@@ -1,0 +1,100 @@
+<!-- pages/attendance/attendance.wxml -->
+<scroll-view class="scroll-container" scroll-y="true">
+  <view class="container">
+    <!-- 顶部自定义导航栏 -->
+    <view class="top-nav">
+      <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
+        <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
+      </view>
+      <text class="nav-title">考勤打卡</text>
+      <view class="nav-empty"></view>
+    </view>
+
+    <!-- 今日打卡核心区域 -->
+    <view class="attendance-card">
+      <view class="date-info">
+        <text class="current-date">{{currentDate}}</text>
+        <text class="current-week">{{currentWeek}}</text>
+      </view>
+
+      <!-- 打卡状态展示 -->
+      <view class="check-status {{checkStatus === 'completed' ? 'status-completed' : 'status-uncompleted'}}">
+        <image class="status-icon" 
+               src="{{checkStatus === 'completed' ? '/images/check_success.png' : '/images/check_unfinish.png'}}" 
+               mode="widthFix" lazy-load="true"></image>
+        <text class="status-text">{{checkStatus === 'completed' ? '今日已打卡' : '今日未打卡'}}</text>
+      </view>
+
+      <!-- 打卡时间展示 -->
+      <view class="check-time">
+        <view class="time-item" wx:if="{{checkStatus === 'completed'}}">
+          <text class="time-label">上班打卡</text>
+          <text class="time-value">{{checkInTime}}</text>
+        </view>
+        <view class="time-item" wx:if="{{checkStatus === 'completed' && checkOutTime}}">
+          <text class="time-label">下班打卡</text>
+          <text class="time-value">{{checkOutTime}}</text>
+        </view>
+        <view class="time-item" wx:if="{{checkStatus === 'uncompleted'}}">
+          <text class="time-label">上班打卡时间</text>
+          <text class="time-value">{{workStartTime}}</text>
+        </view>
+      </view>
+
+      <!-- 打卡按钮 -->
+      <button class="check-btn {{checkStatus === 'completed' ? 'btn-disabled' : ''}}" 
+              bindtap="handleCheckIn" 
+              disabled="{{checkStatus === 'completed'}}">
+        <text class="btn-text">{{checkStatus === 'completed' ? '已打卡' : '立即打卡'}}</text>
+      </button>
+    </view>
+
+    <!-- 考勤规则提示 -->
+    <view class="rule-tips">
+      <view class="tips-title">
+        <image class="tips-icon" src="/images/rule.png" mode="widthFix" lazy-load="true"></image>
+        <text>考勤规则</text>
+      </view>
+      <view class="tips-content">
+        <text class="rule-item">● 上班打卡时间：{{workStartTime}} - {{workEndTime}}</text>
+        <text class="rule-item">● 下班打卡时间：{{offWorkStartTime}} - {{offWorkEndTime}}</text>
+        <text class="rule-item">● 迟到/早退超过15分钟将记为异常</text>
+      </view>
+    </view>
+
+    <!-- 近期打卡记录 -->
+    <view class="record-section">
+      <view class="section-title">
+        <text>近期打卡记录</text>
+        <text class="record-more" bindtap="handleShowAllRecord" hover-class="record-more-hover">查看全部 ></text>
+      </view>
+      
+      <view class="record-list">
+        <!-- 记录列表头部 -->
+        <view class="record-header">
+          <text class="header-col date-col">日期</text>
+          <text class="header-col time-col">上班打卡</text>
+          <text class="header-col time-col">下班打卡</text>
+          <text class="header-col status-col">状态</text>
+        </view>
+        
+        <!-- 记录列表内容 -->
+        <block wx:for="{{recordList}}" wx:key="id">
+          <view class="record-item">
+            <text class="record-col date-col">{{item.date}}</text>
+            <text class="record-col time-col">{{item.checkInTime || '--'}}</text>
+            <text class="record-col time-col">{{item.checkOutTime || '--'}}</text>
+            <text class="record-col status-col {{item.status === 'normal' ? 'status-normal' : 'status-abnormal'}}">
+              {{item.status === 'normal' ? '正常' : '异常'}}
+            </text>
+          </view>
+        </block>
+        
+        <!-- 空记录提示 -->
+        <view wx:if="{{recordList.length === 0}}" class="empty-record">
+          <text>暂无打卡记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

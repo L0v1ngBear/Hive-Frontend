@@ -1,0 +1,124 @@
+<scroll-view 
+  class="scroll-container" 
+  scroll-y="true" 
+  enhanced="true" 
+  bounces="true"
+  scroll-bottom="{{100}}">
+  <view class="container">
+    <!-- 顶部导航 -->
+    <view class="top-nav">
+      <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
+        <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
+      </view>
+      <text class="nav-title">订单详情</text>
+      <view class="nav-empty"></view> <!-- 占位，保持标题居中 -->
+    </view>
+
+    <!-- 订单基础信息卡片 -->
+    <view class="base-info-card">
+      <view class="info-row main-row">
+        <text class="label">订单号：</text>
+        <text class="value main-value">{{orderDetail.orderId}}</text>
+        <text class="status-tag {{statusClass}}">{{statusMap[orderDetail.status]}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">项目：</text>
+        <text class="info-value">{{currentOrder.projectName || '暂无项目'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">创建时间：</text>
+        <text class="value">{{orderDetail.createTime || '2026-02-12 10:30:00'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">客户名称：</text>
+        <text class="value">{{orderDetail.customerName || 'XX纺织贸易有限公司'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">联系人/电话：</text>
+        <text class="value">{{orderDetail.contact || '张经理 138XXXX8888'}}</text>
+      </view>
+    </view>
+
+    <!-- 纺织产品信息卡片 -->
+    <view class="product-info-card">
+      <text class="card-title">产品信息</text>
+      <view class="info-grid">
+        <view class="info-item">
+          <text class="item-label">型号</text>
+          <text class="item-value">{{orderDetail.model}}</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">面料</text>
+          <text class="item-value">{{orderDetail.fabric}}</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">克重</text>
+          <text class="item-value">{{orderDetail.weight}}g</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">幅宽</text>
+          <text class="item-value">{{orderDetail.width}}cm</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">颜色</text>
+          <text class="item-value">{{orderDetail.color}}</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">数量</text>
+          <text class="item-value">{{orderDetail.quantity}}米</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">单价</text>
+          <text class="item-value">¥{{orderDetail.price}}/米</text>
+        </view>
+        <view class="info-item">
+          <text class="item-label">总价</text>
+          <!-- 修复：直接使用JS中计算好的总价 -->
+          <text class="item-value">¥{{totalPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 生产进度卡片（仅生产中显示） -->
+    <view class="process-card" wx:if="{{orderDetail.status == 'producing'}}">
+      <text class="card-title">生产进度</text>
+      <view class="process-title">当前工序：{{steps[orderDetail.process - 1] || '未开始'}}</view>
+      <view class="process-progress">
+        <view class="progress-bar">
+          <!-- 修复：小程序progress组件需要设置宽度，补充样式 -->
+          <progress 
+            percent="{{(orderDetail.process / 5) * 100}}" 
+            active="true"
+            stroke-width="6"
+          ></progress>
+        </view>
+        <view class="process-steps">
+          <text class="step-item {{orderDetail.process >=1?'done':''}}">整经</text>
+          <text class="step-item {{orderDetail.process >=2?'done':''}}">浆纱</text>
+          <text class="step-item {{orderDetail.process >=3?'done':''}}">织造</text>
+          <text class="step-item {{orderDetail.process >=4?'done':''}}">验布</text>
+          <text class="step-item {{orderDetail.process >=5?'done':''}}">卷布</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 状态流转记录 - 增加底部缓冲间距 -->
+    <view class="status-log-card">
+      <text class="card-title">状态流转记录</text>
+      <view class="log-list">
+        <block wx:for="{{statusLog}}" wx:key="id">
+          <view class="log-item">
+            <view class="log-dot {{item.current?'current':''}}"></view>
+            <view class="log-content">
+              <text class="log-status">{{item.statusText}}</text>
+              <text class="log-time">{{item.time}}</text>
+              <text class="log-operator" wx:if="{{item.operator}}">操作人：{{item.operator}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+      <!-- 关键修复：增加底部空白区域，确保能滚动到最底部 -->
+      <view class="bottom-buffer"></view>
+    </view>
+  </view>
+</scroll-view>

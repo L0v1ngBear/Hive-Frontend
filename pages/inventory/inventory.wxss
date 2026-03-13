@@ -1,0 +1,416 @@
+/* pages/inventory/inventory.wxss */
+page {
+  background-color: #fafafa;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 滚动容器 */
+.scroll-container {
+  width: 100%;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 根容器：改用 Flex 布局以分配剩余空间 */
+.container {
+  width: 100%;
+  min-height: 100%; /* 确保容器至少与屏幕等高 */
+  padding: 45px 12px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+}
+
+/* 顶部导航：与内容块左对齐 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  width: calc(100% - 24px);
+  margin-left: auto;
+  margin-right: auto;
+  flex-shrink: 0;
+}
+.nav-back {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.nav-back-hover, .nav-back:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+.back-icon, .scan-icon {
+  width: 24px;
+  height: 24px;
+}
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+.nav-scan {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.nav-scan-hover, .nav-scan:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+
+/* 统一内容块样式：缩小间距 */
+.inventory-overview, .quick-actions, .record-section {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.06);
+  margin-bottom: 10px; /* 间距变小，更紧凑 */
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* 库存概览卡片 */
+.inventory-overview {
+  background: linear-gradient(180deg, #ffffff 0%, #FFFCF8 100%);
+  padding: 24px 20px;
+}
+.overview-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+.overview-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 4px;
+}
+.stat-label {
+  font-size: 15px;
+  color: #666;
+  display: block;
+  margin-bottom: 8px;
+}
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+.in-stock {
+  color: #52C41A;
+}
+.out-stock {
+  color: #F5222D;
+}
+
+/* 快捷操作区 */
+.quick-actions {
+  background-color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  transition: all 0.2s ease;
+}
+.action-item-hover, .action-item:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+.action-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+}
+.action-text {
+  font-size: 15px;
+  color: #333;
+}
+
+/* 操作记录区域：填满底部空间 */
+.record-section {
+  background-color: #fff;
+  padding: 20px;
+  flex: 1; /* 核心修改：占据剩余垂直空间 */
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.section-title text:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+.section-title text:last-child {
+  font-size: 15px;
+  color: #999;
+}
+
+/* ================= 记录列表 & 表格优化 ================= */
+.record-list {
+  width: 100%;
+  flex: 1; 
+}
+
+/* 表头：加深底边框，淡灰底色更像真实表格 */
+.record-header {
+  display: flex;
+  align-items: center; /* 确保垂直居中 */
+  padding: 12px 8px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+  background-color: #f7f8fa;
+  border-radius: 6px;
+}
+
+/* 数据行：加深底边框 */
+.record-item {
+  display: flex;
+  align-items: center; /* 确保垂直居中 */
+  padding: 12px 8px;
+  border-bottom: 1px solid #ebebeb;
+  transition: background-color 0.2s;
+}
+.record-item:last-child {
+  border-bottom: none;
+}
+.record-item:active {
+  background-color: #fcfcfc; /* 按压反馈 */
+}
+
+/* 表头与内容公共列属性 */
+.header-col, .record-col {
+  font-size: 15px;
+  word-break: break-all;
+  box-sizing: border-box;
+  padding: 0 4px;
+  /* 去除了原先多余的 display:flex 避免影响内部文本 */
+}
+.header-col {
+  color: #999;
+  font-weight: 500;
+}
+.record-col {
+  color: #333;
+}
+
+/* 列宽分配与水平对齐 */
+.time-col {
+  flex: 1;
+  text-align: left;
+}
+.type-col {
+  flex: 1;
+  text-align: center;
+}
+.model-col {
+  flex: 1;
+  text-align: center;
+}
+.meter-col {
+  flex: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.type-in {
+  color: #52C41A;
+  font-weight: 500;
+}
+.type-out {
+  color: #F5222D;
+  font-weight: 500;
+}
+
+/* 阻止事件冒泡 */
+.stopPropagation {
+  pointer-events: auto;
+}
+
+/* ================= 弹窗公共样式优化 ================= */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.modal-content {
+  width: 85%;
+  max-width: 600rpx;
+  background: #fff;
+  border-radius: 24rpx; 
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
+}
+.modal-content.add-cloth-modal {
+  max-width: 600rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+/* 弹窗信息行 */
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  position: relative;
+}
+.info-row text {
+  font-size: 28rpx;
+  color: #666;
+  min-width: 140rpx;
+}
+.info-row input {
+  flex: 1;
+  height: 76rpx;
+  border: 1px solid #e8e8e8;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+  background-color: #fafafa;
+}
+
+/* 型号搜索下拉列表样式 */
+.model-list {
+  position: absolute;
+  top: 84rpx;
+  left: 140rpx;
+  right: 0;
+  background: #fff;
+  border: 1px solid #f5f5f5;
+  border-radius: 12rpx;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  max-height: 240rpx;
+  overflow-y: auto;
+  z-index: 1000;
+}
+.model-item {
+  padding: 16rpx 24rpx;
+  border-bottom: 1px solid #f9f9f9;
+  font-size: 28rpx;
+  color: #333;
+  transition: all 0.2s ease;
+}
+.model-item:last-child {
+  border-bottom: none;
+}
+.model-item.create-item {
+  color: #F5A623;
+  font-weight: 500;
+}
+.model-item:active {
+  background-color: #f0f0f0;
+}
+
+/* 弹窗普通信息展示 */
+.modal-info {
+  display: flex;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+}
+.info-label {
+  color: #666;
+  width: 120rpx;
+}
+.info-value {
+  color: #333;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 操作按钮 */
+.modal-actions, .oper-btns, .print-type-btns {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+.modal-btn, .btn, .print-btn {
+  flex: 1;
+  padding: 0; /* 必须强制清空小程序的默认 padding */
+  margin: 0;  /* 清除默认 margin 防止 flex 计算偏差 */
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 12rpx;
+  font-size: 35rpx;
+  border: none;
+  font-weight: 500;
+}
+.cancel-btn, .btn.cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+.confirm-btn, .btn.in {
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  color: #fff;
+}
+.btn.out {
+  background: #F5222D;
+  color: #fff;
+}
+
+/* 打印按钮 */
+.print-type-btns {
+  margin: 30rpx 0 20rpx 0;
+}
+.preview-btn {
+  background: #0088ff;
+  color: #fff;
+}
+.bluetooth-btn {
+  background: #07c160;
+  color: #fff;
+}

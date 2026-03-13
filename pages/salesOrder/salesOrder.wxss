@@ -1,0 +1,52 @@
+/* 直接引入生产订单的基础结构样式，保证UI统一 */
+@import "../order/order.wxss";
+
+/* 针对销售订单的一些特有样式调整 */
+.font-bold {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.price-text {
+  color: #E02020;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* 状态颜色重写 */
+.status-pending_pay { color: #E02020; background-color: rgba(224, 32, 32, 0.1); }
+.status-pending_ship { color: #F5A623; background-color: rgba(245, 166, 35, 0.1); }
+.status-shipped { color: #1890FF; background-color: rgba(24, 144, 255, 0.1); }
+.status-completed { color: #52C41A; background-color: rgba(82, 196, 26, 0.1); }
+.status-cancelled { color: #999; background-color: #f5f5f5; }
+
+/* 按钮组样式 */
+.order-action {
+  gap: 10px;
+}
+.action-btn {
+  margin: 0 !important;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 16px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #1890FF, #40A9FF);
+  color: #fff;
+}
+.btn-default {
+  background: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.show-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 4px !important;
+  background-color: transparent;
+  }
+  
+  .show-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.2);
+  }

@@ -1,0 +1,78 @@
+<view class="container">
+  <view class="top-nav">
+    <view class="nav-back" bindtap="handleBack">
+      <image class="back-icon" src="/images/back.png" mode="widthFix"></image>
+    </view>
+    
+    <text class="nav-title">销售订单管理</text>
+    <view class="nav-scan" bindtap="handleSearch">
+      <image class="scan-icon" src="/images/search.png" mode="widthFix"></image>
+    </view>
+  </view>
+
+  <view class="order-filter">
+    <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key"
+      bindtap="handleFilter" data-filter="{{item.key}}">
+      {{item.label}}
+    </view>
+  </view>
+  <scroll-view class="list-scroll-container show-scrollbar" scroll-y="true" enhanced="true" bounces="true"
+    show-scrollbar="true">
+    <view class="order-section">
+      <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
+        <text>暂无相关销售订单</text>
+      </view>
+
+      <block wx:for="{{filteredOrderList}}" wx:key="orderId">
+        <view class="order-card">
+          <view class="order-head" bindtap="openDetail" data-order="{{item}}">
+            <text class="order-id">单号：{{item.orderId}}</text>
+            <text class="order-status status-{{item.status}}">{{statusMap[item.status]}}</text>
+          </view>
+
+          <view class="info-group" bindtap="openDetail" data-order="{{item}}">
+            <view class="info-line">
+              <text class="info-label">客户：</text>
+              <text class="info-value font-bold">{{item.customerName}}</text>
+            </view>
+            
+            <view class="info-line">
+              <text class="info-label">项目：</text>
+              <text class="info-value">{{item.projectName || '暂无项目'}}</text>
+            </view>
+
+            <view class="info-line">
+              <text class="info-label">商品：</text>
+              <text class="info-value">{{item.goodsDesc}}</text>
+            </view>
+            <view class="info-line">
+              <text class="info-label">金额：</text>
+              <text class="info-value price-text">¥{{item.totalAmount}}</text>
+              <text class="info-label ml-12">数量：</text>
+              <text class="info-value">{{item.totalQuantity}}米</text>
+            </view>
+            <view class="info-line">
+              <text class="info-label">交期：</text>
+              <text class="info-value">{{item.deliveryDate}}</text>
+            </view>
+            <view class="info-line" wx:if="{{item.expressNo}}">
+              <text class="info-label">物流：</text>
+              <text class="info-value">{{item.expressCompany}} ({{item.expressNo}})</text>
+            </view>
+          </view>
+
+          <view class="order-action">
+            <button wx:if="{{item.status === 'pending_pay'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="pay" data-order="{{item}}">确认收款</button>
+            <button wx:if="{{item.status === 'pending_ship'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="ship" data-order="{{item}}">录入发货</button>
+            <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-default" size="mini"
+              catchtap="handleAction" data-type="logistics" data-order="{{item}}">查看物流</button>
+            <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="finish" data-order="{{item}}">完成订单</button>
+          </view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>

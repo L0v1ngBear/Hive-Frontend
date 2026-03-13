@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "蜂巢",
+  "navigationBarBackgroundColor": "#2f5496",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false,
+  "onReachBottomDistance": 50
+}

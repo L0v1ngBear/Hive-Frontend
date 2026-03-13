@@ -1,0 +1,290 @@
+/* pages/attendance/attendance.wxss */
+page {
+  background-color: #fafafa;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 滚动容器 */
+.scroll-container {
+  width: 100%;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 根容器：贴屏且保留统一空隙 */
+.container {
+  width: 100%;
+  /* 左右保留12px空隙，贴合屏幕但不贴死 */
+  padding: 0 12px;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+}
+
+/* 顶部导航：与内容块左对齐 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  /* 与内容块的上下间距统一 */
+  margin-bottom: 16px;
+  /* 确保导航和内容块左右对齐 */
+  width: calc(100% - 24px);
+  margin-left: auto;
+  margin-right: auto;
+}
+.nav-back {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.nav-back:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+.back-icon {
+  width: calc(100vw / 375 * 40); /* 从20改为24，比例放大 */
+  height: calc(100vw / 375 * 40); /* 保持宽高一致，避免变形 */
+}
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+.nav-empty {
+  width: 36px;
+  height: 36px;
+}
+
+/* 统一内容块样式：确保三块内容完全对齐 */
+.attendance-card, .rule-tips, .record-section {
+  /* 宽度贴满容器，左右无额外间距 */
+  width: 100%;
+  /* 统一圆角、阴影、间距，保证视觉一致 */
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.06);
+  /* 统一上下间距，确保三块内容间距一致 */
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* 今日打卡卡片 */
+.attendance-card {
+  background: linear-gradient(180deg, #ffffff 0%, #FFFCF8 100%);
+  /* 内部padding保留，保证内容不贴边 */
+  padding: 24px 20px;
+  text-align: center;
+}
+
+/* 日期信息 */
+.date-info {
+  margin-bottom: 24px;
+}
+.current-date {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
+.current-week {
+  font-size: 16px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* 打卡状态 */
+.check-status {
+  margin-bottom: 16px;
+}
+.status-icon {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.status-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+}
+.status-completed .status-text {
+  color: #F5A623;
+}
+
+/* 打卡时间 */
+.check-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+.time-item {
+  text-align: center;
+}
+.time-label {
+  font-size: 16px;
+  color: #666;
+  display: block;
+  margin-bottom: 4px;
+}
+.time-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 打卡按钮 */
+.check-btn {
+  width: 100%;
+  max-width: 280px;
+  height: 56px;
+  line-height: 40px;
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  border-radius: 28px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2);
+  margin: 0 auto;
+  display: block;
+}
+.check-btn.btn-disabled {
+  background: #E5E5E5;
+  box-shadow: none;
+}
+.btn-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+.check-btn.btn-disabled .btn-text {
+  color: #999;
+}
+
+/* 考勤规则提示 */
+.rule-tips {
+  background-color: #fff;
+  padding: 20px;
+}
+.tips-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.tips-icon {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.tips-title text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+.tips-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rule-item {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 打卡记录区域 */
+.record-section {
+  background-color: #fff;
+  padding: 20px;
+}
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.section-title text:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+.record-more {
+  font-size: 16px;
+  color: #F5A623;
+}
+.record-more:active {
+  opacity: 0.8;
+  color: #D48806;
+}
+
+/* 记录列表 */
+.record-list {
+  width: 100%;
+}
+.record-header {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+  margin-bottom: 8px;
+}
+.header-col {
+  font-size: 16px;
+  font-weight: 600;
+  color: #999;
+  word-break: break-all;
+  line-height: 1.2;
+}
+.date-col {
+  width: 25%;
+  text-align: left;
+}
+.time-col {
+  width: 30%;
+  text-align: center;
+}
+.status-col {
+  width: 15%;
+  text-align: center;
+}
+
+/* 记录项 */
+.record-item {
+  display: flex;
+  padding: 12px 0;
+  border-bottom: 1px solid #f9f9f9;
+}
+.record-item:last-child {
+  border-bottom: none;
+}
+.record-col {
+  font-size: 16px;
+  color: #333;
+  word-break: break-all;
+  line-height: 1.2;
+}
+.status-normal {
+  line-height: 48%;
+  color: #52C41A;
+}
+.status-abnormal {
+  line-height: 48%;
+  color: #F5222D;
+}
+
+/* 空记录提示 */
+.empty-record {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 16px;
+  color: #999;
+}

@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/attendance/attendance",
+    "pages/inventory/inventory",
+    "pages/order/order",
+    "pages/salesOrder/salesOrder", 
+    "pages/knowledge/knowledge", 
+    "pages/orderDetail/orderDetail",
+    "pages/badProduct/badProduct",
+    "pages/customer/customer",
+    "pages/customer/customerEdit"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "renderer": "webview",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

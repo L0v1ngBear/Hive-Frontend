@@ -1,0 +1,495 @@
+/* 全局样式重置 - 增强多设备适配 */
+page {
+  background-color: #fafafa;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  height: 100%;
+  min-height: 100vh;
+  /* 适配刘海屏/全面屏安全区域 */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
+  /* 禁止文本缩放 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 滚动容器 - 核心修复：解决滚动不到底问题 */
+.scroll-container {
+  width: 100%;
+  /* 修复：使用calc减去顶部安全区域，避免高度溢出 */
+  height: calc(100vh - env(safe-area-inset-top));
+  height: calc(100dvh - env(safe-area-inset-top)); /* 动态视口高度，适配移动端地址栏 */
+  -webkit-overflow-scrolling: touch; /* iOS弹性滚动 */
+  scroll-behavior: smooth;
+  /* 隐藏滚动条 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* 强制启用垂直滚动，确保滚动功能生效 */
+  overflow-y: auto !important;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 根容器 - 增加底部内边距，确保内容不被遮挡 */
+.container {
+  width: 100%;
+  /* 基础间距，适配小屏/大屏 */
+  padding: 0 clamp(8px, calc(100vw / 375 * 12), 20px);
+  /* 核心修复：大幅增加底部padding，确保滚动到底部能显示完整内容 */
+  padding-bottom: clamp(80px, calc(100vw / 375 * 120), 150px);
+  box-sizing: border-box;
+  /* 限制最大宽度，大屏/平板不拉伸 */
+  max-width: 480px;
+  margin: 0 auto;
+  /* 最小宽度，避免超小屏挤压 */
+  min-width: 280px;
+}
+
+/* 顶部导航 - 多设备交互优化 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* 响应式内边距 */
+  padding: clamp(8px, calc(100vw / 375 * 12), 16px) 0;
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  /* 最小高度，保证点击区域 */
+  min-height: 44px;
+}
+.nav-back {
+  /* 响应式尺寸，保证点击区域 */
+  width: clamp(32px, calc(100vw / 375 * 36), 44px);
+  height: clamp(32px, calc(100vw / 375 * 36), 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  /* 优化触摸体验 */
+  touch-action: manipulation;
+}
+.nav-back-hover, .nav-back:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+.back-icon {
+  width: clamp(16px, calc(100vw / 375 * 20), 24px);
+  height: clamp(16px, calc(100vw / 375 * 20), 24px);
+}
+.nav-title {
+  font-size: clamp(16px, calc(100vw / 375 * 18), 20px);
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  text-align: center;
+  /* 防止标题过长 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-empty {
+  width: clamp(32px, calc(100vw / 375 * 36), 44px);
+  flex-shrink: 0;
+}
+
+/* 基础信息卡片 - 多设备视觉适配 */
+.base-info-card {
+  background-color: #fff;
+  border-radius: clamp(8px, calc(100vw / 375 * 12), 16px);
+  padding: clamp(12px, calc(100vw / 375 * 16), 20px);
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(0,0,0,0.05);
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(6px, calc(100vw / 375 * 10), 12px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  /* 小屏自动换行 */
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+.info-row.main-row {
+  justify-content: space-between;
+  margin-bottom: clamp(8px, calc(100vw / 375 * 12), 14px);
+}
+.info-row:last-child {
+  margin-bottom: 0;
+}
+.label {
+  color: #666;
+  /* 响应式最小宽度，避免标签挤压 */
+  min-width: clamp(60px, calc(100vw / 375 * 80), 90px);
+  flex-shrink: 0;
+}
+.value {
+  color: #333;
+  flex: 1;
+  /* 防止文本溢出 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.value.main-value {
+  font-weight: 600;
+  font-size: clamp(15px, calc(100vw / 375 * 17), 19px);
+}
+.status-tag {
+  padding: clamp(2px, calc(100vw / 375 * 4), 6px) clamp(4px, calc(100vw / 375 * 8), 10px);
+  border-radius: clamp(4px, calc(100vw / 375 * 6), 8px);
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #fff;
+  flex-shrink: 0;
+  /* 小屏强制换行 */
+  margin-top: 4px;
+}
+/* 不同状态的标签样式 */
+.status-pending_confirm {
+  background-color: #999;
+}
+.status-pending_material {
+  background-color: #1890ff;
+}
+.status-producing {
+  background-color: #faad14;
+}
+.status-pending_ship {
+  background-color: #2f54eb;
+}
+.status-completed {
+  background-color: #52c41a;
+}
+
+/* 产品信息卡片 - 多列布局适配 */
+.product-info-card {
+  background-color: #fff;
+  border-radius: clamp(8px, calc(100vw / 375 * 12), 16px);
+  padding: clamp(12px, calc(100vw / 375 * 16), 20px);
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(0,0,0,0.05);
+}
+.card-title {
+  font-size: clamp(15px, calc(100vw / 375 * 17), 19px);
+  font-weight: 600;
+  color: #333;
+  margin-bottom: clamp(8px, calc(100vw / 375 * 12), 14px);
+  display: block;
+}
+.info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  /* 响应式间距 */
+  gap: clamp(6px, calc(100vw / 375 * 10), 12px);
+}
+.info-item {
+  /* 自适应宽度，小屏1列，大屏2列 */
+  width: calc(50% - clamp(3px, calc(100vw / 375 * 5), 6px));
+  display: flex;
+  flex-direction: column;
+  /* 最小宽度，避免挤压 */
+  min-width: 120px;
+}
+/* 超小屏（<320px）强制1列布局 */
+@media (max-width: 320px) {
+  .info-item {
+    width: 100%;
+    min-width: unset;
+  }
+}
+.item-label {
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #666;
+  margin-bottom: clamp(2px, calc(100vw / 375 * 4), 6px);
+}
+.item-value {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #333;
+  font-weight: 500;
+  /* 防止文本溢出 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 生产进度卡片 - 进度条适配 + progress组件样式修复 */
+.process-card {
+  background-color: #fff;
+  border-radius: clamp(8px, calc(100vw / 375 * 12), 16px);
+  padding: clamp(12px, calc(100vw / 375 * 16), 20px);
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(0,0,0,0.05);
+}
+.process-title {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #333;
+  margin-bottom: clamp(8px, calc(100vw / 375 * 12), 14px);
+}
+.process-progress {
+  width: 100%;
+}
+.progress-bar {
+  width: 100%;
+  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
+}
+/* 修复小程序原生progress组件样式 */
+progress {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: clamp(4px, calc(100vw / 375 * 6), 8px);
+  border-radius: clamp(2px, calc(100vw / 375 * 3), 4px);
+}
+progress::-webkit-progress-bar {
+  background-color: #f5f5f5;
+  border-radius: clamp(2px, calc(100vw / 375 * 3), 4px);
+}
+progress::-webkit-progress-value {
+  background-color: #faad14;
+  border-radius: clamp(2px, calc(100vw / 375 * 3), 4px);
+}
+.process-steps {
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  /* 允许换行，适配超小屏 */
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.step-item {
+  color: #999;
+  text-align: center;
+  /* 最小宽度，保证可读性 */
+  min-width: 40px;
+}
+.step-item.done {
+  color: #faad14;
+  font-weight: 600;
+}
+
+/* 状态流转记录 - 时间轴适配 + 移除多余margin-bottom */
+.status-log-card {
+  background-color: #fff;
+  border-radius: clamp(8px, calc(100vw / 375 * 12), 16px);
+  padding: clamp(12px, calc(100vw / 375 * 16), 20px);
+  /* 修复：移除原有margin-bottom，改用container的padding-bottom */
+  margin-bottom: 0;
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(0,0,0,0.05);
+}
+.log-list {
+  padding-left: clamp(6px, calc(100vw / 375 * 8), 10px);
+  position: relative;
+}
+.log-list::before {
+  content: '';
+  position: absolute;
+  left: clamp(6px, calc(100vw / 375 * 8), 10px);
+  top: clamp(8px, calc(100vw / 375 * 10), 12px);
+  bottom: clamp(8px, calc(100vw / 375 * 10), 12px);
+  width: 1px;
+  background-color: #eee;
+  transform: translateX(-50%);
+}
+.log-item {
+  display: flex;
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  position: relative;
+  /* 小屏允许换行 */
+  flex-wrap: wrap;
+}
+.log-item:last-child {
+  margin-bottom: 0;
+}
+.log-dot {
+  width: clamp(12px, calc(100vw / 375 * 16), 20px);
+  height: clamp(12px, calc(100vw / 375 * 16), 20px);
+  border-radius: 50%;
+  background-color: #eee;
+  flex-shrink: 0;
+  margin-right: clamp(8px, calc(100vw / 375 * 12), 14px);
+  position: relative;
+  z-index: 1;
+  /* 小屏换行后调整间距 */
+  margin-bottom: 4px;
+}
+.log-dot.current {
+  background: linear-gradient(90deg, #faad14, #ffc53d);
+}
+.log-content {
+  flex: 1;
+  min-width: 200px;
+}
+.log-status {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: clamp(2px, calc(100vw / 375 * 4), 6px);
+}
+.log-time {
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #999;
+  display: block;
+  margin-bottom: clamp(1px, calc(100vw / 375 * 2), 3px);
+}
+.log-operator {
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #666;
+}
+
+/* 底部缓冲区域 - 确保滚动到底部能看到完整内容 */
+.bottom-buffer {
+  height: clamp(60px, calc(100vw / 375 * 80), 100px);
+  width: 100%;
+}
+
+/* 底部操作按钮 - 安全区域适配（若后续加回按钮可保留） */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(8px, calc(100vw / 375 * 12), 16px) clamp(8px, calc(100vw / 375 * 12), 20px) env(safe-area-inset-bottom);
+  background-color: #fff;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.05);
+  z-index: 99;
+  /* 最小高度，保证点击区域 */
+  min-height: 60px;
+  box-sizing: border-box;
+}
+.action-btn {
+  width: 100%;
+  height: clamp(36px, calc(100vw / 375 * 44), 50px);
+  line-height: clamp(36px, calc(100vw / 375 * 44), 50px);
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  color: #fff;
+  border: none;
+  border-radius: clamp(18px, calc(100vw / 375 * 22), 25px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  font-weight: 500;
+  /* 优化触摸体验 */
+  touch-action: manipulation;
+}
+.action-btn:active {
+  opacity: 0.8;
+}
+
+/* ========== 设备尺寸适配断点 ========== */
+
+/* 超小屏手机 (<=320px) - 如旧款iPhone SE */
+@media (max-width: 320px) {
+  .container {
+    padding: 0 8px;
+    padding-bottom: clamp(60px, calc(100vw / 375 * 100), 120px);
+  }
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 6px;
+  }
+  .status-tag {
+    margin-top: 8px;
+    align-self: flex-start;
+  }
+  .log-content {
+    min-width: unset;
+    width: 100%;
+  }
+  .bottom-buffer {
+    height: clamp(50px, calc(100vw / 375 * 70), 90px);
+  }
+}
+
+/* 大屏手机 (>=414px) - 如iPhone 12/13/14 Plus */
+@media (min-width: 414px) {
+  .container {
+    max-width: 440px;
+    padding: 0 16px;
+    padding-bottom: clamp(90px, calc(100vw / 375 * 130), 160px);
+  }
+  .top-nav {
+    padding: 16px 0;
+  }
+  .base-info-card, .product-info-card, .process-card, .status-log-card {
+    padding: 20px;
+  }
+  .bottom-buffer {
+    height: clamp(70px, calc(100vw / 375 * 90), 110px);
+  }
+}
+
+/* 平板/大屏设备 (>=768px) - 如iPad */
+@media (min-width: 768px) {
+  page {
+    display: flex;
+    justify-content: center;
+    background-color: #eee;
+  }
+  .scroll-container {
+    width: 100%;
+    max-width: 500px;
+    height: calc(100vh - 40px);
+    height: calc(100dvh - 40px);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin: 20px auto;
+  }
+  .container {
+    max-width: 500px;
+    padding: 0 20px;
+    padding-bottom: clamp(100px, calc(100vw / 375 * 140), 180px);
+  }
+  .bottom-buffer {
+    height: clamp(80px, calc(100vw / 375 * 100), 120px);
+  }
+  .bottom-actions {
+    border-radius: 0 0 20px 20px;
+  }
+}
+
+/* 横屏适配 (landscape) */
+@media (orientation: landscape) {
+  .scroll-container {
+    height: 100vh;
+    height: 100dvh;
+  }
+  .container {
+    max-width: unset;
+    width: 100%;
+    padding: 0 20px;
+    padding-bottom: clamp(40px, calc(100vw / 375 * 60), 80px);
+  }
+  .info-grid {
+    /* 横屏显示3列 */
+    gap: 10px;
+  }
+  .info-item {
+    width: calc(33.333% - 7px);
+    min-width: 100px;
+  }
+  .bottom-buffer {
+    height: clamp(40px, calc(100vw / 375 * 60), 80px);
+  }
+  .bottom-actions {
+    padding: 10px 20px env(safe-area-inset-bottom);
+    min-height: 50px;
+  }
+  .action-btn {
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+/* 高分辨率屏幕 (2倍/3倍屏) 优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .log-list::before {
+    width: 0.5px;
+  }
+  progress::-webkit-progress-bar {
+    background-image: linear-gradient(0deg, #f5f5f5, #f5f5f5);
+  }
+}

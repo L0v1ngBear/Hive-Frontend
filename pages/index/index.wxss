@@ -1,0 +1,570 @@
+/* pages/index/index.wxss */
+page {
+  background-color: #fafafa;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 滚动容器：全屏滚动，隐藏原生滚动条 */
+.scroll-container {
+  width: 100%;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* 新增：给滚动区域顶部留出固定导航的高度 */
+  padding-top: calc(64px + env(safe-area-inset-top));
+  box-sizing: border-box;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 新增：固定顶部导航容器 */
+.fixed-top-nav-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  /* 确保在最上层 */
+  background-color: #fafafa;
+  /* 与页面背景一致 */
+  padding-top: env(safe-area-inset-top);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  /* 轻微阴影提升层次感 */
+}
+
+/* 顶部导航：调整定位，改为固定布局 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  padding: 12px 30px;
+  /* 调整左右内边距，与容器对齐 */
+  background: none;
+  border: none;
+  box-shadow: none;
+  /* 移除原有绝对定位 */
+  /* position: absolute;
+  top: env(safe-area-inset-top);
+  left: 30px;
+  z-index: 99; */
+  /* 新增：固定导航的宽度控制 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  /* 新增：与租户名称保持间距 */
+  margin-right: 12px;
+}
+
+/* 修改：租户名称样式（固定顶部导航栏） */
+.tenant-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.5px;
+  /* 超出自动省略 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* 新增：加入组织的点击反馈 */
+.tenant-name:active {
+  opacity: 0.85;
+}
+
+/* 根容器：增大左右空隙，避免内容贴边 */
+.container {
+  width: 100%;
+  padding: 0 30px;
+  /* 保留充足的左右空隙 */
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #F5A62333 #f5f5f5;
+  /* 移除原有顶部间距（因为滚动容器已预留） */
+  margin-top: 0;
+}
+
+/* 定制化滚动条样式（精简版） */
+.container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.container::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 2px;
+  margin: 16px 0;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F5A623, #FFB84D);
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #D48806, #F5A623);
+}
+
+/* 用户信息卡片：重新调整宽度和布局，将待办事项完全整合 */
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 24px;
+  /* 优化内边距，让内容更舒展 */
+  margin: 0 0 24px;
+  /* 移除原有60px顶部间距 */
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.06);
+  background: linear-gradient(180deg, #ffffff 0%, #FFFCF8 100%);
+  box-sizing: border-box;
+  width: 100%;
+  /* 卡片宽度自适应容器，不超出 */
+  max-width: 100%;
+  /* 限制最大宽度 */
+}
+
+/* 头像容器（兼容你的WXML结构） */
+.user-avatar-wrapper {
+  flex-shrink: 0;
+  /* 防止头像被压缩 */
+}
+
+.user-avatar {
+  width: 64px;
+  /* 微调头像尺寸 */
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #FFF3E0;
+  box-shadow: 0 2px 8px rgba(245, 166, 35, 0.1);
+}
+
+/* 用户信息区域：占据主要宽度，适配新增的租户名称 */
+.user-info {
+  flex: 1;
+  /* 占满除头像和待办外的剩余空间 */
+  margin: 0 20px;
+  /* 与头像、待办保持间距 */
+  /* 新增：调整行高，适配多行文本 */
+  line-height: 1.4;
+}
+
+/* 缩小用户名字体大小 */
+.user-name {
+  display: block;
+  font-size: 20px;
+  /* 从23px进一步缩小 */
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 缩小部门名称字体大小 */
+.user-dept {
+  font-size: 15px;
+  /* 从17px进一步缩小 */
+  color: #666666;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 新增：与租户名称保持间距 */
+  margin-bottom: 4px;
+}
+
+/* 新增：用户信息区域的租户名称样式 */
+.user-tenant {
+  font-size: 14px;
+  color: #999;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 待办事项模块：完全整合到卡片内部，优化样式 */
+.user-todo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  /* 增加内边距，提升点击区域 */
+  border-radius: 12px;
+  background-color: #FFF9F0;
+  /* 增加浅色背景，突出待办模块 */
+  flex-shrink: 0;
+  /* 防止待办模块被压缩 */
+  cursor: pointer;
+  /* 提示可点击 */
+}
+
+.todo-num {
+  font-size: 32px;
+  /* 从38px缩小 */
+  font-weight: bold;
+  color: #F5A623;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(245, 166, 35, 0.1);
+}
+
+.todo-text {
+  font-size: 18px;
+  /* 从22px缩小 */
+  color: #666666;
+  opacity: 0.9;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 3px;
+}
+
+/* 核心功能模块：调整标题样式 */
+.function-module {
+  margin: 0 0 24px;
+  width: 100%;
+}
+
+.module-title {
+  font-size: 24px;
+  /* 从28px缩小 */
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  padding-left: 10px;
+}
+
+.module-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background-color: #F5A623;
+  border-radius: 2px;
+}
+
+/* 核心功能块：改为网格布局（重点修改） */
+.function-grid {
+  display: flex;
+  flex-wrap: wrap;
+  /* 自动换行 */
+  gap: 12px;
+  /* 网格间距 */
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.06);
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 功能项：适配网格布局（重点修改） */
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  /* 图标在上，文字在下 */
+  align-items: center;
+  justify-content: center;
+  width: calc(33.333% - 8px);
+  /* 3列布局，减去间距 */
+  height: 120px;
+  /* 调整高度适配网格 */
+  padding: 12px 8px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  /* 增加圆角 */
+  transition: all 0.2s ease-in-out;
+  background-color: #FFFCF8;
+  /* 增加背景色区分 */
+}
+
+/* 移除列表样式的下边框 */
+.grid-item:last-child {
+  border-bottom: none;
+}
+
+.grid-icon {
+  width: 48px;
+  /* 调整图标大小 */
+  height: 48px;
+  margin-right: 0;
+  /* 移除右侧间距 */
+  margin-bottom: 8px;
+  /* 增加底部间距 */
+  filter: drop-shadow(0 2px 4px rgba(245, 166, 35, 0.1));
+  border-radius: 8px;
+}
+
+.grid-text {
+  font-size: 20px;
+  /* 调整文字大小 */
+  color: #333333;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 快捷待办：统一调整字体和间距 */
+.quick-todo {
+  margin: 0 0 24px;
+  width: 100%;
+}
+
+.todo-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.todo-title text:first-child {
+  font-size: 24px;
+  /* 从28px缩小 */
+  font-weight: 600;
+  color: #333333;
+  letter-spacing: 0.5px;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  padding-left: 10px;
+}
+
+.todo-title text:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background-color: #F5A623;
+  border-radius: 2px;
+}
+
+.todo-more {
+  font-size: 20px;
+  /* 从24px缩小 */
+  color: #F5A623;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 待办列表：调整容器样式 */
+.todo-list {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.06);
+  background: linear-gradient(180deg, #ffffff 0%, #FFFCF8 100%);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 待办项：调整高度和内边距 */
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+  height: 96px;
+  border-bottom: 1px solid #f9f7f5;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  overflow: hidden;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+/* 待办标签：调整尺寸和字体 */
+.todo-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 36px;
+  background-color: #FFF3E0;
+  color: #F5A623;
+  font-size: 18px;
+  /* 从20px缩小 */
+  border-radius: 18px;
+  margin-right: 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(245, 166, 35, 0.08);
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+/* 待办内容：调整字体和行高 */
+.todo-content {
+  flex: 1;
+  font-size: 22px;
+  /* 从26px缩小 */
+  color: #333333;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+}
+
+/* 待办时间：调整尺寸和字体 */
+.todo-time {
+  font-size: 18px;
+  /* 从22px缩小 */
+  color: #999999;
+  margin-left: 16px;
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 100px;
+  display: inline-block;
+}
+
+/* 空待办提示：调整字体大小 */
+.empty-todo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  text-align: center;
+  font-size: 22px;
+  /* 从26px缩小 */
+  color: #999999;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(180deg, #ffffff 0%, #FFFCF8 100%);
+}
+
+/* 底部导航：全面调整尺寸 */
+.bottom-tab {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  background-color: #ffffff;
+  box-shadow: 0 -2px 12px rgba(245, 166, 35, 0.06);
+  z-index: 999;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  padding: 6px 12px;
+}
+
+.tab-item.active .tab-text {
+  color: #F5A623;
+  font-weight: 600;
+}
+
+.tab-item.active .tab-icon {
+  filter: brightness(0.8) saturate(1.2) drop-shadow(0 2px 4px rgba(245, 166, 35, 0.2));
+}
+
+.tab-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab-text {
+  font-size: 18px;
+  /* 从20px缩小 */
+  color: #666666;
+  transition: all 0.2s ease-in-out;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 触摸反馈：保持交互体验 */
+.grid-item:active {
+  opacity: 0.85;
+  background-color: #FFFDFA;
+  transform: scale(0.95);
+  /* 改为缩放效果更适合网格 */
+}
+
+.todo-more:active {
+  opacity: 0.85;
+  color: #D48806;
+  text-decoration: underline;
+}
+
+.todo-item:active {
+  background-color: #FFFDFA;
+  transform: translateX(4px);
+}
+
+.tab-item:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.user-todo:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+  /* 待办模块添加点击反馈 */
+}
+
+/* 核心功能空状态 */
+.empty-function {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 优化功能网格布局：禁用项隐藏后自动补位 */
+.function-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+.grid-item {
+  width: calc(33.333% - 14rpx);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 0;
+  background-color: #fff;
+  border-radius: 12rpx;
+}

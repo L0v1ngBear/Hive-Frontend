@@ -1,0 +1,123 @@
+<scroll-view class="scroll-container" scroll-y="true">
+  <view class="container">
+    <!-- 顶部自定义导航栏 -->
+    <view class="top-nav">
+      <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
+        <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
+      </view>
+      <text class="nav-title">库存管理</text>
+      <view class="nav-scan" bindtap="handleScanCode" hover-class="nav-scan-hover">
+        <image class="scan-icon" src="/images/scan.png" mode="widthFix" lazy-load="true"></image>
+      </view>
+    </view>
+
+    <!-- 库存概览卡片 -->
+    <view class="inventory-overview">
+      <view class="overview-title">库存概览</view>
+      <view class="overview-stats">
+        <view class="stat-item">
+          <text class="stat-label">总库存数</text>
+          <text class="stat-value">{{totalCount}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">今日入库</text>
+          <text class="stat-value in-stock">{{todayInCount}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">今日出库</text>
+          <text class="stat-value out-stock">{{todayOutCount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快捷操作区（统一为扫码出入库） -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="handleScanCode" hover-class="action-item-hover">
+        <image class="action-icon" src="/images/scan_all.png" mode="widthFix" lazy-load="true"></image>
+        <text class="action-text">扫码出入库</text>
+      </view>
+      <view class="action-item" bindtap="handleStockCheck" hover-class="action-item-hover">
+        <image class="action-icon" src="/images/check.png" mode="widthFix" lazy-load="true"></image>
+        <text class="action-text">库存盘点</text>
+      </view>
+    </view>
+
+    <!-- 最近操作记录 -->
+    <view class="record-section">
+      <view class="section-title">
+        <text>最近操作记录</text>
+        <text class="record-more" bindtap="handleShowAllRecord" hover-class="record-more-hover">查看全部 ></text>
+      </view>
+      
+      <view class="record-list">
+        <!-- 记录列表头部 -->
+        <view class="record-header">
+          <text class="header-col time-col">时间</text>
+          <text class="header-col type-col">操作类型</text>
+          <text class="header-col goods-col">商品名称</text>
+          <text class="header-col count-col">数量</text>
+          <text class="header-col status-col">状态</text>
+        </view>
+        
+        <!-- 记录列表内容 -->
+        <block wx:for="{{recordList}}" wx:key="id">
+          <view class="record-item">
+            <text class="record-col time-col">{{item.time}}</text>
+            <text class="record-col type-col {{item.type === 'in' ? 'type-in' : 'type-out'}}">
+              {{item.type === 'in' ? '入库' : '出库'}}
+            </text>
+            <text class="record-col goods-col">{{item.goodsName}}</text>
+            <text class="record-col count-col">{{item.count}}</text>
+            <text class="record-col status-col {{item.status === 'success' ? 'status-success' : 'status-fail'}}">
+              {{item.status === 'success' ? '成功' : '失败'}}
+            </text>
+          </view>
+        </block>
+        
+        <!-- 空记录提示 -->
+        <view wx:if="{{recordList.length === 0}}" class="empty-record">
+          <text>暂无操作记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+
+<!-- 操作类型选择弹窗（核心：扫码后选入库/出库） -->
+<view class="modal-mask" wx:if="{{showOperTypeModal}}" bindtap="hideOperTypeModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-title">选择操作类型</view>
+    <view class="modal-info">
+      <text class="info-label">商品条码：</text>
+      <text class="info-value">{{scanResult}}</text>
+    </view>
+    <view class="oper-type-btns">
+      <button class="oper-btn in-btn" bindtap="chooseOperType('in')">入库</button>
+      <button class="oper-btn out-btn" bindtap="chooseOperType('out')">出库</button>
+    </view>
+    <button class="modal-btn cancel-btn" bindtap="hideOperTypeModal">取消</button>
+  </view>
+</view>
+
+<!-- 确认操作弹窗（可选：二次确认，防误操作） -->
+<view class="modal-mask" wx:if="{{showConfirmModal}}" bindtap="hideConfirmModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-title">确认{{currentOperType === 'in' ? '入库' : '出库'}}</view>
+    <view class="modal-info">
+      <text class="info-label">商品条码：</text>
+      <text class="info-value">{{scanResult}}</text>
+    </view>
+    <view class="modal-info">
+      <text class="info-label">操作类型：</text>
+      <text class="info-value">{{currentOperType === 'in' ? '入库' : '出库'}}</text>
+    </view>
+    <view class="modal-info">
+      <text class="info-label">操作数量：</text>
+      <input class="count-input" type="number" value="{{operCount}}" bindinput="handleCountInput" placeholder="默认1" />
+    </view>
+    <view class="modal-actions">
+      <button class="modal-btn cancel-btn" bindtap="hideConfirmModal">取消</button>
+      <button class="modal-btn confirm-btn" bindtap="confirmOper">确认执行</button>
+    </view>
+  </view>
+</view>

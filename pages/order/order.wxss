@@ -1,0 +1,532 @@
+/* 基础重置与全局适配：纵向 Flex 且禁止页面级滚动（防跳动核心） */
+page {
+  background-color: #fafafa;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+}
+
+.container {
+  width: 100%;
+  padding: 0 clamp(8px, calc(100vw / 375 * 12), 20px);
+  padding-bottom: clamp(20px, calc(100vw / 375 * 30), 40px);
+  box-sizing: border-box;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.list-scroll-container {
+  flex: 1; 
+  height: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  box-sizing: border-box;
+}
+.list-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(8px, calc(100vw / 375 * 12), 16px) 0;
+  margin-bottom: clamp(12px, calc(100vw / 375 * 10), 20px);
+  width: 100%;
+  min-height: clamp(32px, calc(100vw / 375 * 36), 44px);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.nav-back {
+  width: clamp(32px, calc(100vw / 375 * 36), 44px);
+  height: clamp(32px, calc(100vw / 375 * 36), 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.nav-back-hover, .nav-back:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+.back-icon {
+  width: clamp(24px, calc(100vw / 375 * 40), 36px);
+  height: clamp(24px, calc(100vw / 375 * 40), 36px);
+  max-width: 100%;
+  max-height: 100%;
+}
+.nav-title {
+  font-size: clamp(16px, calc(100vw / 375 * 18), 20px);
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 clamp(4px, calc(100vw / 375 * 8), 12px);
+  flex: 1;
+  text-align: center;
+}
+.nav-scan {
+  width: clamp(32px, calc(100vw / 375 * 36), 44px);
+  height: clamp(32px, calc(100vw / 375 * 36), 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.nav-scan-hover, .nav-scan:active {
+  background-color: #f5f5f5;
+  transform: scale(0.95);
+}
+.scan-icon {
+  width: clamp(16px, calc(100vw / 375 * 20), 24px);
+  height: clamp(16px, calc(100vw / 375 * 20), 24px);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* 筛选区：完美横滑修复 */
+.order-filter {
+  display: flex;
+  flex-wrap: nowrap; /* 必须：禁止换行，排成一排 */
+  overflow-x: auto; /* 必须：原生开启横向滚动 */
+  -webkit-overflow-scrolling: touch;
+  gap: clamp(8px, calc(100vw / 375 * 12), 16px);
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  width: 100%;
+  box-sizing: border-box;
+  /* 关键：上下给予 12px 的内边距，确保下方的阴影（box-shadow）有空间展示而不被切断 */
+  padding: 12px clamp(2px, calc(100vw / 375 * 4), 8px);
+  align-items: center;
+  flex-shrink: 0; 
+}
+
+/* 隐藏 view 标签的原生滚动条 */
+.order-filter::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.filter-item {
+  padding: clamp(6px, calc(100vw / 375 * 8), 10px) clamp(12px, calc(100vw / 375 * 16), 20px);
+  background-color: #fff;
+  border-radius: clamp(16px, calc(100vw / 375 * 20), 24px);
+  font-size: clamp(12px, calc(100vw / 375 * 16), 18px);
+  color: #666;
+  transition: all 0.2s ease;
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(245, 166, 35, 0.06);
+  min-width: clamp(48px, calc(100vw / 375 * 60), 72px);
+  text-align: center;
+  flex-shrink: 0; /* 必须：保证内部胶囊按钮不会被挤压变扁 */
+  touch-action: manipulation;
+}
+.filter-item.active {
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  color: #fff;
+}
+.filter-item:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* 订单列表区域 */
+.order-section {
+  width: 100%;
+  border-radius: clamp(12px, calc(100vw / 375 * 16), 20px);
+  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(245, 166, 35, 0.06);
+  background-color: #fff;
+  padding: clamp(16px, calc(100vw / 375 * 20), 24px);
+  box-sizing: border-box;
+  min-height: auto;
+  margin: 0;
+}
+.order-section.empty-section {
+  padding: clamp(40px, calc(100vw / 375 * 50), 60px) 0;
+  min-height: clamp(100px, calc(100vw / 375 * 120), 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 空数据提示 */
+.empty-record {
+  padding: 0;
+  text-align: center;
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(40px, calc(100vw / 375 * 50), 60px);
+  margin: 0;
+}
+
+/* 订单卡片 */
+.order-card {
+  padding: clamp(16px, calc(100vw / 375 * 20), 24px) 0;
+  border-bottom: 1px solid #f9f9f9;
+  box-sizing: border-box;
+  touch-action: auto;
+}
+.order-card:last-child {
+  border-bottom: none;
+}
+.card-content {
+  width: 100%;
+}
+.order-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  flex-wrap: wrap;
+  row-gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+}
+.order-id {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #333;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+.order-status {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #F5A623;
+  font-weight: 600;
+  padding: clamp(2px, calc(100vw / 375 * 4), 6px) clamp(6px, calc(100vw / 375 * 8), 10px);
+  background-color: rgba(245, 166, 35, 0.1);
+  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
+  flex-shrink: 0;
+}
+
+/* 信息组 */
+.info-group {
+  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
+  width: 100%;
+  box-sizing: border-box;
+}
+.info-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  flex-wrap: wrap;
+  row-gap: clamp(2px, calc(100vw / 375 * 4), 6px);
+  column-gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+}
+.info-label {
+  color: #666;
+  min-width: clamp(40px, calc(100vw / 375 * 50), 60px);
+  flex-shrink: 0;
+}
+.info-value {
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - clamp(48px, calc(100vw / 375 * 60), 72px));
+}
+.ml-12 {
+  margin-left: clamp(8px, calc(100vw / 375 * 12), 16px);
+}
+
+/* 生产工序 */
+.process-box {
+  margin: clamp(12px, calc(100vw / 375 * 16), 20px) 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.process-title {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #666;
+  display: block;
+  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
+}
+.process-flow {
+  display: flex;
+  gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+  flex-wrap: wrap;
+  width: 100%;
+}
+.process-item {
+  padding: clamp(4px, calc(100vw / 375 * 6), 8px) clamp(8px, calc(100vw / 375 * 12), 14px);
+  background-color: #f5f5f5;
+  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #666;
+  transition: all 0.2s ease;
+  min-width: clamp(32px, calc(100vw / 375 * 40), 48px);
+  text-align: center;
+  flex-shrink: 0;
+}
+.process-item.done {
+  background-color: #52C41A;
+  color: #fff;
+}
+
+/* 状态机 */
+.status-flow {
+  display: flex;
+  align-items: center;
+  margin-top: clamp(12px, calc(100vw / 375 * 16), 20px);
+  overflow-x: auto;
+  padding-bottom: clamp(2px, calc(100vw / 375 * 4), 6px);
+  min-height: clamp(24px, calc(100vw / 375 * 30), 36px);
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+.status-flow::-webkit-scrollbar {
+  display: none;
+}
+.node {
+  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  color: #999;
+  white-space: nowrap;
+  padding: clamp(1px, calc(100vw / 375 * 2), 3px) clamp(2px, calc(100vw / 375 * 4), 6px);
+  min-width: clamp(48px, calc(100vw / 375 * 60), 72px);
+  text-align: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.node.active {
+  color: #F5A623;
+  font-weight: 600;
+}
+.node.done {
+  color: #52C41A;
+}
+.line {
+  width: clamp(10px, calc(100vw / 375 * 15), 20px);
+  height: clamp(1px, calc(100vw / 375 * 2), 3px);
+  background-color: #eee;
+  margin: 0 clamp(6px, calc(100vw / 375 * 8), 10px);
+  flex-shrink: 0;
+}
+.line.done {
+  background-color: #52C41A;
+}
+
+/* 订单操作按钮 */
+.order-action {
+  margin-top: calc(100vw / 375 * 16);
+  display: flex;
+  justify-content: flex-end;
+}
+.update-btn {
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  color: #fff;
+  border-radius: calc(100vw / 375 * 8);
+  font-size: calc(100vw / 375 * 14);
+  padding: calc(100vw / 375 * 4) calc(100vw / 375 * 12);
+}
+
+/* 扫码更新状态按钮 */
+.scan-status-btn {
+  display: flex;
+  align-items: center;
+  padding: calc(100vw / 375 * 10) calc(100vw / 375 * 12);
+  border: 1px solid #f5f5f5;
+  border-radius: calc(100vw / 375 * 8);
+  background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
+}
+.scan-small-icon {
+  width: calc(100vw / 375 * 20);
+  height: calc(100vw / 375 * 20);
+  margin-right: calc(100vw / 375 * 8);
+}
+.scan-btn-text {
+  font-size: calc(100vw / 375 * 16);
+  color: #333;
+  flex: 1;
+}
+
+/* 弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+.modal-content {
+  width: clamp(280px, 80%, 360px);
+  max-width: calc(100vw - 40px);
+  background-color: #fff;
+  border-radius: clamp(12px, calc(100vw / 375 * 16), 20px);
+  padding: clamp(20px, calc(100vw / 375 * 24), 28px);
+  box-sizing: border-box;
+  min-width: 260px;
+}
+.modal-title {
+  font-size: clamp(16px, calc(100vw / 375 * 18), 20px);
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: clamp(16px, calc(100vw / 375 * 20), 24px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.modal-info {
+  margin-bottom: clamp(20px, calc(100vw / 375 * 24), 28px);
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(10px, calc(100vw / 375 * 12), 14px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  flex-wrap: wrap;
+  row-gap: clamp(2px, calc(100vw / 375 * 4), 6px);
+}
+.picker-wrap {
+  margin-top: clamp(10px, calc(100vw / 375 * 12), 14px);
+  width: 100%;
+}
+.picker-label {
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #666;
+  display: block;
+  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
+}
+.picker {
+  padding: clamp(8px, calc(100vw / 375 * 10), 12px) clamp(10px, calc(100vw / 375 * 12), 14px);
+  border: 1px solid #f5f5f5;
+  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  color: #333;
+  background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: clamp(36px, calc(100vw / 375 * 44), 48px);
+  display: flex;
+  align-items: center;
+}
+.modal-actions {
+  display: flex;
+  gap: clamp(10px, calc(100vw / 375 * 12), 14px);
+  width: 100%;
+}
+.modal-btn {
+  flex: 1;
+  height: clamp(36px, calc(100vw / 375 * 44), 48px);
+  line-height: clamp(36px, calc(100vw / 375 * 44), 48px);
+  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
+  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  touch-action: manipulation;
+}
+.cancel-btn {
+  background-color: #f5f5f5;
+  color: #666;
+}
+.confirm-btn {
+  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  color: #fff;
+}
+
+/* 通用样式：响应式调整 */
+.mt-20 {
+  margin-top: clamp(16px, calc(100vw / 375 * 20), 24px);
+}
+.stopPropagation {
+  pointer-events: auto;
+}
+
+@media (max-width: 320px) {
+  .order-filter {
+    gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+  }
+  .filter-item {
+    padding: clamp(4px, calc(100vw / 375 * 6), 8px) clamp(10px, calc(100vw / 375 * 12), 14px);
+    min-width: clamp(40px, calc(100vw / 375 * 50), 56px);
+    font-size: 14px;
+  }
+  .node {
+    min-width: clamp(40px, calc(100vw / 375 * 50), 56px);
+    font-size: 12px;
+  }
+  .container {
+    padding: 0 clamp(6px, calc(100vw / 375 * 8), 12px);
+  }
+  .order-section {
+    padding: clamp(12px, calc(100vw / 375 * 16), 20px);
+  }
+  .order-section.empty-section {
+    padding: clamp(30px, calc(100vw / 375 * 40), 50px) 0;
+    min-height: clamp(80px, calc(100vw / 375 * 100), 120px);
+  }
+}
+
+@media (min-width: 414px) {
+  .container { max-width: 440px; margin: 0 auto; }
+  .nav-back, .nav-scan { width: 44px; height: 44px; }
+  .filter-item { min-width: 72px; }
+  .order-section.empty-section {
+    padding: clamp(50px, calc(100vw / 375 * 60), 70px) 0;
+    min-height: clamp(120px, calc(100vw / 375 * 140), 160px);
+  }
+}
+
+@media (min-width: 768px) {
+  .container { max-width: 480px; margin: 20px auto; }
+  page { display: flex; justify-content: center; background-color: #eee; }
+  .list-scroll-container {
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    height: calc(100vh - 40px);
+  }
+  .order-section.empty-section {
+    padding: clamp(60px, calc(100vw / 375 * 70), 80px) 0;
+    min-height: clamp(140px, calc(100vw / 375 * 160), 180px);
+  }
+}
+
+@media (orientation: landscape) {
+  .list-scroll-container { height: 100vh; }
+  .order-section { min-height: auto; }
+  .order-section.empty-section {
+    min-height: calc(100vh - 160px);
+    padding: 40px 0;
+  }
+  .modal-content { width: clamp(300px, 60%, 400px); }
+}

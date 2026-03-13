@@ -1,0 +1,57 @@
+<view class="container">
+  <view class="header-wrapper">
+    <view class="nav-bar">
+      <view class="nav-back" bindtap="handleBack">
+        <image class="back-icon" src="/images/back.png"></image>
+      </view>
+      <view class="nav-title">客户管理</view>
+      <view class="nav-right-placeholder"></view> </view>
+    
+    <view class="action-bar">
+      <view class="search-box">
+        <icon type="search" size="14" color="#999"></icon>
+        <input placeholder="搜索公司或项目名称..." placeholder-class="ph-style" bindinput="handleSearch" />
+      </view>
+      <button class="btn-add" bindtap="goToAdd">
+        <text class="add-icon">+</text> 新增
+      </button>
+    </view>
+  </view>
+
+  <scroll-view class="customer-list" scroll-y="true">
+    <block wx:for="{{customerList}}" wx:key="id">
+      <view class="customer-card" hover-class="card-hover" bindtap="goToDetail" data-id="{{item.id}}">
+        <view class="card-header">
+          <view class="header-left">
+            <text class="company-name">{{item.companyName}}</text>
+            <view class="customer-tag {{item.customerType == 1 ? 'tag-blue' : 'tag-orange'}}">
+              {{item.customerType == 1 ? '总包' : '业主'}}
+            </view>
+          </view>
+          <view class="arrow-right"></view>
+        </view>
+        
+        <view class="card-body">
+          <view class="data-row">
+            <view class="data-item">
+              <text class="data-label">施工区域</text>
+              <text class="data-value">{{item.region}}</text>
+            </view>
+            <view class="data-item">
+              <text class="data-label">项目数</text>
+              <text class="data-value highlight">{{item.projectCount}} 个</text>
+            </view>
+          </view>
+          <view class="project-row">
+            <text class="project-label">当前合作：</text>
+            <text class="project-name">{{item.projectName}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{customerList.length === 0}}" class="empty-holder">
+      <text class="empty-text">暂无客户数据，点击右上角添加</text>
+    </view>
+  </scroll-view>
+</view>

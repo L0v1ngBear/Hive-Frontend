@@ -1,0 +1,141 @@
+<view class="container">
+  <view class="top-nav">
+    <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
+      <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
+    </view>
+    <text class="nav-title">纺织订单管理</text>
+    <view class="nav-scan" bindtap="handleScanOrder" hover-class="nav-scan-hover">
+      <image class="scan-icon" src="/images/scan.png" mode="widthFix" lazy-load="true"></image>
+    </view>
+  </view>
+
+  <view class="order-filter">
+    <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key"
+      catchtap="handleFilter" data-filter="{{item.key}}">
+      {{item.label}}
+    </view>
+  </view>
+
+  <scroll-view 
+    class="list-scroll-container" 
+    scroll-y="true" 
+    scroll-with-animation="true"
+    enhanced="true"
+    bounces="true"
+  >
+    <view class="order-section {{filteredOrderList.length === 0 ? 'empty-section' : ''}}">
+      <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
+        <text>暂无相关订单数据</text>
+      </view>
+
+      <block wx:for="{{filteredOrderList}}" wx:key="orderId">
+        <view class="order-card">
+          <view class="card-content" bindtap="openDetail" data-order="{{item}}">
+            <view class="order-head">
+              <text class="order-id">订单号：{{item.orderId}}</text>
+              <text class="order-status">{{statusMap[item.status]}}</text>
+            </view>
+
+            <view class="info-group">
+              <view class="info-line">
+                <text class="info-label">合作项目：</text>
+                <text class="info-value">{{item.projectName || '暂无项目'}}</text>
+              </view>
+              
+              <view class="info-line">
+                <text class="info-label">型号：</text>
+                <text class="info-value">{{item.model}}</text>
+                <text class="info-label ml-12">面料：</text>
+                <text class="info-value">{{item.fabric}}</text>
+              </view>
+              <view class="info-line">
+                <text class="info-label">克重：</text>
+                <text class="info-value">{{item.weight}}g</text>
+                <text class="info-label ml-12">幅宽：</text>
+                <text class="info-value">{{item.width}}cm</text>
+                <text class="info-label ml-12">颜色：</text>
+                <text class="info-value">{{item.color}}</text>
+              </view>
+              <view class="info-line">
+                <text class="info-label">数量：</text>
+                <text class="info-value">{{item.quantity}}米</text>
+                <text class="info-label ml-12">单价：</text>
+                <text class="info-value">{{item.price}}元/米</text>
+              </view>
+            </view>
+
+            <view class="process-box" wx:if="{{item.status == 'producing'}}">
+              <text class="process-title">当前生产工序：</text>
+              <view class="process-flow">
+                <text class="process-item {{item.process >=1?'done':''}}">整经</text>
+                <text class="process-item {{item.process >=2?'done':''}}">浆纱</text>
+                <text class="process-item {{item.process >=3?'done':''}}">织造</text>
+                <text class="process-item {{item.process >=4?'done':''}}">验布</text>
+                <text class="process-item {{item.process >=5?'done':''}}">卷布</text>
+              </view>
+            </view>
+
+            <view class="status-flow">
+              <view class="node {{item.status=='pending_confirm'?'active':(item.statusIndex>=0?'done':'')}}">待确认</view>
+              <view class="line {{item.statusIndex>=1?'done':''}}"></view>
+              <view class="node {{item.status=='pending_material'?'active':(item.statusIndex>=1?'done':'')}}">备料</view>
+              <view class="line {{item.statusIndex>=2?'done':''}}"></view>
+              <view class="node {{item.status=='producing'?'active':(item.statusIndex>=2?'done':'')}}">生产</view>
+              <view class="line {{item.statusIndex>=3?'done':''}}"></view>
+              <view class="node {{item.status=='pending_ship'?'active':(item.statusIndex>=3?'done':'')}}">待发</view>
+              <view class="line {{item.statusIndex>=4?'done':''}}"></view>
+              <view class="node {{item.status=='completed'?'active':''}}">完成</view>
+            </view>
+          </view>
+
+          <view class="order-action" catchtap="openUpdateModal" data-order="{{item}}">
+            <button class="update-btn" size="mini" type="primary">更新状态</button>
+          </view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>
+
+<view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-title">更新订单状态</view>
+    <view class="modal-info" wx:if="{{currentOrder}}">
+      <view class="info-row">
+        <text class="info-label">订单：</text>
+        <text class="info-value">{{currentOrder.orderId}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">项目：</text>
+        <text class="info-value">{{currentOrder.projectName || '暂无项目'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">型号：</text>
+        <text class="info-value">{{currentOrder.model}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">当前状态：</text>
+        <text class="info-value">{{statusMap[currentOrder.status]}}</text>
+      </view>
+
+      <view class="picker-wrap mt-20" wx:if="{{currentOrder.status == 'producing'}}">
+        <text class="picker-label">更新生产工序：</text>
+        <picker value="{{step}}" range="{{steps}}" bindchange="changeStep">
+          <view class="picker">{{steps[step]}}</view>
+        </picker>
+      </view>
+
+      <view class="picker-wrap mt-20" wx:else>
+        <text class="picker-label">更新状态：</text>
+        <view class="scan-status-btn" bindtap="scanToUpdateStatus">
+          <image class="scan-small-icon" src="/images/scan.png" mode="widthFix"></image>
+          <text class="scan-btn-text">扫码更新状态</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-btn cancel-btn" bindtap="closeModal">取消</button>
+      <button class="modal-btn confirm-btn" bindtap="confirmUpdate" wx:if="{{currentOrder}}">确认更新</button>
+    </view>
+  </view>
+</view>
