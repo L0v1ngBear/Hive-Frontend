@@ -10,7 +10,7 @@
       <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
         <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true" />
       </view>
-      <text class="nav-title">次品管理</text>
+      <text class="nav-title">次品</text>
       <view class="nav-add" bindtap="openAddModal" hover-class="nav-add-hover">
         <image class="add-icon" src="/images/add.png" mode="widthFix" lazy-load="true" />
       </view>
