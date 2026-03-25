@@ -10,7 +10,7 @@ const MOCK_TENANT_LIST = [
 ];
 
 // 测试用后续删除
-const TEST_TENANT_ID = 'test_001';
+const TEST_TENANT_ID = 'TENANT_001';
 const TEST_TENANT_NAME = '测试租户';
 
 module.exports = {

@@ -1,17 +1,11 @@
 // 引入租户工具（之前封装的 tenant.js）
 const tenantUtil = require('./tenant.js');
 
-
+// 【 fix 】你的正式后端地址（必须 HTTPS + 合法域名）
+const BASE_URL = 'http://www.dtvl.top/api';
 
 /**
- * 封装微信小程序请求方法，自动带租户ID
- * @param {Object} options - 请求配置
- * @param {String} options.url - 接口地址
- * @param {String} [options.method='POST'] - 请求方法
- * @param {Object} [options.data={}] - 请求参数
- * @param {Boolean} [options.showLoading=true] - 是否显示加载中
- * @param {Boolean} [options.needTenant=true] - 是否需要带租户ID
- * @returns {Promise} - 返回Promise
+ * 封装微信小程序请求方法，自动带租户ID + user_id + 自动拼接URL
  */
 function request(options) {
   const {
@@ -22,58 +16,75 @@ function request(options) {
     needTenant = true
   } = options;
 
-  // 1. 前置校验：如果需要租户ID但未获取到，直接reject
+  // 1. 获取租户ID
   const tenantId = tenantUtil.getTenantId();
   if (needTenant && !tenantId) {
     wx.showToast({ title: '请先选择租户', icon: 'none' });
-    return Promise.reject(new Error('缺少租户ID'));
+    return Promise.reject('缺少租户ID');
   }
 
-  // 2. 显示加载提示（可选）
+  // 2. 获取 user_id
+  const userId = wx.getStorageSync('user_id') || '1';
+
+  // 3. 加载
   if (showLoading) {
-    wx.showLoading({ title: '处理中...', mask: true });
+    wx.showLoading({ title: '加载中...', mask: true });
   }
 
-  // 3. 构造请求头（自动加租户ID）
+  // 4. 请求头
   const header = {
     'content-type': 'application/json',
-    ...(needTenant && { 'Tenant-Id': tenantId }) // 自动添加租户ID到请求头
+    ...(needTenant && { 'Tenant-Code': tenantId }),
+    'User-Id': userId
   };
 
-  // 4. 返回Promise，简化异步调用
+  // 5. 【关键修复】自动拼接 URL，并且自动处理斜杠问题
+  let fullUrl = url;
+  if (!url.startsWith('http')) {
+    fullUrl = BASE_URL + url;
+  }
+
+  console.log('✅ 请求地址：', fullUrl); // 这里会打印真实地址
+  console.log('✅ 请求头：', header);
+
+  // 6. 发起请求
   return new Promise((resolve, reject) => {
     wx.request({
-      url: url,
+      url: fullUrl,
       method: method,
       header: header,
       data: data,
+      timeout: 10000, // 超时时间
       success: (res) => {
-        // 统一隐藏加载提示
         if (showLoading) wx.hideLoading();
-
-        // 统一处理后端返回的错误码（比如401未授权、403无权限）
-        if (res.data.code === 200) {
-          resolve(res.data); // 成功：返回后端数据
+        if (res.statusCode === 200) {
+          resolve(res.data);
         } else {
-          // 统一错误提示（可根据业务调整）
-          wx.showToast({ title: res.data.msg || '请求失败', icon: 'none' });
-          reject(new Error(res.data.msg || '请求失败'));
+          wx.showToast({ title: '服务器异常', icon: 'none' });
+          reject(res);
         }
       },
       fail: (err) => {
-        // 统一隐藏加载提示
         if (showLoading) wx.hideLoading();
-
-        // 统一网络错误提示
-        wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+        console.error('❌ 请求失败详情：', err); // 看这里！
+        wx.showToast({ title: '网络请求失败', icon: 'none' });
         reject(err);
-        console.error(`接口请求失败：${url}`, err);
       }
     });
   });
 }
 
-// 导出封装后的请求方法
+// 快捷方法
+function get(url, options = {}) {
+  return request({ ...options, url, method: 'GET' });
+}
+
+function post(url, data, options = {}) {
+  return request({ ...options, url, method: 'POST', data });
+}
+
 module.exports = {
-  request
+  request,
+  get,
+  post
 };

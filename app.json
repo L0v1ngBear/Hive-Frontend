@@ -11,6 +11,14 @@
     "pages/customer/customer",
     "pages/customer/customerEdit"
   ],
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于考勤打卡" 
+    }
+  },
   "window": {
     "navigationBarTextStyle": "black",
     "navigationStyle": "custom"
