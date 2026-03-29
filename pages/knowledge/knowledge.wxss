@@ -1,1 +1,153 @@
-/* pages/knowledge/knowledge.wxss */
+page {
+  background-color: #f7f8fa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 顶部工具栏 (类似 Windows 顶部导航) */
+.toolbar {
+  background: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.btn-group {
+  display: flex;
+  gap: 40rpx;
+}
+.tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tool-btn .icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 8rpx;
+}
+.tool-btn text {
+  font-size: 24rpx;
+  color: #333;
+}
+
+/* 地址栏/面包屑 */
+.breadcrumb {
+  background: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.breadcrumb-scroll {
+  white-space: nowrap;
+}
+.bread-text {
+  font-size: 28rpx;
+  color: #0078D7; /* Windows 蓝 */
+  font-weight: 500;
+}
+.separator {
+  font-size: 28rpx;
+  color: #999;
+  margin: 0 12rpx;
+}
+
+/* 列表区 */
+.file-list {
+  flex: 1;
+  background: #fff;
+  margin-top: 16rpx;
+  overflow: hidden;
+}
+.list-header {
+  display: flex;
+  padding: 16rpx 30rpx;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 24rpx;
+  color: #999;
+}
+.col-name { flex: 1; }
+.col-date { width: 180rpx; text-align: right; margin-right: 60rpx; }
+
+/* 每一行文件/文件夹 */
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  border-bottom: 1px solid #f9f9f9;
+  transition: background 0.2s;
+}
+.file-item:active {
+  background-color: #f0f8ff; /* 选中效果 */
+}
+.item-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.type-icon {
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 20rpx;
+}
+.item-name {
+  font-size: 28rpx;
+  color: #333;
+}
+.item-date {
+  font-size: 24rpx;
+  color: #999;
+  width: 180rpx;
+  text-align: right;
+}
+.more-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dot {
+  font-size: 36rpx;
+  color: #666;
+  line-height: 1;
+  margin-top: -16rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding-top: 200rpx;
+  font-size: 28rpx;
+}
+
+/* 弹窗通用样式 */
+.modal-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+.modal-content {
+  background: #fff; width: 600rpx; border-radius: 16rpx; padding: 40rpx;
+}
+.modal-title {
+  font-size: 32rpx; font-weight: bold; margin-bottom: 30rpx; text-align: center;
+}
+.modal-input {
+  background: #f5f5f5; height: 80rpx; border-radius: 8rpx; padding: 0 20rpx; margin-bottom: 40rpx; font-size: 28rpx;
+}
+.modal-btns {
+  display: flex; gap: 20rpx;
+}
+.btn {
+  flex: 1; height: 80rpx; line-height: 80rpx; font-size: 28rpx; border-radius: 8rpx;
+}
+.btn.cancel { background: #f0f0f0; color: #666; }
+.btn.confirm { background: #0078D7; color: #fff; }

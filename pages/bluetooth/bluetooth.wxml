@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="header">
+    <text class="title">附近的蓝牙设备</text>
+    <button class="scan-btn" bindtap="startScan" type="primary" loading="{{isScanning}}">
+      {{isScanning ? '搜索中...' : '重新搜索'}}
+    </button>
+  </view>
+
+  <scroll-view class="device-list" scroll-y>
+    <view class="device-item" 
+          wx:for="{{devices}}" 
+          wx:key="deviceId" 
+          bindtap="connectDevice" 
+          data-device="{{item}}">
+      <view class="device-info">
+        <text class="device-name">{{item.name || item.localName || '未知打印机'}}</text>
+        <text class="device-id">{{item.deviceId}}</text>
+      </view>
+      <text class="connect-status" wx:if="{{connectedDeviceId === item.deviceId}}">已连接</text>
+    </view>
+    
+    <view class="empty" wx:if="{{devices.length === 0 && !isScanning}}">
+      未搜索到设备，请确保打印机已开机且未被其他手机连接
+    </view>
+  </scroll-view>
+</view>

@@ -4,52 +4,64 @@
       <view class="nav-back" bindtap="handleBack">
         <image class="back-icon" src="/images/back.png"></image>
       </view>
-      <text class="nav-title">布匹库存管理</text>
+      <text class="nav-title">智慧仓储看板</text>
       <view class="nav-scan" bindtap="handleScanCode">
         <image class="scan-icon" src="/images/scan.png"></image>
       </view>
     </view>
 
-    <view class="inventory-overview">
-      <view class="overview-title">库存概览</view>
-      <view class="overview-stats">
-        <view class="stat-item">
-          <text class="stat-label">总匹数</text>
-          <text class="stat-value">{{totalRollCount}}</text>
+    <view class="warning-section" wx:if="{{lowStockList.length > 0}}">
+      <view class="warning-header">
+        <icon type="warn" size="18" color="#F5222D"></icon>
+        <text class="warning-title">库存预警 ({{lowStockList.length}}条型号告急)</text>
+      </view>
+      <swiper class="warning-swiper" vertical autoplay circular interval="3000">
+        <swiper-item wx:for="{{lowStockList}}" wx:key="modelCode">
+          <view class="warning-item">
+            <text class="w-model">{{item.modelCode}}</text>
+            <text class="w-msg">当前余量 {{item.meters}}m，建议及时补货</text>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <view class="chart-section">
+      <view class="section-header">
+        <text class="section-title">出入库趋势 (近7日)</text>
+        <view class="chart-legend">
+          <view class="legend-item"><view class="dot in"></view>入库</view>
+          <view class="legend-item"><view class="dot out"></view>出库</view>
         </view>
-        <view class="stat-item">
-          <text class="stat-label">总米数</text>
-          <text class="stat-value">{{totalMeters}}</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-label">今日入库</text>
-          <text class="stat-value in-stock">{{todayInMeters}}</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-label">今日出库</text>
-          <text class="stat-value out-stock">{{todayOutMeters}}</text>
-        </view>
+      </view>
+      <view class="chart-container">
+        <canvas canvas-id="trendChart" class="trend-canvas"></canvas>
       </view>
     </view>
 
     <view class="quick-actions">
       <view class="action-item" bindtap="handleAddCloth">
-        <image class="action-icon" src="/images/hand.png"></image>
+        <view class="action-icon-wrapper hand">
+          <image class="action-icon" src="/images/hand.png"></image>
+        </view>
         <text class="action-text">手动入库</text>
       </view>
       <view class="action-item" bindtap="handleScanCode">
-        <image class="action-icon" src="/images/scan_all.png"></image>
+        <view class="action-icon-wrapper scan">
+          <image class="action-icon" src="/images/scan_all.png"></image>
+        </view>
         <text class="action-text">扫码出库</text>
       </view>
       <view class="action-item" bindtap="handleStockCheck">
-        <image class="action-icon" src="/images/check.png"></image>
+        <view class="action-icon-wrapper check">
+          <image class="action-icon" src="/images/check.png"></image>
+        </view>
         <text class="action-text">布匹盘点</text>
       </view>
     </view>
 
     <view class="record-section">
       <view class="section-title">
-        <text>最近操作</text>
+        <text>最近操作记录</text>
         <text class="show-all" bindtap="handleShowAllRecord">查看全部</text>
       </view>
 
@@ -81,98 +93,18 @@
 <view class="modal-mask" wx:if="{{showClothModal}}" bindtap="hideClothModal">
   <view class="modal-content" catchtap="stopPropagation">
     <view class="modal-title">布匹信息</view>
-    <view class="info-row-display">
-      <text class="label">条码：</text>
-      <text class="value">{{barcode}}</text>
-    </view>
-    <view class="info-row-display">
-      <text class="label">型号：</text>
-      <text class="value">{{clothInfo.model || clothInfo.modelCode}}</text>
-    </view>
-    <view class="info-row-display">
-      <text class="label">当前规格：</text>
-      <text class="value">{{clothInfo.spec}}</text>
-    </view>
-    <view class="info-row-display">
-      <text class="label">当前米数：</text>
-      <text class="value">{{clothInfo.meters}} m</text>
-    </view>
-    
+    <view class="info-row-display"><text class="label">条码：</text><text class="value">{{barcode}}</text></view>
+    <view class="info-row-display"><text class="label">型号：</text><text class="value">{{clothInfo.model || clothInfo.modelCode}}</text></view>
+    <view class="info-row-display"><text class="label">当前规格：</text><text class="value">{{clothInfo.spec}}</text></view>
+    <view class="info-row-display"><text class="label">当前米数：</text><text class="value">{{clothInfo.meters}} m</text></view>
     <view class="info-input-row">
       <text class="label">{{currentOperType === 'in' ? '入库米数：' : '出库米数：'}}</text>
       <input class="modal-input" type="digit" bindinput="onMetersInput" placeholder="请输入米数" value="{{inputMeters}}" focus />
     </view>
-
     <view class="oper-btns">
       <button class="btn in" bindtap="doIn" wx:if="{{currentOperType === 'in'}}">确认入库</button>
       <button class="btn out" bindtap="doOut" wx:if="{{currentOperType === 'out'}}">确认出库</button>
       <button class="btn cancel" bindtap="hideClothModal">取消</button>
     </view>
-  </view>
-</view>
-
-<view class="modal-mask" wx:if="{{showAddClothModal}}" bindtap="hideAddClothModal">
-  <view class="modal-content add-cloth-modal" catchtap="stopPropagation">
-    <view class="modal-title">新增布匹入库</view>
-
-    <view class="info-row">
-      <text class="label">型号：</text>
-      <view class="input-container">
-        <input class="modal-input" type="text" 
-               bindinput="onModelSearch" 
-               placeholder="输入型号搜索" 
-               value="{{clothForm.modelCode}}" />
-        
-        <view class="model-list" wx:if="{{showModelList && modelOptions.length > 0}}">
-          <view class="model-item" 
-                wx:for="{{modelOptions}}" 
-                wx:key="index" 
-                bindtap="chooseModel" 
-                data-model="{{item.modelCode}}" 
-                data-spec="{{item.spec}}">
-            <text class="m-code">{{item.modelCode}}</text>
-            <text class="m-spec">规格: {{item.spec}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <view class="info-row">
-      <text class="label">米数：</text>
-      <input class="modal-input" type="digit" 
-             bindinput="onFormInput" 
-             data-field="meters" 
-             placeholder="请输入米数" 
-             value="{{clothForm.meters}}" />
-    </view>
-
-    <view class="info-row">
-      <text class="label">规格：</text>
-      <input class="modal-input" type="digit" 
-             bindinput="onFormInput" 
-             data-field="spec" 
-             placeholder="请输入规格(如门幅)" 
-             value="{{clothForm.spec}}" />
-    </view>
-
-    <view class="oper-btns">
-      <button class="btn in" bindtap="doAddCloth">确认提交</button>
-      <button class="btn cancel" bindtap="hideAddClothModal">取消</button>
-    </view>
-  </view>
-</view>
-
-<view class="modal-mask" wx:if="{{showPrintModal}}" bindtap="hidePrintModal">
-  <view class="modal-content" catchtap="stopPropagation">
-    <view class="modal-title">入库成功</view>
-    <view class="modal-info">
-      <view class="info-line"><text>条码：</text><text>{{printData.barcode}}</text></view>
-      <view class="info-line"><text>型号：</text><text>{{printData.modelCode}}</text></view>
-    </view>
-    <view class="print-type-btns">
-      <button class="print-btn preview-btn" bindtap="choosePrintType" data-type="preview">预览标签</button>
-      <button class="print-btn bluetooth-btn" bindtap="choosePrintType" data-type="bluetooth">蓝牙打印</button>
-    </view>
-    <button class="modal-btn cancel-btn" bindtap="hidePrintModal">关闭</button>
   </view>
 </view>
