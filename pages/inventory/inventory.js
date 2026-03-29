@@ -5,8 +5,8 @@ Page({
   data: {
     // 核心看板数据
     lowStockList: [], // 异常预警列表
-    recordList: [],
-    
+    recordList: [],   // 最近操作记录
+
     // UI 控制
     showClothModal: false,
     showAddClothModal: false,
@@ -28,49 +28,131 @@ Page({
   },
 
   /**
-   * 刷新看板数据：预警 + 记录 + 统计
+   * 刷新看板数据：并发请求预警、记录和趋势数据
    */
   async refreshDashboard() {
     try {
-      const res = await request({ url: '/inventory/overView', method: 'GET' });
-      if (res.code === 200 || res.code === 0) {
-        this.setData({
-          // 假设后端返回 lowStocks 字段，若没有则模拟两条数据演示
-          lowStockList: res.data.lowStocks || [
-            { modelCode: '黑色莱卡-S1', meters: 5.5 },
-            { modelCode: '白色平纹-A2', meters: 2.1 }
-          ],
-          recordList: res.data.recentRecords || []
-        });
-        // 渲染图表
-        this.drawTrendChart();
+      // 同时发起 3 个请求，不互相阻塞
+      const [warnRes, recordRes, trendRes] = await Promise.all([
+        request({ url: '/inventory/warning/list', method: 'GET' }).catch(() => ({})),
+        request({ url: '/inventory/record/recent', method: 'GET' }).catch(() => ({})),
+        request({ url: '/inventory/trend', method: 'GET' }).catch(() => ({}))
+      ]);
+      
+      // 1. 赋值预警数据
+      if (warnRes.code === 200 || warnRes.code === 0) {
+        this.setData({ lowStockList: warnRes.data || [] });
       }
+      
+      // 2. 赋值操作记录
+      if (recordRes.code === 200 || recordRes.code === 0) {
+        this.setData({ recordList: recordRes.data || [] });
+      }
+      
+      // 3. 拿到趋势数据后，交给 Canvas 画图
+      // 如果后端还没写好接口，就传入 null，画图函数里我写了假数据托底
+      this.drawTrendChart((trendRes.code === 200 || trendRes.code === 0) ? trendRes.data : null);
+
     } catch (err) {
-      console.error("加载概览失败", err);
+      console.error("加载看板数据失败", err);
     }
   },
 
   /**
-   * 绘制简易趋势图 (Canvas)
+   * 带有坐标轴的趋势图绘制 (Canvas)
    */
-  drawTrendChart() {
+  drawTrendChart(trendData) {
+    // 如果后端接口没数据，先用模拟数据让图表显示出来
+    if (!trendData || !trendData.inMeters) {
+      trendData = {
+        dates: ["10-21", "10-22", "10-23", "10-24", "10-25", "10-26", "今天"],
+        inMeters: [120, 300, 150, 50, 400, 210, 350],
+        outMeters: [50, 100, 80, 200, 10, 30, 90]
+      };
+    }
+
     const ctx = wx.createCanvasContext('trendChart');
-    const width = 340, height = 150;
+    // 获取屏幕宽度，动态计算 Canvas 宽度 (减去两边的 padding 大约 40px)
+    const screenWidth = wx.getSystemInfoSync().windowWidth;
+    const canvasWidth = screenWidth - 40; 
+    const canvasHeight = 120; // 对应 WXSS 中的 240rpx 左右
 
-    // 绘制入库线 (蓝色)
-    ctx.beginPath();
-    ctx.setStrokeStyle('#1890FF');
-    ctx.setLineWidth(2);
-    ctx.moveTo(10, 120); ctx.lineTo(60, 40); ctx.lineTo(120, 90);
-    ctx.lineTo(180, 30); ctx.lineTo(240, 70); ctx.lineTo(300, 50);
-    ctx.stroke();
+    // 图表的内边距 (留给坐标轴文字的空间)
+    const paddingLeft = 35;   // 左侧留出 35px 画 Y 轴数字
+    const paddingBottom = 20; // 底部留出 20px 画 X 轴日期
+    const paddingTop = 10;
+    
+    // 实际用来画折线的区域宽高
+    const chartWidth = canvasWidth - paddingLeft - 10;
+    const chartHeight = canvasHeight - paddingBottom - paddingTop;
 
-    // 绘制出库线 (绿色)
-    ctx.beginPath();
-    ctx.setStrokeStyle('#52C41A');
-    ctx.moveTo(10, 140); ctx.lineTo(80, 100); ctx.lineTo(160, 110);
-    ctx.lineTo(240, 40); ctx.lineTo(320, 80);
-    ctx.stroke();
+    const { dates, inMeters, outMeters } = trendData;
+    const daysCount = dates.length;
+    
+    // 找出数据中的最大值，用来计算 Y 轴上限
+    let maxVal = Math.max(...inMeters, ...outMeters, 100);
+    // 把最大值向上取整（比如最大是350，就当成400来画网格，好看一点）
+    maxVal = Math.ceil(maxVal / 100) * 100; 
+
+    // ---- 1. 绘制背景网格和 Y 轴数字 ----
+    ctx.setFontSize(10);
+    ctx.setFillStyle('#999999');
+    ctx.setTextAlign('right');
+    const ySteps = 4; // 画 4 条横向网格线
+    for (let i = 0; i <= ySteps; i++) {
+      const val = (maxVal / ySteps) * i;
+      const y = paddingTop + chartHeight - (chartHeight / ySteps) * i;
+      
+      // 画 Y 轴数字 (如 0, 100, 200)
+      ctx.fillText(val.toString(), paddingLeft - 5, y + 4);
+      
+      // 画淡淡的横向网格线
+      ctx.beginPath();
+      ctx.setStrokeStyle('#eeeeee');
+      ctx.setLineWidth(1);
+      ctx.moveTo(paddingLeft, y);
+      ctx.lineTo(canvasWidth, y);
+      ctx.stroke();
+    }
+
+    // ---- 2. 绘制 X 轴日期 ----
+    ctx.setTextAlign('center');
+    dates.forEach((date, i) => {
+      const x = paddingLeft + (chartWidth / (daysCount - 1)) * i;
+      ctx.fillText(date, x, canvasHeight - 2);
+    });
+
+    // ---- 3. 封装一个画折线的方法 ----
+    const drawLine = (dataArray, color) => {
+      ctx.beginPath();
+      ctx.setStrokeStyle(color);
+      ctx.setLineWidth(2);
+      ctx.setLineJoin('round'); // 折角圆润
+      dataArray.forEach((val, i) => {
+        const x = paddingLeft + (chartWidth / (daysCount - 1)) * i;
+        const y = paddingTop + chartHeight - (val / maxVal) * chartHeight;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      
+      // 画折线上的小圆点
+      dataArray.forEach((val, i) => {
+        const x = paddingLeft + (chartWidth / (daysCount - 1)) * i;
+        const y = paddingTop + chartHeight - (val / maxVal) * chartHeight;
+        ctx.beginPath();
+        ctx.setFillStyle('#ffffff');
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.setStrokeStyle(color);
+        ctx.setLineWidth(1.5);
+        ctx.stroke();
+      });
+    };
+
+    // 分别画入库和出库的线
+    drawLine(inMeters, '#1890FF');  // 蓝色
+    drawLine(outMeters, '#52C41A'); // 绿色
 
     ctx.draw();
   },
