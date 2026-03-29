@@ -1,0 +1,69 @@
+<view class="container">
+  <view class="top-nav">
+    <view class="nav-back" bindtap="handleBack">
+      <image class="back-icon" src="/images/back.png" mode="widthFix"></image>
+    </view>
+    <text class="nav-title">新建销售订单</text>
+    <view class="nav-scan"></view> </view>
+
+  <scroll-view class="form-scroll-container" scroll-y="true">
+    <view class="form-card">
+      <view class="card-title">基础信息</view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>客户名称</text>
+        <input class="form-input" placeholder="请输入客户名称" placeholder-class="placeholder" 
+               value="{{formData.customerName}}" bindinput="handleInput" data-field="customerName" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">项目名称</text>
+        <input class="form-input" placeholder="请输入所属项目 (选填)" placeholder-class="placeholder" 
+               value="{{formData.projectName}}" bindinput="handleInput" data-field="projectName" />
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="card-title">商品与金额</view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>商品描述</text>
+        <input class="form-input" placeholder="如: T800-210 涤纶弹力布" placeholder-class="placeholder" 
+               value="{{formData.goodsDesc}}" bindinput="handleInput" data-field="goodsDesc" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>总数量(米)</text>
+        <input class="form-input" type="digit" placeholder="请输入订单总米数" placeholder-class="placeholder" 
+               value="{{formData.totalQuantity}}" bindinput="handleInput" data-field="totalQuantity" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>总金额(元)</text>
+        <input class="form-input" type="digit" placeholder="请输入订单总金额" placeholder-class="placeholder" 
+               value="{{formData.totalAmount}}" bindinput="handleInput" data-field="totalAmount" />
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="card-title">交期与备注</view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>交货日期</text>
+        <picker mode="date" value="{{formData.deliveryDate}}" start="{{minDate}}" bindchange="handleDateChange">
+          <view class="picker-view {{formData.deliveryDate ? '' : 'placeholder'}}">
+            {{formData.deliveryDate || '请选择交货日期'}}
+          </view>
+        </picker>
+        <text class="arrow-right">></text>
+      </view>
+    </view>
+
+    <view class="safe-bottom-area"></view>
+  </scroll-view>
+
+  <view class="fixed-bottom-bar">
+    <button class="btn btn-cancel" bindtap="handleBack">取消</button>
+    <button class="btn btn-submit" bindtap="handleSubmit">提交订单</button>
+  </view>
+</view>

@@ -13,7 +13,7 @@ Page({
     offWorkEndTime: '18:30',
     
     // 初始化为空，由 onLoad 从缓存中读取
-    userId: '' 
+    userId: 1 
   },
 
   onLoad(options) {

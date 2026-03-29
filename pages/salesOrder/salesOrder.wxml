@@ -10,17 +10,20 @@
     </view>
   </view>
 
-  <view class="order-filter">
-    <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key"
-      bindtap="handleFilter" data-filter="{{item.key}}">
-      {{item.label}}
+  <scroll-view class="order-filter-scroll" scroll-x="true" enable-flex="true">
+    <view class="order-filter">
+      <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key"
+        bindtap="handleFilter" data-filter="{{item.key}}">
+        {{item.label}}
+      </view>
     </view>
-  </view>
+  </scroll-view>
+
   <scroll-view class="list-scroll-container show-scrollbar" scroll-y="true" enhanced="true" bounces="true"
     show-scrollbar="true">
     <view class="order-section">
       <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
-        <text>暂无相关销售订单</text>
+        <text>暂无相关订单</text>
       </view>
 
       <block wx:for="{{filteredOrderList}}" wx:key="orderId">
@@ -62,10 +65,18 @@
           </view>
 
           <view class="order-action">
-            <button wx:if="{{item.status === 'pending_pay'}}" class="action-btn btn-primary" size="mini"
-              catchtap="handleAction" data-type="pay" data-order="{{item}}">确认收款</button>
+            <button wx:if="{{item.status === 'pending_confirm'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="confirm" data-order="{{item}}">确认订单</button>
+            
+            <button wx:if="{{item.status === 'pending_material'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="material_done" data-order="{{item}}">备料完成</button>
+            
+            <button wx:if="{{item.status === 'producing'}}" class="action-btn btn-primary" size="mini"
+              catchtap="handleAction" data-type="produce_done" data-order="{{item}}">生产完成</button>
+            
             <button wx:if="{{item.status === 'pending_ship'}}" class="action-btn btn-primary" size="mini"
               catchtap="handleAction" data-type="ship" data-order="{{item}}">录入发货</button>
+            
             <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-default" size="mini"
               catchtap="handleAction" data-type="logistics" data-order="{{item}}">查看物流</button>
             <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-primary" size="mini"
@@ -73,6 +84,14 @@
           </view>
         </view>
       </block>
+
+      <view style="height: 140rpx; width: 100%;"></view>
     </view>
   </scroll-view>
+
+  <view class="fixed-bottom-bar">
+    <button class="create-order-btn" bindtap="handleCreateOrder">
+      <text class="plus-icon">+</text> 新建销售订单
+    </button>
+  </view>
 </view>

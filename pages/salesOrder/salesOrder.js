@@ -3,20 +3,23 @@ Page({
     currentFilter: 'all',
     filterList: [
       { key: 'all', label: '全部' },
-      { key: 'pending_pay', label: '待收款' },
-      { key: 'pending_ship', label: '待发货' },
-      { key: 'shipped', label: '已发货' },
-      { key: 'completed', label: '已完成' }
+      { label: '待确认', key: 'pending_confirm' },
+      { label: '备料中', key: 'pending_material' },
+      { label: '生产中', key: 'producing' },
+      { label: '待发货', key: 'pending_ship' },
+      { label: '已发货', key: 'shipped' },
+      { label: '已完成', key: 'completed' }
     ],
     orderList: [],
     filteredOrderList: [],
     statusMap: {
-      pending_pay: '待收款',
-      pending_ship: '待发货',
-      shipped: '已发货',
-      completed: '已完成',
-      cancelled: '已取消'
-    }
+      'pending_confirm': '待确认',
+      'pending_material': '备料中',
+      'producing': '生产中',
+      'pending_ship': '待发货',
+      'shipped': '已发货',
+      'completed': '已完成'
+    },
   },
 
   onLoad(options) {
@@ -24,11 +27,11 @@ Page({
   },
 
   mockGetSalesOrderData() {
-    // 模拟销售订单数据
+    // 模拟销售订单数据 (状态已修正为新的枚举对应状态)
     const mockData = [
       {
         orderId: 'SO20260312001',
-        status: 'pending_pay',
+        status: 'pending_confirm', // 原 pending_pay 修改为 pending_confirm
         customerName: '杭州锦绣服饰有限公司',
         goodsDesc: 'T800-210 涤纶弹力布 等2件',
         totalAmount: '14250.00',
@@ -84,9 +87,11 @@ Page({
   handleAction(e) {
     const { type, order } = e.currentTarget.dataset;
     
-    // 模拟按钮操作交互
+    // 根据新的状态节点修正提示语
     const actionMap = {
-      pay: '确认已收到款项？',
+      confirm: '确认接受该订单？',
+      material_done: '确认备料已完成，流转至生产？',
+      produce_done: '确认生产已完成，流转至待发货？',
       ship: '准备发货并录入物流单号？',
       finish: '确认客户已签收并完成订单？'
     };
@@ -106,6 +111,11 @@ Page({
         }
       }
     });
+  },
+
+  // === 新增：处理新建订单点击 ===
+  handleCreateOrder() {
+    wx.navigateTo({ url: '/pages/salesOrderCreate/salesOrderCreate' });
   },
 
   openDetail(e) {

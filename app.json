@@ -10,7 +10,8 @@
     "pages/badProduct/badProduct",
     "pages/customer/customer",
     "pages/customer/customerEdit",
-    "pages/bluetooth/bluetooth"
+    "pages/bluetooth/bluetooth",
+    "pages/salesOrderCreate/salesOrderCreate"
   ],
   "requiredPrivateInfos": [
     "getLocation"
