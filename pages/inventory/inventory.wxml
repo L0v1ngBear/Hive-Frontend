@@ -4,7 +4,7 @@
       <view class="nav-back" bindtap="handleBack">
         <image class="back-icon" src="/images/back.png"></image>
       </view>
-      <text class="nav-title">智慧仓储看板</text>
+      <text class="nav-title">库存管理</text>
       <view class="nav-scan" bindtap="handleScanCode">
         <image class="scan-icon" src="/images/scan.png"></image>
       </view>

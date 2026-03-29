@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request.js');
-const printerUtil = require('../../utils/printer.js');
+const printerUtil = require('../../utils/printer.js'); 
 
 Page({
   data: {
@@ -38,18 +38,17 @@ Page({
         request({ url: '/inventory/record/recent', method: 'GET' }).catch(() => ({})),
         request({ url: '/inventory/trend', method: 'GET' }).catch(() => ({}))
       ]);
-
+      
       // 1. 赋值预警数据
       if (warnRes.code === 200 || warnRes.code === 0) {
         this.setData({ lowStockList: warnRes.data || [] });
       }
-
-      // 2. 赋值操作记录 (重点修改了这里的映射逻辑)
+      
+      // 2. 赋值操作记录 (适配后端的 InventoryRecordVO 字段)
       if (recordRes.code === 200 || recordRes.code === 0) {
-        // 适配后端的 InventoryRecordVO 字段
         const rawList = recordRes.data || [];
         const formattedList = rawList.map(item => {
-
+          // 格式化时间：截取 "2026-03-29 10:15"
           let fTime = item.createTime || '';
           if (fTime.includes('T')) {
             fTime = fTime.substring(5, 16).replace('T', ' ');
@@ -58,17 +57,18 @@ Page({
           return {
             id: item.id,
             time: fTime,
+            // 0 是入库，其他是出库 (请确保后端 0 表示入库)
             type: item.operateType === 0 ? 'in' : 'out',
-            model: item.modelCode,        // 映射 modelCode
-            meters: item.operateMeters    // 映射 operateMeters
+            model: item.modelCode,        
+            meters: item.operateMeters    
           };
         });
 
         this.setData({ recordList: formattedList });
       }
-
+      
       // 3. 拿到趋势数据后，交给 Canvas 画图
-      this.drawTrendChart((trendRes.code === 300 || trendRes.code === 0) ? trendRes.data : null);
+      this.drawTrendChart((trendRes.code === 300) ? trendRes.data : null);
 
     } catch (err) {
       console.error("加载看板数据失败", err);
@@ -90,35 +90,36 @@ Page({
 
     // 2. 加一个短暂延迟，确保 WXML 里的 canvas 节点已经渲染完毕
     setTimeout(() => {
-      const ctx = wx.createCanvasContext('trendChart', this);
-
+      const ctx = wx.createCanvasContext('trendChart', this); 
+      
       const screenWidth = wx.getSystemInfoSync().windowWidth;
-      const canvasWidth = screenWidth - 40;
-      const canvasHeight = 120; // 对应 WXSS 中的 240rpx 左右
+      const canvasWidth = screenWidth - 40; 
+      const canvasHeight = 120; // 对应 WXSS 中的 240rpx
 
-      const paddingLeft = 35;
-      const paddingBottom = 20;
+      const paddingLeft = 35;   
+      const paddingBottom = 20; 
       const paddingTop = 10;
-
+      
       const chartWidth = canvasWidth - paddingLeft - 10;
       const chartHeight = canvasHeight - paddingBottom - paddingTop;
 
       const { dates, inMeters, outMeters } = trendData;
       const daysCount = dates.length;
-
+      
       let maxVal = Math.max(...inMeters, ...outMeters, 100);
-      maxVal = Math.ceil(maxVal / 100) * 100;
+      maxVal = Math.ceil(maxVal / 100) * 100; 
 
       // ---- 绘制背景网格和 Y 轴数字 ----
       ctx.setFontSize(10);
       ctx.setFillStyle('#999999');
       ctx.setTextAlign('right');
-      const ySteps = 4;
+      const ySteps = 4; 
       for (let i = 0; i <= ySteps; i++) {
         const val = (maxVal / ySteps) * i;
         const y = paddingTop + chartHeight - (chartHeight / ySteps) * i;
+        
         ctx.fillText(val.toString(), paddingLeft - 5, y + 4);
-
+        
         ctx.beginPath();
         ctx.setStrokeStyle('#eeeeee');
         ctx.setLineWidth(1);
@@ -139,7 +140,7 @@ Page({
         ctx.beginPath();
         ctx.setStrokeStyle(color);
         ctx.setLineWidth(2);
-        ctx.setLineJoin('round');
+        ctx.setLineJoin('round'); 
         dataArray.forEach((val, i) => {
           const x = paddingLeft + (chartWidth / (daysCount - 1)) * i;
           const y = paddingTop + chartHeight - (val / maxVal) * chartHeight;
@@ -147,7 +148,8 @@ Page({
           else ctx.lineTo(x, y);
         });
         ctx.stroke();
-
+        
+        // 画线上的点
         dataArray.forEach((val, i) => {
           const x = paddingLeft + (chartWidth / (daysCount - 1)) * i;
           const y = paddingTop + chartHeight - (val / maxVal) * chartHeight;
@@ -161,11 +163,11 @@ Page({
         });
       };
 
-      drawLine(inMeters, '#1890FF');
-      drawLine(outMeters, '#52C41A');
+      drawLine(inMeters, '#1890FF');  // 入库 蓝
+      drawLine(outMeters, '#52C41A'); // 出库 绿
 
       ctx.draw();
-    }, 150);
+    }, 150); 
   },
 
   // --- 原有扫码业务逻辑 ---
@@ -185,19 +187,43 @@ Page({
       const res = await request({ url: `/inventory/barCode/search?barCode=${barcode}`, method: 'GET' });
       if ((res.code === 200 || res.code === 0) && res.data) {
         const d = res.data;
-        this.setData({
-          clothInfo: d,
+        this.setData({ 
+          clothInfo: d, 
           showClothModal: true,
           inputMeters: d.remainingMeters || d.meters || 0,
-          currentOperType: d.status === 1 ? 'out' : 'in'
+          currentOperType: d.status === 1 ? 'out' : 'in' 
         });
+      } else {
+        wx.showToast({ title: '未查询到布匹信息', icon: 'none' });
       }
+    } catch (err) {
+      wx.showToast({ title: '查询失败', icon: 'none' });
     } finally { wx.hideLoading(); }
   },
 
   // --- 入库/出库提交 ---
+
+  // 手动入库确认按钮点击
+  doAddCloth() {
+    this.executeIn({ ...this.data.clothForm, inType: 'hand' });
+  },
+
+  // 扫码弹窗确认入库点击
+  doIn() {
+    const { clothInfo, barcode, inputMeters } = this.data;
+    this.executeIn({
+      barcode: barcode,
+      modelCode: clothInfo.modelCode || clothInfo.model,
+      meters: inputMeters,
+      spec: clothInfo.spec,
+      inType: 'SCAN'
+    });
+  },
+
   async executeIn(payload) {
-    if (!payload.modelCode || !payload.meters) return wx.showToast({ title: '信息不全', icon: 'none' });
+    if (!payload.modelCode) return wx.showToast({ title: '请输入型号', icon: 'none' });
+    if (!payload.meters || payload.meters <= 0) return wx.showToast({ title: '请输入有效米数', icon: 'none' });
+    
     wx.showLoading({ title: '提交中...' });
     try {
       const res = await request({
@@ -208,14 +234,24 @@ Page({
       if (res.code === 200 || res.code === 0) {
         wx.showToast({ title: '入库成功' });
         this.setData({ showAddClothModal: false, showClothModal: false });
-        this.preparePrintData(res.data.barcode, res.data.modelCode, res.data.meters, res.data.spec);
+        
+        // 调用打印（优先使用后端返回的条码等信息）
+        const resData = res.data || payload;
+        this.preparePrintData(resData.barcode, resData.modelCode, resData.meters, resData.spec);
+        
         this.refreshDashboard(); // 刷新数据
+      } else {
+        wx.showToast({ title: res.msg || '入库失败', icon: 'none' });
       }
+    } catch (err) {
+      wx.showToast({ title: '请求失败', icon: 'none' });
     } finally { wx.hideLoading(); }
   },
 
   async doOut() {
     const { barcode, inputMeters } = this.data;
+    if (!inputMeters || inputMeters <= 0) return wx.showToast({ title: '请输入出库米数', icon: 'none' });
+
     wx.showLoading({ title: '正在出库...' });
     try {
       const res = await request({
@@ -227,7 +263,22 @@ Page({
         wx.showToast({ title: '出库成功' });
         this.hideClothModal();
         this.refreshDashboard();
+
+        // 获取出库后最新的布匹信息，若有剩余则提示打印新标签贴回
+        const outClothInfo = res.data || {};
+        if (outClothInfo.meters && outClothInfo.meters > 0) {
+           this.preparePrintData(
+             outClothInfo.barcode, 
+             outClothInfo.modelCode, 
+             outClothInfo.meters, 
+             outClothInfo.spec
+           );
+        }
+      } else {
+        wx.showToast({ title: res.msg || '出库失败', icon: 'none' });
       }
+    } catch (err) {
+      wx.showToast({ title: '请求失败', icon: 'none' });
     } finally { wx.hideLoading(); }
   },
 
@@ -240,8 +291,19 @@ Page({
   },
 
   async fetchModelOptions(keyword) {
-    const res = await request({ url: `/inventory/model/search?keyword=${keyword}`, method: 'GET' });
-    if (res.data) this.setData({ modelOptions: res.data, showModelList: true });
+    try {
+      const res = await request({ url: `/inventory/model/search?keyword=${keyword}`, method: 'GET' });
+      if (res.data) {
+        const formattedOptions = res.data.map(item => ({
+          modelCode: item.modelCode,
+          spec: item.Spec !== undefined ? item.Spec : item.spec
+        }));
+        this.setData({ modelOptions: formattedOptions, showModelList: true });
+      }
+    } catch (err) {
+      console.error("搜索型号失败", err);
+      this.setData({ modelOptions: [], showModelList: false });
+    }
   },
 
   chooseModel(e) {
@@ -253,17 +315,31 @@ Page({
     this.setData({ printData: { barcode, modelCode, meters, spec }, showPrintModal: true });
   },
 
-  hideAddClothModal() { this.setData({ showAddClothModal: false }); },
+  handleAddCloth() { 
+    this.setData({ 
+      showAddClothModal: true, 
+      clothForm: { modelCode: '', meters: '', spec: '', inType: 'hand' },
+      modelOptions: [],
+      showModelList: false
+    }); 
+  },
+
+  hideAddClothModal() { this.setData({ showAddClothModal: false, showModelList: false }); },
   hideClothModal() { this.setData({ showClothModal: false }); },
   hidePrintModal() { this.setData({ showPrintModal: false }); },
   handleBack() { wx.navigateBack(); },
   onFormInput(e) { this.setData({ [`clothForm.${e.currentTarget.dataset.field}`]: e.detail.value }); },
   onMetersInput(e) { this.setData({ inputMeters: e.detail.value }); },
-  handleAddCloth() { this.setData({ showAddClothModal: true, clothForm: { modelCode: '', meters: '', spec: '', inType: 'hand' } }); },
+  stopPropagation() {}, // 阻止弹窗事件冒泡
+  
   choosePrintType(e) {
-    if (e.currentTarget.dataset.type === 'bluetooth') {
-      printerUtil.printViaBluetooth(this.data.printData);
+    const type = e.currentTarget.dataset.type;
+    const { printData } = this.data;
+    if (type === 'bluetooth') {
+      printerUtil.printViaBluetooth(printData);
       this.hidePrintModal();
+    } else if (type === 'preview') {
+      wx.showToast({ title: '预览功能开发中', icon: 'none' });
     }
   }
 });
