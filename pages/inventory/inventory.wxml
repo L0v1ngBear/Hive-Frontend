@@ -29,12 +29,16 @@
       <view class="section-header">
         <text class="section-title">出入库趋势 (近7日)</text>
         <view class="chart-legend">
-          <view class="legend-item"><view class="dot in"></view>入库</view>
-          <view class="legend-item"><view class="dot out"></view>出库</view>
+          <view class="legend-item">
+            <view class="dot in"></view>入库
+          </view>
+          <view class="legend-item">
+            <view class="dot out"></view>出库
+          </view>
         </view>
       </view>
       <view class="chart-container">
-        <canvas canvas-id="trendChart" class="trend-canvas"></canvas>
+        <canvas canvas-id="trendChart" class="trend-canvas" hidden="{{showClothModal || showAddClothModal || showPrintModal}}"></canvas>
       </view>
     </view>
 
@@ -83,7 +87,7 @@
             <view class="record-col meter-col">{{item.meters}}m</view>
           </view>
         </block>
-        
+
         <view class="empty-tip" wx:if="{{recordList.length === 0}}">暂无操作记录</view>
       </view>
     </view>
@@ -105,6 +109,71 @@
       <button class="btn in" bindtap="doIn" wx:if="{{currentOperType === 'in'}}">确认入库</button>
       <button class="btn out" bindtap="doOut" wx:if="{{currentOperType === 'out'}}">确认出库</button>
       <button class="btn cancel" bindtap="hideClothModal">取消</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAddClothModal}}" bindtap="hideAddClothModal">
+  <view class="modal-content add-cloth-modal" catchtap="stopPropagation">
+    <view class="modal-title">新增布匹入库</view>
+
+    <view class="info-row">
+      <text class="label">型号：</text>
+      <view class="input-container" style="flex: 1;">
+        <input class="modal-input" style="margin-top: 0;" type="text" 
+               bindinput="onModelSearch" 
+               placeholder="输入型号搜索" 
+               value="{{clothForm.modelCode}}" />
+        
+        <view class="model-list" wx:if="{{showModelList && modelOptions.length > 0}}">
+          <view class="model-item" 
+                wx:for="{{modelOptions}}" 
+                wx:key="index" 
+                bindtap="chooseModel" 
+                data-model="{{item.modelCode}}" 
+                data-spec="{{item.spec}}">
+            <text class="m-code">{{item.modelCode}}</text>
+            <text class="m-spec" style="font-size: 24rpx; color: #999; margin-left: 10rpx;">规格: {{item.spec}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="info-row">
+      <text class="label">米数：</text>
+      <input class="modal-input" style="margin-top: 0;" type="digit" 
+             bindinput="onFormInput" 
+             data-field="meters" 
+             placeholder="请输入米数" 
+             value="{{clothForm.meters}}" />
+    </view>
+
+    <view class="info-row">
+      <text class="label">规格：</text>
+      <input class="modal-input" style="margin-top: 0;" type="digit" 
+             bindinput="onFormInput" 
+             data-field="spec" 
+             placeholder="请输入规格(如门幅)" 
+             value="{{clothForm.spec}}" />
+    </view>
+
+    <view class="oper-btns">
+      <button class="btn in" bindtap="doAddCloth">确认提交</button>
+      <button class="btn cancel" bindtap="hideAddClothModal">取消</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showPrintModal}}" bindtap="hidePrintModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-title">操作成功</view>
+    <view class="modal-info" style="display: flex; flex-direction: column;">
+      <view class="info-row-display"><text class="label">条码：</text><text class="value">{{printData.barcode}}</text></view>
+      <view class="info-row-display"><text class="label">型号：</text><text class="value">{{printData.modelCode}}</text></view>
+    </view>
+    <view class="oper-btns">
+      <button class="btn in" style="background: #07c160;" bindtap="choosePrintType" data-type="bluetooth">蓝牙打印标签</button>
+      <button class="btn cancel" bindtap="hidePrintModal">关闭</button>
     </view>
   </view>
 </view>

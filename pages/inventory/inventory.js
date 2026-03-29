@@ -68,7 +68,7 @@ Page({
       }
 
       // 3. 拿到趋势数据后，交给 Canvas 画图
-      this.drawTrendChart((trendRes.code === 200 || trendRes.code === 0) ? trendRes.data : null);
+      this.drawTrendChart((trendRes.code === 300 || trendRes.code === 0) ? trendRes.data : null);
 
     } catch (err) {
       console.error("加载看板数据失败", err);

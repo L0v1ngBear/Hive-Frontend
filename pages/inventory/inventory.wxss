@@ -271,10 +271,10 @@ page {
 .record-col {
   color: #333;
 }
-.time-col { flex: 1; text-align: left; }
-.type-col { flex: 1; text-align: center; }
-.model-col { flex: 1; text-align: center; }
-.meter-col { flex: 1; text-align: right; padding-right: 8px; }
+.time-col { flex: 1.5; text-align: left; }
+.type-col { flex: 0.8; text-align: center; }
+.model-col { flex: 1.8; text-align: center; }
+.meter-col { flex: 0.8; text-align: right; padding-right: 8px; }
 
 .type-in { color: #52C41A; font-weight: 500; }
 .type-out { color: #F5222D; font-weight: 500; }
