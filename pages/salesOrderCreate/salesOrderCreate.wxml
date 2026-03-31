@@ -4,7 +4,8 @@
       <image class="back-icon" src="/images/back.png" mode="widthFix"></image>
     </view>
     <text class="nav-title">新建销售订单</text>
-    <view class="nav-scan"></view> </view>
+    <view class="nav-scan"></view> 
+  </view>
 
   <scroll-view class="form-scroll-container" scroll-y="true">
     <view class="form-card">
@@ -17,8 +18,8 @@
       </view>
       
       <view class="form-item">
-        <text class="form-label">项目名称</text>
-        <input class="form-input" placeholder="请输入所属项目 (选填)" placeholder-class="placeholder" 
+        <text class="form-label"><text class="required">*</text>项目名称</text>
+        <input class="form-input" placeholder="请输入所属项目" placeholder-class="placeholder" 
                value="{{formData.projectName}}" bindinput="handleInput" data-field="projectName" />
       </view>
     </view>
@@ -46,7 +47,7 @@
     </view>
 
     <view class="form-card">
-      <view class="card-title">交期与备注</view>
+      <view class="card-title">交期与生产</view>
       
       <view class="form-item">
         <text class="form-label"><text class="required">*</text>交货日期</text>
@@ -56,6 +57,15 @@
           </view>
         </picker>
         <text class="arrow-right">></text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">同步创建生产订单</text>
+        <switch 
+          checked="{{formData.createProductionOrder === 1}}" 
+          bindchange="handleSwitchChange" 
+          color="#07c160"
+        />
       </view>
     </view>
 

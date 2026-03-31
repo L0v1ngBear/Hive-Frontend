@@ -283,26 +283,71 @@ Page({
   },
 
   // --- 辅助 UI 函数 ---
+
   onModelSearch(e) {
     let keyword = (e.detail.value || '').trim();
-    this.setData({ 'clothForm.modelCode': keyword, showModelList: !!keyword });
+    
+    // 更新输入框的值
+    this.setData({ 'clothForm.modelCode': keyword });
+
+    // 1. 【优化】清空定时器
     if (this.searchTimer) clearTimeout(this.searchTimer);
-    this.searchTimer = setTimeout(() => this.fetchModelOptions(keyword), 300);
+
+    // 2. 【优化】如果关键词为空，直接隐藏列表，不发请求
+    if (!keyword) {
+      this.setData({ modelOptions: [], showModelList: false });
+      return;
+    }
+
+    // 3. 【优化】延长防抖时间到 500ms，更符合手机端打字习惯
+    this.searchTimer = setTimeout(() => {
+      this.fetchModelOptions(keyword);
+    }, 500);
   },
 
   async fetchModelOptions(keyword) {
+    // 4. 【优化】增加本地缓存。如果搜过的词再次搜，直接用缓存，秒出结果
+    if (!this.searchCache) this.searchCache = {};
+    if (this.searchCache[keyword]) {
+      this.setData({ 
+        modelOptions: this.searchCache[keyword], 
+        showModelList: this.searchCache[keyword].length > 0 
+      });
+      return;
+    }
+
+    // 5. 【优化】竞态处理。记录当前请求的批次号，防止弱网下旧请求覆盖新请求
+    if (!this.searchId) this.searchId = 0;
+    const currentSearchId = ++this.searchId;
+
     try {
       const res = await request({ url: `/inventory/model/search?keyword=${keyword}`, method: 'GET' });
+      
+      // 【关键】如果当前请求已经不是最后一次发起的请求，直接丢弃结果
+      if (currentSearchId !== this.searchId) return;
+
       if (res.data) {
         const formattedOptions = res.data.map(item => ({
           modelCode: item.modelCode,
           spec: item.Spec !== undefined ? item.Spec : item.spec
         }));
-        this.setData({ modelOptions: formattedOptions, showModelList: true });
+
+        // 存入本地缓存
+        this.searchCache[keyword] = formattedOptions;
+
+        this.setData({ 
+          modelOptions: formattedOptions, 
+          showModelList: formattedOptions.length > 0 
+        });
+      } else {
+        this.setData({ modelOptions: [], showModelList: false });
       }
     } catch (err) {
       console.error("搜索型号失败", err);
-      this.setData({ modelOptions: [], showModelList: false });
+      // 报错时也要校验是不是最后一次请求
+      if (currentSearchId === this.searchId) {
+        this.setData({ modelOptions: [], showModelList: false });
+      }
     }
   },
 
