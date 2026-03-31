@@ -25,29 +25,40 @@
     </view>
 
     <view class="form-card">
-      <view class="card-title">商品与金额</view>
-      
-      <view class="form-item">
-        <text class="form-label"><text class="required">*</text>商品描述</text>
-        <input class="form-input" placeholder="如: T800-210 涤纶弹力布" placeholder-class="placeholder" 
-               value="{{formData.goodsDesc}}" bindinput="handleInput" data-field="goodsDesc" />
+      <view class="card-title flex-between">
+        <text>商品明细</text>
+        <view class="add-btn" bindtap="addItem">+ 添加商品</view>
       </view>
       
-      <view class="form-item">
-        <text class="form-label"><text class="required">*</text>总数量(米)</text>
-        <input class="form-input" type="digit" placeholder="请输入订单总米数" placeholder-class="placeholder" 
-               value="{{formData.totalQuantity}}" bindinput="handleInput" data-field="totalQuantity" />
-      </view>
-
-      <view class="form-item">
-        <text class="form-label"><text class="required">*</text>总金额(元)</text>
-        <input class="form-input" type="digit" placeholder="请输入订单总金额" placeholder-class="placeholder" 
-               value="{{formData.totalAmount}}" bindinput="handleInput" data-field="totalAmount" />
-      </view>
+      <block wx:for="{{formData.items}}" wx:key="index">
+        <view class="item-box">
+          <view class="item-header" wx:if="{{formData.items.length > 1}}">
+            <text class="item-title">商品 {{index + 1}}</text>
+            <text class="delete-btn" bindtap="removeItem" data-index="{{index}}">删除</text>
+          </view>
+          
+          <view class="form-item">
+            <text class="form-label"><text class="required">*</text>商品型号</text>
+            <input class="form-input" placeholder="如: T800-210" placeholder-class="placeholder" 
+                   value="{{item.modelCode}}" bindinput="handleItemInput" data-index="{{index}}" data-field="modelCode" />
+          </view>
+          
+          <view class="form-item">
+            <text class="form-label"><text class="required">*</text>数量(米)</text>
+            <input class="form-input" type="digit" placeholder="请输入数量" placeholder-class="placeholder" 
+                   value="{{item.quantity}}" bindinput="handleItemInput" data-index="{{index}}" data-field="quantity" />
+          </view>
+        </view>
+      </block>
     </view>
 
     <view class="form-card">
-      <view class="card-title">交期与生产</view>
+      <view class="card-title">汇总与交期</view>
+
+      <view class="form-item">
+        <text class="form-label">总数量(米)</text>
+        <text class="form-input readonly-text">{{formData.totalQuantity}}</text>
+      </view>
       
       <view class="form-item">
         <text class="form-label"><text class="required">*</text>交货日期</text>

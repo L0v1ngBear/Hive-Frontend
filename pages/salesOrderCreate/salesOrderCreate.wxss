@@ -187,3 +187,56 @@ picker {
   background: linear-gradient(135deg, #1890FF, #40A9FF);
   color: #ffffff;
 }
+/* ================= 动态商品明细样式 ================= */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-btn {
+  font-size: 26rpx;
+  color: #1890FF;
+  font-weight: 500;
+  padding: 4rpx 12rpx;
+  background: rgba(24, 144, 255, 0.1);
+  border-radius: 8rpx;
+}
+
+.item-box {
+  background: #fbfbfb;
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid #f0f0f0;
+}
+.item-box:last-child {
+  margin-bottom: 0;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0 10rpx;
+  border-bottom: 1rpx dashed #e8e8e8;
+  margin-bottom: 10rpx;
+}
+
+.item-title {
+  font-size: 26rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+.delete-btn {
+  font-size: 24rpx;
+  color: #F5222D;
+  padding: 4rpx 12rpx;
+}
+
+/* 只读文本颜色（如自动计算的总数量） */
+.readonly-text {
+  color: #999 !important;
+  font-weight: 500;
+}

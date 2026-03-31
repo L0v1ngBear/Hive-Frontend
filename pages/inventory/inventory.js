@@ -380,9 +380,17 @@ Page({
   choosePrintType(e) {
     const type = e.currentTarget.dataset.type;
     const { printData } = this.data;
+    
     if (type === 'bluetooth') {
-      printerUtil.printViaBluetooth(printData);
+      // 1. 调用新的【打标签】方法
+      printerUtil.printLabel(printData);
       this.hidePrintModal();
+      
+    } else if (type === 'triplicate') {
+      // 2. 如果你的 WXML 里加了【打印三联单】的按钮，传 data-type="triplicate" 进来即可
+      printerUtil.printTriplicate(printData);
+      this.hidePrintModal();
+      
     } else if (type === 'preview') {
       wx.showToast({ title: '预览功能开发中', icon: 'none' });
     }

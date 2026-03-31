@@ -138,3 +138,38 @@
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.2);
 }
+
+/* ================= 7. 商品明细一对多排版 ================= */
+.align-top {
+  align-items: flex-start !important; /* 让标签和商品列表顶部对齐 */
+}
+.goods-box {
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+  padding: 10rpx 16rpx;
+  margin-top: -6rpx; /* 微调对齐 */
+}
+.goods-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  color: #555;
+  margin-bottom: 8rpx;
+}
+.goods-item:last-child {
+  margin-bottom: 0;
+}
+.g-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 20rpx;
+}
+.g-qty {
+  color: #888;
+  font-family: 'Courier New', Courier, monospace; /* 数字更规整 */
+}
+.mt-8 { margin-top: 8rpx; }
+.ml-12 { margin-left: 24rpx; }

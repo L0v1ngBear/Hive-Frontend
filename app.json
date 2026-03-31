@@ -4,8 +4,8 @@
     "pages/attendance/attendance",
     "pages/inventory/inventory",
     "pages/order/order",
-    "pages/salesOrder/salesOrder", 
-    "pages/knowledge/knowledge", 
+    "pages/salesOrder/salesOrder",
+    "pages/knowledge/knowledge",
     "pages/orderDetail/orderDetail",
     "pages/badProduct/badProduct",
     "pages/customer/customer",
@@ -18,7 +18,7 @@
   ],
   "permission": {
     "scope.userLocation": {
-      "desc": "您的位置信息将用于考勤打卡" 
+      "desc": "您的位置信息将用于考勤打卡"
     }
   },
   "window": {

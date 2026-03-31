@@ -44,20 +44,28 @@
               <text class="info-value">{{item.projectName || '暂无项目'}}</text>
             </view>
 
-            <view class="info-line">
+            <view class="info-line align-top">
               <text class="info-label">商品：</text>
-              <text class="info-value">{{item.goodsDesc}}</text>
+              <view class="info-value goods-box">
+                <view class="goods-item" wx:for="{{item.items}}" wx:key="modelCode" wx:for-item="goods">
+                  <text class="g-name">{{goods.modelCode}} {{goods.goodsDesc}}</text>
+                  <text class="g-qty">x {{goods.quantity}}米</text>
+                </view>
+              </view>
             </view>
-            <view class="info-line">
+
+            <view class="info-line mt-8">
               <text class="info-label">金额：</text>
               <text class="info-value price-text">¥{{item.totalAmount}}</text>
-              <text class="info-label ml-12">数量：</text>
+              <text class="info-label ml-12">总量：</text>
               <text class="info-value">{{item.totalQuantity}}米</text>
             </view>
+            
             <view class="info-line">
               <text class="info-label">交期：</text>
               <text class="info-value">{{item.deliveryDate}}</text>
             </view>
+            
             <view class="info-line" wx:if="{{item.expressNo}}">
               <text class="info-label">物流：</text>
               <text class="info-value">{{item.expressCompany}} ({{item.expressNo}})</text>
