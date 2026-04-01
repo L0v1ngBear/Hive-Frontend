@@ -1,10 +1,10 @@
 <view class="container">
   <view class="top-nav">
     <view class="nav-back" bindtap="handleBack">
-      <image class="back-icon" src="/images/back.png" mode="widthFix"></image>
+      <text class="back-icon">＜</text>
     </view>
     <text class="nav-title">新建销售订单</text>
-    <view class="nav-scan"></view> 
+    <view class="nav-placeholder"></view>
   </view>
 
   <scroll-view class="form-scroll-container" scroll-y="true">
@@ -13,13 +13,13 @@
       
       <view class="form-item">
         <text class="form-label"><text class="required">*</text>客户名称</text>
-        <input class="form-input" placeholder="请输入客户名称" placeholder-class="placeholder" 
+        <input class="form-input" placeholder="请输入客户名称" 
                value="{{formData.customerName}}" bindinput="handleInput" data-field="customerName" />
       </view>
       
       <view class="form-item">
         <text class="form-label"><text class="required">*</text>项目名称</text>
-        <input class="form-input" placeholder="请输入所属项目" placeholder-class="placeholder" 
+        <input class="form-input" placeholder="请输入所属项目" 
                value="{{formData.projectName}}" bindinput="handleInput" data-field="projectName" />
       </view>
     </view>
@@ -32,21 +32,35 @@
       
       <block wx:for="{{formData.items}}" wx:key="index">
         <view class="item-box">
-          <view class="item-header" wx:if="{{formData.items.length > 1}}">
+          <view class="item-header">
             <text class="item-title">商品 {{index + 1}}</text>
-            <text class="delete-btn" bindtap="removeItem" data-index="{{index}}">删除</text>
+            <text class="delete-btn" wx:if="{{formData.items.length > 1}}" 
+                  bindtap="removeItem" data-index="{{index}}">删除</text>
           </view>
           
           <view class="form-item">
             <text class="form-label"><text class="required">*</text>商品型号</text>
-            <input class="form-input" placeholder="如: T800-210" placeholder-class="placeholder" 
+            <input class="form-input" placeholder="请输入" 
                    value="{{item.modelCode}}" bindinput="handleItemInput" data-index="{{index}}" data-field="modelCode" />
           </view>
           
+          <view class="form-row">
+            <view class="form-item half">
+              <text class="form-label"><text class="required">*</text>数量(米)</text>
+              <input class="form-input" type="digit" placeholder="请输入"
+                     value="{{item.quantity}}" bindinput="handleItemInput" data-index="{{index}}" data-field="quantity" />
+            </view>
+            <view class="form-item half">
+              <text class="form-label"><text class="required">*</text>克重(g)</text>
+              <input class="form-input" type="digit" placeholder="请输入" 
+                     value="{{item.weight}}" bindinput="handleItemInput" data-index="{{index}}" data-field="weight" />
+            </view>
+          </view>
+
           <view class="form-item">
-            <text class="form-label"><text class="required">*</text>数量(米)</text>
-            <input class="form-input" type="digit" placeholder="请输入数量" placeholder-class="placeholder" 
-                   value="{{item.quantity}}" bindinput="handleItemInput" data-index="{{index}}" data-field="quantity" />
+            <text class="form-label"><text class="required">*</text>规格/幅宽(cm)</text>
+            <input class="form-input" type="digit" placeholder="请输入规格" 
+                   value="{{item.spec}}" bindinput="handleItemInput" data-index="{{index}}" data-field="spec" />
           </view>
         </view>
       </block>
@@ -57,26 +71,22 @@
 
       <view class="form-item">
         <text class="form-label">总数量(米)</text>
-        <text class="form-input readonly-text">{{formData.totalQuantity}}</text>
+        <text class="form-input readonly-text">{{totalQuantityDisplay}}</text>
       </view>
       
       <view class="form-item">
         <text class="form-label"><text class="required">*</text>交货日期</text>
-        <picker mode="date" value="{{formData.deliveryDate}}" start="{{minDate}}" bindchange="handleDateChange">
+        <picker mode="date" value="{{formData.deliveryDate}}" bindchange="handleDateChange">
           <view class="picker-view {{formData.deliveryDate ? '' : 'placeholder'}}">
             {{formData.deliveryDate || '请选择交货日期'}}
           </view>
         </picker>
-        <text class="arrow-right">></text>
       </view>
 
       <view class="form-item">
         <text class="form-label">同步创建生产订单</text>
-        <switch 
-          checked="{{formData.createProductionOrder === 1}}" 
-          bindchange="handleSwitchChange" 
-          color="#07c160"
-        />
+        <switch checked="{{formData.createProductionOrder === 1}}" 
+                bindchange="handleSwitchChange" color="#07c160" />
       </view>
     </view>
 

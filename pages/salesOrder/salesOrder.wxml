@@ -1,12 +1,11 @@
 <view class="container">
   <view class="top-nav">
     <view class="nav-back" bindtap="handleBack">
-      <image class="back-icon" src="/images/back.png" mode="widthFix"></image>
+      <text class="back-icon">＜</text>
     </view>
-    
     <text class="nav-title">销售订单管理</text>
     <view class="nav-scan" bindtap="handleSearch">
-      <image class="scan-icon" src="/images/search.png" mode="widthFix"></image>
+      <icon type="search" size="18" color="#333"></icon>
     </view>
   </view>
 
@@ -19,8 +18,7 @@
     </view>
   </scroll-view>
 
-  <scroll-view class="list-scroll-container show-scrollbar" scroll-y="true" enhanced="true" bounces="true"
-    show-scrollbar="true">
+  <scroll-view class="list-scroll-container" scroll-y="true" enhanced="true" bounces="true">
     <view class="order-section">
       <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
         <text>暂无相关订单</text>
@@ -41,59 +39,45 @@
             
             <view class="info-line">
               <text class="info-label">项目：</text>
-              <text class="info-value">{{item.projectName || '暂无项目'}}</text>
+              <text class="info-value">{{item.projectName || '默认项目'}}</text>
             </view>
 
             <view class="info-line align-top">
-              <text class="info-label">商品：</text>
+              <text class="info-label">明细：</text>
               <view class="info-value goods-box">
-                <view class="goods-item" wx:for="{{item.items}}" wx:key="modelCode" wx:for-item="goods">
-                  <text class="g-name">{{goods.modelCode}} {{goods.goodsDesc}}</text>
-                  <text class="g-qty">x {{goods.quantity}}米</text>
+                <view class="goods-item" wx:for="{{item.items}}" wx:key="index" wx:for-item="goods">
+                  <view class="g-main">
+                    <text class="g-name">{{goods.modelCode}}</text>
+                    <text class="g-qty">x {{goods.quantity}}米</text>
+                  </view>
+                  <view class="g-tags">
+                    <text class="g-tag">{{goods.weight}}g/㎡</text>
+                    <text class="g-tag">{{goods.spec}}cm</text>
+                  </view>
                 </view>
               </view>
             </view>
 
             <view class="info-line mt-8">
-              <text class="info-label">金额：</text>
-              <text class="info-value price-text">¥{{item.totalAmount}}</text>
-              <text class="info-label ml-12">总量：</text>
-              <text class="info-value">{{item.totalQuantity}}米</text>
-            </view>
-            
-            <view class="info-line">
               <text class="info-label">交期：</text>
               <text class="info-value">{{item.deliveryDate}}</text>
-            </view>
-            
-            <view class="info-line" wx:if="{{item.expressNo}}">
-              <text class="info-label">物流：</text>
-              <text class="info-value">{{item.expressCompany}} ({{item.expressNo}})</text>
+              <text class="info-label ml-12" wx:if="{{item.createProductionOrder === 1}}">
+                <text class="sync-tag">同步生产</text>
+              </text>
             </view>
           </view>
 
           <view class="order-action">
             <button wx:if="{{item.status === 'pending_confirm'}}" class="action-btn btn-primary" size="mini"
               catchtap="handleAction" data-type="confirm" data-order="{{item}}">确认订单</button>
-            
-            <button wx:if="{{item.status === 'pending_material'}}" class="action-btn btn-primary" size="mini"
-              catchtap="handleAction" data-type="material_done" data-order="{{item}}">备料完成</button>
-            
-            <button wx:if="{{item.status === 'producing'}}" class="action-btn btn-primary" size="mini"
-              catchtap="handleAction" data-type="produce_done" data-order="{{item}}">生产完成</button>
-            
             <button wx:if="{{item.status === 'pending_ship'}}" class="action-btn btn-primary" size="mini"
               catchtap="handleAction" data-type="ship" data-order="{{item}}">录入发货</button>
-            
-            <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-default" size="mini"
-              catchtap="handleAction" data-type="logistics" data-order="{{item}}">查看物流</button>
             <button wx:if="{{item.status === 'shipped'}}" class="action-btn btn-primary" size="mini"
               catchtap="handleAction" data-type="finish" data-order="{{item}}">完成订单</button>
           </view>
         </view>
       </block>
-
-      <view style="height: 140rpx; width: 100%;"></view>
+      <view class="safe-bottom-holder"></view>
     </view>
   </scroll-view>
 

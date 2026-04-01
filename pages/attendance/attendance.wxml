@@ -91,7 +91,7 @@
         </block>
         
         <!-- 空记录提示 -->
-        <view wx:if="{{recordList.length === 0}}" class="empty-record">
+        <view wx:if="{{recordList.length === 0 }}" class="empty-record">
           <text>暂无打卡记录</text>
         </view>
       </view>

@@ -1,4 +1,4 @@
-/* 直接引入生产订单的基础结构样式，保证UI统一 */
+/* 直接引入生产订单的基础结构样式 */
 @import "../order/order.wxss";
 
 /* ================= 1. 基础特有样式 ================= */
@@ -9,15 +9,18 @@
 .price-text {
   color: #E02020;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 30rpx;
 }
 
 /* ================= 2. 顶部横向筛选栏 ================= */
 .order-filter-scroll {
   width: 100%;
-  white-space: nowrap; /* 保证子元素不换行，实现横向滚动 */
+  white-space: nowrap;
   background: #fff;
   border-bottom: 1rpx solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
 .order-filter {
@@ -35,7 +38,6 @@
   transition: all 0.2s;
 }
 
-/* 选中状态：文字变色 + 底部小蓝条 */
 .filter-item.active {
   color: #1890FF; 
   font-weight: bold;
@@ -52,41 +54,50 @@
   border-radius: 4rpx;
 }
 
-/* ================= 3. 状态颜色重写 (匹配最新枚举) ================= */
+/* ================= 3. 状态标签样式 (优化背景色) ================= */
+.order-status {
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
 /* 待确认：橙色 */
-.status-pending_confirm { color: #FAAD14; background-color: rgba(250, 173, 20, 0.1); }
+.status-pending_confirm { color: #FAAD14; background: rgba(250, 173, 20, 0.1); }
 /* 备料中：紫色 */
-.status-pending_material { color: #722ED1; background-color: rgba(114, 46, 209, 0.1); }
+.status-pending_material { color: #722ED1; background: rgba(114, 46, 209, 0.1); }
 /* 生产中：明蓝色 */
-.status-producing { color: #1890FF; background-color: rgba(24, 144, 255, 0.1); }
-/* 待发货：红橙色 */
-.status-pending_ship { color: #F5A623; background-color: rgba(245, 166, 35, 0.1); }
+.status-producing { color: #1890FF; background: rgba(24, 144, 255, 0.1); }
+/* 待发货：金黄色 */
+.status-pending_ship { color: #D48806; background: rgba(255, 251, 230, 1); border: 1rpx solid #FFE58F; }
 /* 已发货：青色 */
-.status-shipped { color: #13C2C2; background-color: rgba(19, 194, 194, 0.1); }
+.status-shipped { color: #13C2C2; background: rgba(19, 194, 194, 0.1); }
 /* 已完成：绿色 */
-.status-completed { color: #52C41A; background-color: rgba(82, 196, 26, 0.1); }
-/* 取消/其他：灰色 */
-.status-cancelled { color: #999; background-color: #f5f5f5; }
+.status-completed { color: #52C41A; background: rgba(82, 196, 26, 0.1); }
 
 /* ================= 4. 按钮组样式 ================= */
 .order-action {
-  gap: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 20rpx;
 }
 .action-btn {
   margin: 0 !important;
-  border-radius: 16px;
-  font-size: 13px;
+  border-radius: 32rpx;
+  font-size: 26rpx;
   font-weight: 500;
-  padding: 4px 16px;
+  padding: 8rpx 24rpx;
+  line-height: 1.5;
 }
 .btn-primary {
   background: linear-gradient(135deg, #1890FF, #40A9FF);
   color: #fff;
+  border: none;
 }
 .btn-default {
   background: #fff;
   color: #666;
-  border: 1px solid #ddd;
+  border: 1rpx solid #ddd;
 }
 
 /* ================= 5. 底部悬浮新建按钮 ================= */
@@ -95,7 +106,6 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  /* padding-bottom 适配全面屏底部安全区（如 iPhone 小黑条） */
   padding: 20rpx 30rpx calc(20rpx + env(safe-area-inset-bottom)); 
   background-color: #ffffff;
   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
@@ -106,70 +116,89 @@
 .create-order-btn {
   width: 100%;
   height: 88rpx;
-  line-height: 88rpx;
-  background: linear-gradient(135deg, #1890FF, #40A9FF); /* 保持主按钮颜色一致 */
+  background: linear-gradient(135deg, #1890FF, #0050B3);
   color: #ffffff;
   font-size: 32rpx;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 44rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 6rpx 16rpx rgba(24, 144, 255, 0.3);
 }
 
-.create-order-btn::after {
-  border: none;
-}
-
-.plus-icon {
-  font-size: 40rpx;
-  margin-right: 12rpx;
-  font-weight: 400;
-  margin-top: -4rpx;
-}
-
-/* ================= 6. 滚动条美化 ================= */
-.show-scrollbar::-webkit-scrollbar {
-  display: block !important;
-  width: 4px !important;
-  background-color: transparent;
-}
-.show-scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-/* ================= 7. 商品明细一对多排版 ================= */
+/* ================= 6. 商品明细适配 (适配 weight & spec) ================= */
 .align-top {
-  align-items: flex-start !important; /* 让标签和商品列表顶部对齐 */
+  align-items: flex-start !important;
 }
+
 .goods-box {
-  background-color: #f9f9f9;
-  border-radius: 8rpx;
-  padding: 10rpx 16rpx;
-  margin-top: -6rpx; /* 微调对齐 */
+  background-color: #f7f8fa;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  flex: 1;
 }
+
 .goods-item {
+  display: flex;
+  flex-direction: column; /* 改为纵向布局以容纳更多参数 */
+  padding-bottom: 12rpx;
+  margin-bottom: 12rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.goods-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.g-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 26rpx;
-  color: #555;
-  margin-bottom: 8rpx;
+  width: 100%;
 }
-.goods-item:last-child {
-  margin-bottom: 0;
-}
+
 .g-name {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
 }
+
 .g-qty {
-  color: #888;
-  font-family: 'Courier New', Courier, monospace; /* 数字更规整 */
+  color: #1890FF;
+  font-weight: bold;
+  font-size: 26rpx;
 }
+
+/* 新增参数标签组样式 */
+.g-params {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 8rpx;
+}
+
+.param-tag {
+  font-size: 22rpx;
+  color: #666;
+  background: #fff;
+  border: 1rpx solid #e0e0e0;
+  padding: 2rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+/* 同步生产标签 */
+.sync-tag {
+  font-size: 20rpx;
+  color: #722ED1;
+  background: #F9F0FF;
+  border: 1rpx solid #D3ADF7;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+}
+
+/* 辅助样式 */
 .mt-8 { margin-top: 8rpx; }
 .ml-12 { margin-left: 24rpx; }
+.text-grey { color: #888; font-size: 24rpx; }
