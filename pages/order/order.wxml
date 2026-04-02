@@ -16,13 +16,8 @@
     </view>
   </view>
 
-  <scroll-view 
-    class="list-scroll-container" 
-    scroll-y="true" 
-    scroll-with-animation="true"
-    enhanced="true"
-    bounces="true"
-  >
+  <scroll-view class="list-scroll-container" scroll-y="true" scroll-with-animation="true" enhanced="true"
+    bounces="true">
     <view class="order-section {{filteredOrderList.length === 0 ? 'empty-section' : ''}}">
       <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
         <text>暂无相关订单数据</text>
@@ -33,7 +28,7 @@
           <view class="card-content" bindtap="openDetail" data-order="{{item}}">
             <view class="order-head">
               <text class="order-id">订单号：{{item.orderId}}</text>
-              <text class="order-status">{{statusMap[item.status]}}</text>
+              <text class="order-status status-{{item.status}}">{{statusMap[item.status]}}</text>
             </view>
 
             <view class="info-group">
@@ -41,7 +36,7 @@
                 <text class="info-label">合作项目：</text>
                 <text class="info-value">{{item.projectName || '暂无项目'}}</text>
               </view>
-              
+
               <view class="info-line">
                 <text class="info-label">型号：</text>
                 <text class="info-value">{{item.model}}</text>
@@ -93,8 +88,16 @@
           </view>
         </view>
       </block>
+
+      <view class="safe-bottom-holder"></view>
     </view>
   </scroll-view>
+
+  <view class="fixed-bottom-bar">
+    <button class="create-order-btn" bindtap="handleCreateOrder">
+      <text class="plus-icon">+</text> 新建生产订单
+    </button>
+  </view>
 </view>
 
 <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal">

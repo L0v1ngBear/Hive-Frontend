@@ -6,13 +6,30 @@ Page({
     // 筛选相关
     scrollTop: 0,
     currentFilter: 'all',
-    filterList: [
-      { key: 'all', label: '全部' },
-      { key: 'pending_confirm', label: '待确认' },
-      { key: 'pending_material', label: '备料中' },
-      { key: 'producing', label: '生产中' },
-      { key: 'pending_ship', label: '待发货' },
-      { key: 'completed', label: '已完成' }
+    filterList: [{
+        key: 'all',
+        label: '全部'
+      },
+      {
+        key: 'pending_confirm',
+        label: '待确认'
+      },
+      {
+        key: 'pending_material',
+        label: '备料中'
+      },
+      {
+        key: 'producing',
+        label: '生产中'
+      },
+      {
+        key: 'pending_ship',
+        label: '待发货'
+      },
+      {
+        key: 'completed',
+        label: '已完成'
+      }
     ],
     // 订单列表
     orderList: [], // 原始订单数据
@@ -51,8 +68,7 @@ Page({
    * 模拟获取订单数据
    */
   mockGetOrderData() {
-    const mockData = [
-      {
+    const mockData = [{
         orderId: 'TZ20260212001',
         status: 'producing',
         statusIndex: 2,
@@ -150,19 +166,33 @@ Page({
    * 获取可更新的状态选项
    */
   getNextStatusOptions(currentStatus) {
-    const statusOrder = [
-      { key: 'pending_confirm', label: '待确认' },
-      { key: 'pending_material', label: '备料中' },
-      { key: 'producing', label: '生产中' },
-      { key: 'pending_ship', label: '待发货' },
-      { key: 'completed', label: '已完成' }
+    const statusOrder = [{
+        key: 'pending_confirm',
+        label: '待确认'
+      },
+      {
+        key: 'pending_material',
+        label: '备料中'
+      },
+      {
+        key: 'producing',
+        label: '生产中'
+      },
+      {
+        key: 'pending_ship',
+        label: '待发货'
+      },
+      {
+        key: 'completed',
+        label: '已完成'
+      }
     ];
 
     // 找到当前状态的索引
     const currentIndex = statusOrder.findIndex(item => item.key === currentStatus);
     // 获取下一级及之后的状态（已完成则返回空）
     const nextStatus = statusOrder.slice(currentIndex + 1);
-    
+
     return nextStatus.map(item => item.label);
   },
 
@@ -188,8 +218,10 @@ Page({
    * 新增：扫码更新非生产中订单的状态
    */
   scanToUpdateStatus() {
-    const { currentOrder } = this.data;
-    
+    const {
+      currentOrder
+    } = this.data;
+
     if (!currentOrder) {
       wx.showToast({
         title: '订单信息异常',
@@ -210,12 +242,12 @@ Page({
       scanType: ['barCode', 'qrCode'], // 支持条形码和二维码
       success: (res) => {
         wx.hideLoading();
-        
+
         try {
           // 解析扫码结果（支持两种格式：statusKey 或 状态名称）
           const scanResult = res.result.trim();
           let targetStatusKey = '';
-          
+
           // 格式1：扫码结果是状态key（如pending_ship）
           if (['pending_confirm', 'pending_material', 'producing', 'pending_ship', 'completed'].includes(scanResult)) {
             targetStatusKey = scanResult;
@@ -303,8 +335,11 @@ Page({
    * 新增：执行扫码更新订单状态的逻辑
    */
   confirmUpdateByScan() {
-    const { currentOrder, targetStatusKey } = this.data;
-    
+    const {
+      currentOrder,
+      targetStatusKey
+    } = this.data;
+
     if (!currentOrder || !targetStatusKey) {
       wx.showToast({
         title: '更新参数异常',
@@ -321,7 +356,9 @@ Page({
 
     try {
       // 构造更新后的订单数据
-      const updatedOrder = { ...currentOrder };
+      const updatedOrder = {
+        ...currentOrder
+      };
       const statusOrder = ['pending_confirm', 'pending_material', 'producing', 'pending_ship', 'completed'];
       updatedOrder.status = targetStatusKey;
       updatedOrder.statusIndex = statusOrder.findIndex(item => item === targetStatusKey);
@@ -369,8 +406,17 @@ Page({
    * 确认更新订单状态（保留原有逻辑，处理生产中订单工序更新）
    */
   confirmUpdate() {
-    const { currentOrder, step, nextIndex, nextStatusText, statusMap, steps } = this.data;
-    let updatedOrder = { ...currentOrder };
+    const {
+      currentOrder,
+      step,
+      nextIndex,
+      nextStatusText,
+      statusMap,
+      steps
+    } = this.data;
+    let updatedOrder = {
+      ...currentOrder
+    };
 
     // 显示加载提示
     wx.showLoading({
@@ -383,7 +429,7 @@ Page({
       if (currentOrder.status === 'producing') {
         const newProcess = parseInt(step) + 1;
         updatedOrder.process = newProcess;
-        
+
         // 如果工序完成（卷布），自动更新为待发货
         if (newProcess >= 5) {
           updatedOrder.status = 'pending_ship';
@@ -459,7 +505,7 @@ Page({
         // 解析扫码结果（假设扫码返回订单号）
         const orderId = res.result;
         const targetOrder = this.data.orderList.find(item => item.orderId === orderId);
-        
+
         if (targetOrder) {
           this.openUpdateModal({
             currentTarget: {
@@ -502,6 +548,13 @@ Page({
     // 跳转到订单详情页（实际项目中补充跳转逻辑）
     wx.navigateTo({
       url: `/pages/orderDetail/orderDetail?orderId=${order.orderId}`
+    });
+  },
+  
+  // 跳转到新建生产订单页面
+  handleCreateOrder() {
+    wx.navigateTo({
+      url: '/pages/productionOrderCreate/productionOrderCreate'
     });
   }
 });

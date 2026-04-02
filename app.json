@@ -11,7 +11,8 @@
     "pages/customer/customer",
     "pages/customer/customerEdit",
     "pages/bluetooth/bluetooth",
-    "pages/salesOrderCreate/salesOrderCreate"
+    "pages/salesOrderCreate/salesOrderCreate",
+    "pages/productionOrderCreate/productionOrderCreate"
   ],
   "requiredPrivateInfos": [
     "getLocation"

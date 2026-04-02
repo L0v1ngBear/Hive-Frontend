@@ -1,532 +1,423 @@
-/* 基础重置与全局适配：纵向 Flex 且禁止页面级滚动（防跳动核心） */
+/* ================= 1. 基础重置与全局适配 ================= */
 page {
-  background-color: #fafafa;
+  background-color: #f7f8fa;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  box-sizing: border-box;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; 
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .container {
   width: 100%;
-  padding: 0 clamp(8px, calc(100vw / 375 * 12), 20px);
-  padding-bottom: clamp(20px, calc(100vw / 375 * 30), 40px);
-  box-sizing: border-box;
-  max-width: 480px;
-  margin: 0 auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
+/* ================= 2. 顶部导航栏 (极致紧凑贴顶版) ================= */
+.top-nav {
+  position: relative;
+  width: 100vw;
+  
+  /* 【旋钮1：控制文字距离屏幕物理顶部的间距】 */
+  /* 设置为 0rpx 就是死死贴住物理屏幕最上边缘。建议保留 40rpx 避开刘海和电量图标 */
+  padding-top: 0rpx; 
+  
+  /* 【旋钮2：控制整个导航栏的高度】 */
+  /* 高度越小，下方的“全部、待确认”Tab 就越往上提。60rpx 已经非常紧凑了！ */
+  height: 60rpx; 
+  
+  background-color: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 999;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 2rpx;
+  max-width: 45%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 返回按钮：绝对定位，动态垂直居中对齐 */
+.nav-back {
+  position: absolute;
+  left: 10rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+/* 扫码按钮：绝对定位，动态垂直居中对齐 */
+.nav-scan {
+  position: absolute;
+  left: 98rpx;
+  top: 50%; 
+  transform: translateY(-50%);
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.nav-back-hover, .nav-scan-hover {
+  opacity: 0.5;
+}
+
+.back-icon, .scan-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+text.back-icon {
+  font-size: 44rpx;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  color: #333;
+}
+
+/* ================= 3. 顶部横向筛选栏 ================= */
+.order-filter {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  padding: 0 10rpx;
+  border-bottom: 1rpx solid #eee;
+  flex-shrink: 0;
+}
+.order-filter::-webkit-scrollbar {
+  display: none;
+}
+.filter-item {
+  display: inline-block;
+  padding: 24rpx 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+}
+.filter-item.active {
+  color: #1890FF; 
+  font-weight: bold;
+}
+.filter-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 6rpx;
+  background: #1890FF;
+  border-radius: 4rpx;
+}
+
+/* ================= 4. 滚动列表区 ================= */
 .list-scroll-container {
   flex: 1; 
   height: 0;
   width: 100%;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   box-sizing: border-box;
 }
-.list-scroll-container::-webkit-scrollbar {
-  display: none;
-}
 
-.top-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: clamp(8px, calc(100vw / 375 * 12), 16px) 0;
-  margin-bottom: clamp(12px, calc(100vw / 375 * 10), 20px);
-  width: 100%;
-  min-height: clamp(32px, calc(100vw / 375 * 36), 44px);
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-.nav-back {
-  width: clamp(32px, calc(100vw / 375 * 36), 44px);
-  height: clamp(32px, calc(100vw / 375 * 36), 44px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  touch-action: manipulation;
-}
-.nav-back-hover, .nav-back:active {
-  background-color: #f5f5f5;
-  transform: scale(0.95);
-}
-.back-icon {
-  width: clamp(24px, calc(100vw / 375 * 40), 36px);
-  height: clamp(24px, calc(100vw / 375 * 40), 36px);
-  max-width: 100%;
-  max-height: 100%;
-}
-.nav-title {
-  font-size: clamp(16px, calc(100vw / 375 * 18), 20px);
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0 clamp(4px, calc(100vw / 375 * 8), 12px);
-  flex: 1;
-  text-align: center;
-}
-.nav-scan {
-  width: clamp(32px, calc(100vw / 375 * 36), 44px);
-  height: clamp(32px, calc(100vw / 375 * 36), 44px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  touch-action: manipulation;
-}
-.nav-scan-hover, .nav-scan:active {
-  background-color: #f5f5f5;
-  transform: scale(0.95);
-}
-.scan-icon {
-  width: clamp(16px, calc(100vw / 375 * 20), 24px);
-  height: clamp(16px, calc(100vw / 375 * 20), 24px);
-  max-width: 100%;
-  max-height: 100%;
-}
-
-/* 筛选区：完美横滑修复 */
-.order-filter {
-  display: flex;
-  flex-wrap: nowrap; /* 必须：禁止换行，排成一排 */
-  overflow-x: auto; /* 必须：原生开启横向滚动 */
-  -webkit-overflow-scrolling: touch;
-  gap: clamp(8px, calc(100vw / 375 * 12), 16px);
-  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
-  width: 100%;
-  box-sizing: border-box;
-  /* 关键：上下给予 12px 的内边距，确保下方的阴影（box-shadow）有空间展示而不被切断 */
-  padding: 12px clamp(2px, calc(100vw / 375 * 4), 8px);
-  align-items: center;
-  flex-shrink: 0; 
-}
-
-/* 隐藏 view 标签的原生滚动条 */
-.order-filter::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-  color: transparent;
-}
-
-.filter-item {
-  padding: clamp(6px, calc(100vw / 375 * 8), 10px) clamp(12px, calc(100vw / 375 * 16), 20px);
-  background-color: #fff;
-  border-radius: clamp(16px, calc(100vw / 375 * 20), 24px);
-  font-size: clamp(12px, calc(100vw / 375 * 16), 18px);
-  color: #666;
-  transition: all 0.2s ease;
-  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(245, 166, 35, 0.06);
-  min-width: clamp(48px, calc(100vw / 375 * 60), 72px);
-  text-align: center;
-  flex-shrink: 0; /* 必须：保证内部胶囊按钮不会被挤压变扁 */
-  touch-action: manipulation;
-}
-.filter-item.active {
-  background: linear-gradient(90deg, #F5A623, #FFB84D);
-  color: #fff;
-}
-.filter-item:active {
-  transform: scale(0.95);
-  opacity: 0.8;
-}
-
-/* 订单列表区域 */
 .order-section {
-  width: 100%;
-  border-radius: clamp(12px, calc(100vw / 375 * 16), 20px);
-  box-shadow: 0 clamp(1px, calc(100vw / 375 * 2), 3px) clamp(8px, calc(100vw / 375 * 12), 16px) rgba(245, 166, 35, 0.06);
-  background-color: #fff;
-  padding: clamp(16px, calc(100vw / 375 * 20), 24px);
+  padding: 24rpx;
   box-sizing: border-box;
-  min-height: auto;
-  margin: 0;
-}
-.order-section.empty-section {
-  padding: clamp(40px, calc(100vw / 375 * 50), 60px) 0;
-  min-height: clamp(100px, calc(100vw / 375 * 120), 140px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* 空数据提示 */
 .empty-record {
-  padding: 0;
   text-align: center;
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  font-size: 28rpx;
   color: #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: clamp(40px, calc(100vw / 375 * 50), 60px);
-  margin: 0;
+  padding: 100rpx 0;
 }
 
-/* 订单卡片 */
+/* ================= 5. 订单卡片与内容 ================= */
 .order-card {
-  padding: clamp(16px, calc(100vw / 375 * 20), 24px) 0;
-  border-bottom: 1px solid #f9f9f9;
-  box-sizing: border-box;
-  touch-action: auto;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.02);
 }
-.order-card:last-child {
-  border-bottom: none;
-}
-.card-content {
-  width: 100%;
-}
+
 .order-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
-  flex-wrap: wrap;
-  row-gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+  margin-bottom: 24rpx;
+  border-bottom: 1rpx dashed #eee;
+  padding-bottom: 20rpx;
 }
 .order-id {
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  font-size: 28rpx;
   color: #333;
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 70%;
-}
-.order-status {
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
-  color: #F5A623;
-  font-weight: 600;
-  padding: clamp(2px, calc(100vw / 375 * 4), 6px) clamp(6px, calc(100vw / 375 * 8), 10px);
-  background-color: rgba(245, 166, 35, 0.1);
-  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
-  flex-shrink: 0;
 }
 
-/* 信息组 */
+/* 状态标签 */
+.order-status {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  background-color: #f5f5f5; /* 默认保底色 */
+  color: #666;
+}
+.status-pending_confirm { color: #FAAD14; background: rgba(250, 173, 20, 0.1); }
+.status-pending_material { color: #722ED1; background: rgba(114, 46, 209, 0.1); }
+.status-producing { color: #1890FF; background: rgba(24, 144, 255, 0.1); }
+.status-pending_ship { color: #D48806; background: rgba(255, 251, 230, 1); border: 1rpx solid #FFE58F; }
+.status-shipped { color: #13C2C2; background: rgba(19, 194, 194, 0.1); }
+.status-completed { color: #52C41A; background: rgba(82, 196, 26, 0.1); }
+
+/* 基础信息组 */
 .info-group {
-  margin-bottom: clamp(12px, calc(100vw / 375 * 16), 20px);
-  width: 100%;
-  box-sizing: border-box;
+  margin-bottom: 24rpx;
 }
 .info-line {
   display: flex;
   align-items: center;
-  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
-  flex-wrap: wrap;
-  row-gap: clamp(2px, calc(100vw / 375 * 4), 6px);
-  column-gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+}
+.info-line:last-child {
+  margin-bottom: 0;
 }
 .info-label {
-  color: #666;
-  min-width: clamp(40px, calc(100vw / 375 * 50), 60px);
+  color: #888;
   flex-shrink: 0;
 }
 .info-value {
   color: #333;
   font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: calc(100% - clamp(48px, calc(100vw / 375 * 60), 72px));
+  flex: 1;
 }
 .ml-12 {
-  margin-left: clamp(8px, calc(100vw / 375 * 12), 16px);
+  margin-left: 24rpx;
 }
 
-/* 生产工序 */
+/* ================= 6. 生产工序与状态轴 ================= */
 .process-box {
-  margin: clamp(12px, calc(100vw / 375 * 16), 20px) 0;
-  width: 100%;
-  box-sizing: border-box;
+  background: #fdfdfd;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 24rpx;
+  border: 1px solid #f0f0f0;
 }
 .process-title {
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  font-size: 26rpx;
   color: #666;
   display: block;
-  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
+  margin-bottom: 16rpx;
+  font-weight: 500;
 }
 .process-flow {
   display: flex;
-  gap: clamp(6px, calc(100vw / 375 * 8), 10px);
+  gap: 16rpx;
   flex-wrap: wrap;
-  width: 100%;
 }
 .process-item {
-  padding: clamp(4px, calc(100vw / 375 * 6), 8px) clamp(8px, calc(100vw / 375 * 12), 14px);
+  padding: 8rpx 20rpx;
   background-color: #f5f5f5;
-  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
-  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
-  color: #666;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #999;
   transition: all 0.2s ease;
-  min-width: clamp(32px, calc(100vw / 375 * 40), 48px);
-  text-align: center;
-  flex-shrink: 0;
 }
 .process-item.done {
-  background-color: #52C41A;
-  color: #fff;
+  background-color: #e6f7ff;
+  color: #1890FF;
+  border: 1px solid #91d5ff;
 }
 
-/* 状态机 */
+/* 底部状态横向时间轴 */
 .status-flow {
   display: flex;
   align-items: center;
-  margin-top: clamp(12px, calc(100vw / 375 * 16), 20px);
+  margin-top: 24rpx;
   overflow-x: auto;
-  padding-bottom: clamp(2px, calc(100vw / 375 * 4), 6px);
-  min-height: clamp(24px, calc(100vw / 375 * 30), 36px);
+  padding: 10rpx 0;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
 }
 .status-flow::-webkit-scrollbar {
   display: none;
 }
 .node {
-  font-size: clamp(12px, calc(100vw / 375 * 14), 16px);
+  font-size: 24rpx;
   color: #999;
   white-space: nowrap;
-  padding: clamp(1px, calc(100vw / 375 * 2), 3px) clamp(2px, calc(100vw / 375 * 4), 6px);
-  min-width: clamp(48px, calc(100vw / 375 * 60), 72px);
-  text-align: center;
   flex-shrink: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .node.active {
-  color: #F5A623;
+  color: #1890FF;
   font-weight: 600;
 }
 .node.done {
   color: #52C41A;
 }
 .line {
-  width: clamp(10px, calc(100vw / 375 * 15), 20px);
-  height: clamp(1px, calc(100vw / 375 * 2), 3px);
+  width: 40rpx;
+  height: 2rpx;
   background-color: #eee;
-  margin: 0 clamp(6px, calc(100vw / 375 * 8), 10px);
+  margin: 0 16rpx;
   flex-shrink: 0;
 }
 .line.done {
   background-color: #52C41A;
 }
 
-/* 订单操作按钮 */
+/* ================= 7. 卡片操作按钮 ================= */
 .order-action {
-  margin-top: calc(100vw / 375 * 16);
   display: flex;
   justify-content: flex-end;
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f9f9f9;
 }
 .update-btn {
-  background: linear-gradient(90deg, #F5A623, #FFB84D);
-  color: #fff;
-  border-radius: calc(100vw / 375 * 8);
-  font-size: calc(100vw / 375 * 14);
-  padding: calc(100vw / 375 * 4) calc(100vw / 375 * 12);
+  margin: 0 !important;
+  background: linear-gradient(135deg, #1890FF, #40A9FF) !important;
+  color: #fff !important;
+  border-radius: 32rpx;
+  font-size: 26rpx !important;
+  font-weight: 500;
+  padding: 10rpx 32rpx !important;
+  line-height: 1.5;
 }
 
-/* 扫码更新状态按钮 */
-.scan-status-btn {
-  display: flex;
-  align-items: center;
-  padding: calc(100vw / 375 * 10) calc(100vw / 375 * 12);
-  border: 1px solid #f5f5f5;
-  border-radius: calc(100vw / 375 * 8);
-  background-color: #f9f9f9;
-  width: 100%;
-  box-sizing: border-box;
-}
-.scan-small-icon {
-  width: calc(100vw / 375 * 20);
-  height: calc(100vw / 375 * 20);
-  margin-right: calc(100vw / 375 * 8);
-}
-.scan-btn-text {
-  font-size: calc(100vw / 375 * 16);
-  color: #333;
-  flex: 1;
-}
-
-/* 弹窗样式 */
+/* ================= 8. 弹窗样式规范化 ================= */
 .modal-mask {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  box-sizing: border-box;
-  min-height: 100vh;
 }
 .modal-content {
-  width: clamp(280px, 80%, 360px);
-  max-width: calc(100vw - 40px);
+  width: 600rpx;
   background-color: #fff;
-  border-radius: clamp(12px, calc(100vw / 375 * 16), 20px);
-  padding: clamp(20px, calc(100vw / 375 * 24), 28px);
+  border-radius: 24rpx;
+  padding: 40rpx 40rpx 30rpx;
   box-sizing: border-box;
-  min-width: 260px;
 }
 .modal-title {
-  font-size: clamp(16px, calc(100vw / 375 * 18), 20px);
+  font-size: 34rpx;
   font-weight: 600;
   color: #333;
   text-align: center;
-  margin-bottom: clamp(16px, calc(100vw / 375 * 20), 24px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.modal-info {
-  margin-bottom: clamp(20px, calc(100vw / 375 * 24), 28px);
+  margin-bottom: 30rpx;
 }
 .info-row {
   display: flex;
-  align-items: center;
-  margin-bottom: clamp(10px, calc(100vw / 375 * 12), 14px);
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
-  flex-wrap: wrap;
-  row-gap: clamp(2px, calc(100vw / 375 * 4), 6px);
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
 }
 .picker-wrap {
-  margin-top: clamp(10px, calc(100vw / 375 * 12), 14px);
-  width: 100%;
+  margin-top: 30rpx;
 }
 .picker-label {
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+  font-size: 28rpx;
   color: #666;
+  margin-bottom: 16rpx;
   display: block;
-  margin-bottom: clamp(6px, calc(100vw / 375 * 8), 10px);
 }
-.picker {
-  padding: clamp(8px, calc(100vw / 375 * 10), 12px) clamp(10px, calc(100vw / 375 * 12), 14px);
-  border: 1px solid #f5f5f5;
-  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
+.picker, .scan-status-btn {
+  padding: 20rpx 24rpx;
+  border: 1rpx solid #e8e8e8;
+  border-radius: 12rpx;
+  font-size: 28rpx;
   color: #333;
-  background-color: #f9f9f9;
-  width: 100%;
-  box-sizing: border-box;
-  min-height: clamp(36px, calc(100vw / 375 * 44), 48px);
+  background-color: #fafafa;
   display: flex;
   align-items: center;
+}
+.scan-small-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 16rpx;
 }
 .modal-actions {
   display: flex;
-  gap: clamp(10px, calc(100vw / 375 * 12), 14px);
-  width: 100%;
+  gap: 24rpx;
+  margin-top: 40rpx;
 }
 .modal-btn {
   flex: 1;
-  height: clamp(36px, calc(100vw / 375 * 44), 48px);
-  line-height: clamp(36px, calc(100vw / 375 * 44), 48px);
-  border-radius: clamp(6px, calc(100vw / 375 * 8), 10px);
-  font-size: clamp(14px, calc(100vw / 375 * 16), 18px);
-  border: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  touch-action: manipulation;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  padding: 0;
+  margin: 0 !important;
 }
 .cancel-btn {
   background-color: #f5f5f5;
   color: #666;
 }
 .confirm-btn {
-  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  background: linear-gradient(135deg, #1890FF, #0050B3);
   color: #fff;
 }
 
-/* 通用样式：响应式调整 */
-.mt-20 {
-  margin-top: clamp(16px, calc(100vw / 375 * 20), 24px);
-}
-.stopPropagation {
-  pointer-events: auto;
-}
-
-@media (max-width: 320px) {
-  .order-filter {
-    gap: clamp(6px, calc(100vw / 375 * 8), 10px);
-  }
-  .filter-item {
-    padding: clamp(4px, calc(100vw / 375 * 6), 8px) clamp(10px, calc(100vw / 375 * 12), 14px);
-    min-width: clamp(40px, calc(100vw / 375 * 50), 56px);
-    font-size: 14px;
-  }
-  .node {
-    min-width: clamp(40px, calc(100vw / 375 * 50), 56px);
-    font-size: 12px;
-  }
-  .container {
-    padding: 0 clamp(6px, calc(100vw / 375 * 8), 12px);
-  }
-  .order-section {
-    padding: clamp(12px, calc(100vw / 375 * 16), 20px);
-  }
-  .order-section.empty-section {
-    padding: clamp(30px, calc(100vw / 375 * 40), 50px) 0;
-    min-height: clamp(80px, calc(100vw / 375 * 100), 120px);
-  }
+/* ================= 9. 底部悬浮新建按钮 ================= */
+.fixed-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20rpx 30rpx calc(20rpx + env(safe-area-inset-bottom)); 
+  background-color: #ffffff;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  box-sizing: border-box;
 }
 
-@media (min-width: 414px) {
-  .container { max-width: 440px; margin: 0 auto; }
-  .nav-back, .nav-scan { width: 44px; height: 44px; }
-  .filter-item { min-width: 72px; }
-  .order-section.empty-section {
-    padding: clamp(50px, calc(100vw / 375 * 60), 70px) 0;
-    min-height: clamp(120px, calc(100vw / 375 * 140), 160px);
-  }
+.create-order-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #1890FF, #0050B3);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 16rpx rgba(24, 144, 255, 0.3);
 }
 
-@media (min-width: 768px) {
-  .container { max-width: 480px; margin: 20px auto; }
-  page { display: flex; justify-content: center; background-color: #eee; }
-  .list-scroll-container {
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    overflow: hidden;
-    height: calc(100vh - 40px);
-  }
-  .order-section.empty-section {
-    padding: clamp(60px, calc(100vw / 375 * 70), 80px) 0;
-    min-height: clamp(140px, calc(100vw / 375 * 160), 180px);
-  }
+.plus-icon {
+  font-size: 40rpx;
+  margin-right: 8rpx;
+  font-weight: 300;
+  line-height: 88rpx;
 }
 
-@media (orientation: landscape) {
-  .list-scroll-container { height: 100vh; }
-  .order-section { min-height: auto; }
-  .order-section.empty-section {
-    min-height: calc(100vh - 160px);
-    padding: 40px 0;
-  }
-  .modal-content { width: clamp(300px, 60%, 400px); }
+.safe-bottom-holder {
+  height: 160rpx; 
+  width: 100%;
+  background: transparent;
 }

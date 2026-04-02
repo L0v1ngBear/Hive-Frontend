@@ -159,7 +159,7 @@ Page({
   // 跳转至新建页面
   handleCreateOrder() {
     // 确保这里的路径与你的实际目录一致
-    wx.navigateTo({ url: '/pages/order/add' });
+    wx.navigateTo({ url: '/pages/salesOrderCreate/salesOrderCreate' });
   },
 
   // 进入详情页

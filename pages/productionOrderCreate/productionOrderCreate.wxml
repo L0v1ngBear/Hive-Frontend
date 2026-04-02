@@ -1,0 +1,76 @@
+<view class="container">
+  <view class="top-nav">
+    <view class="nav-back" bindtap="handleBack">
+      <text class="back-icon">＜</text>
+    </view>
+    <text class="nav-title">新建生产订单</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <scroll-view class="form-scroll-container" scroll-y="true">
+    <view class="form-card">
+      <view class="card-title">基础信息</view>
+      
+      <view class="form-item">
+        <text class="form-label">客户名称</text>
+        <input class="form-input" placeholder="选填，请输入客户名称" 
+               value="{{formData.customerName}}" bindinput="handleInput" data-field="customerName" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">项目名称</text>
+        <input class="form-input" placeholder="选填，请输入项目名称" 
+               value="{{formData.projectName}}" bindinput="handleInput" data-field="projectName" />
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="card-title">生产详情</view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>面料型号</text>
+        <input class="form-input" placeholder="请输入面料型号 (如: T800-210)" 
+               value="{{formData.modelCode}}" bindinput="handleInput" data-field="modelCode" />
+      </view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="form-label"><text class="required">*</text>克重(g)</text>
+          <input class="form-input" type="digit" placeholder="必须>0"
+                 value="{{formData.weight}}" bindinput="handleInput" data-field="weight" />
+        </view>
+        <view class="form-item">
+          <text class="form-label"><text class="required">*</text>规格(cm)</text>
+          <input class="form-input" type="digit" placeholder="必须>0" 
+                 value="{{formData.spec}}" bindinput="handleInput" data-field="spec" />
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>订单数量</text>
+        <input class="form-input" type="number" placeholder="请输入数量 (至少为1)" 
+               value="{{formData.quantity}}" bindinput="handleInput" data-field="quantity" />
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="card-title">交期与排期</view>
+      
+      <view class="form-item">
+        <text class="form-label"><text class="required">*</text>预计交付日期</text>
+        <picker mode="date" value="{{formData.deliveryDate}}" bindchange="handleDateChange">
+          <view class="picker-view {{formData.deliveryDate ? '' : 'placeholder'}}">
+            {{formData.deliveryDate || '请选择将来的日期'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="safe-bottom-area"></view>
+  </scroll-view>
+
+  <view class="fixed-bottom-bar">
+    <button class="btn btn-cancel" bindtap="handleBack">取消</button>
+    <button class="btn btn-submit" bindtap="handleSubmit">创建生产订单</button>
+  </view>
+</view>
