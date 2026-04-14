@@ -1,3 +1,5 @@
+const { request } = require('../../utils/request.js');
+
 Page({
   data: {
     currentFilter: 'all',
@@ -10,172 +12,160 @@ Page({
       { label: '已发货', key: 'shipped' },
       { label: '已完成', key: 'completed' }
     ],
-    orderList: [],
     filteredOrderList: [],
-    statusMap: {
-      'pending_confirm': '待确认',
-      'pending_material': '备料中',
-      'producing': '生产中',
-      'pending_ship': '待发货',
-      'shipped': '已发货',
-      'completed': '已完成'
-    },
+    page: 1,
+    pageSize: 10,
+    total: 0,
+    isFinished: false,
+    isLoading: false
   },
 
   onLoad(options) {
-    this.mockGetSalesOrderData();
+    this.fetchOrderList();
   },
 
-  // 模拟从后端获取数据，适配最新 DTO 结构
-  mockGetSalesOrderData() {
-    const mockData = [
-      {
-        orderId: 'SO20260312001',
-        status: 'pending_confirm',
-        customerName: '杭州锦绣服饰有限公司',
-        projectName: '26春季新款预售',
-        totalAmount: '14250.00',
-        totalQuantity: 500.00,
-        deliveryDate: '2026-03-20',
-        createProductionOrder: 1, // 1-是 0-否
-        expressCompany: '',
-        expressNo: '',
-        // 核心：明细中增加了 weight 和 spec
-        items: [
-          { 
-            modelCode: 'T800-210', 
-            quantity: 300.00, 
-            weight: 120.5, // 克重
-            spec: 150.0    // 规格/幅宽
-          },
-          { 
-            modelCode: 'C600-180', 
-            quantity: 200.00, 
-            weight: 180.0, 
-            spec: 160.0 
-          }
-        ]
-      },
-      {
-        orderId: 'SO20260312002',
-        status: 'pending_ship',
-        customerName: '广州尚衣制造厂',
-        projectName: '',
-        totalAmount: '18200.00',
-        totalQuantity: 1000.00,
-        deliveryDate: '2026-03-15',
-        createProductionOrder: 0,
-        expressCompany: '',
-        expressNo: '',
-        items: [
-          { 
-            modelCode: 'C600-180', 
-            quantity: 1000.00, 
-            weight: 180.0, 
-            spec: 160.0 
-          }
-        ]
-      },
-      {
-        orderId: 'SO20260310005',
-        status: 'shipped',
-        customerName: '上海依米服装设计',
-        projectName: '冬季联名款',
-        totalAmount: '18240.00',
-        totalQuantity: 800.00,
-        deliveryDate: '2026-03-12',
-        createProductionOrder: 1,
-        expressCompany: '顺丰速运',
-        expressNo: 'SF1234567890',
-        items: [
-          { 
-            modelCode: 'N400-200', 
-            quantity: 500.00, 
-            weight: 210.0, 
-            spec: 148.0 
-          }
-        ]
-      }
-    ];
+  fetchOrderList(isMore = false) {
+    if (this.data.isLoading || (isMore && this.data.isFinished)) return;
 
-    this.setData({
-      orderList: mockData,
-      filteredOrderList: mockData
+    this.setData({ isLoading: true });
+
+    const queryParams = {
+      current: this.data.page,
+      size: this.data.pageSize,
+      status: this.data.currentFilter === 'all' ? '' : this.data.currentFilter
+    };
+
+    request({
+      url: '/sales/orders/list',
+      method: 'GET',
+      params: queryParams  // 这里我也帮你修正拼写
+    }).then(res => {
+      const { data, total, pages } = res.data;
+      const newList = isMore ? this.data.filteredOrderList.concat(data) : data;
+
+      this.setData({
+        filteredOrderList: newList,
+        total: total,
+        isFinished: this.data.page >= pages
+      });
+    })
+    // ⬇️⬇️⬇️ 只打日志，不弹任何提示！交给 request.js 自动弹 ⬇️⬇️⬇️
+    .catch(err => {
+      console.error('加载失败:', err);
+    })
+    .finally(() => {
+      this.setData({ isLoading: false });
+      wx.stopPullDownRefresh();
     });
   },
 
-  // 顶部 Tab 切换过滤
   handleFilter(e) {
     const filterKey = e.currentTarget.dataset.filter;
-    let filteredList = this.data.orderList;
-
-    if (filterKey !== 'all') {
-      filteredList = this.data.orderList.filter(item => item.status === filterKey);
-    }
+    if (this.data.currentFilter === filterKey) return;
 
     this.setData({
       currentFilter: filterKey,
-      filteredOrderList: filteredList
+      page: 1,
+      filteredOrderList: [],
+      isFinished: false
+    }, () => {
+      this.fetchOrderList();
     });
   },
 
-  // 按钮操作逻辑
   handleAction(e) {
     const { type, order } = e.currentTarget.dataset;
-    
-    const actionMap = {
-      confirm: '确认接受该订单并进入待备料状态？',
-      material_done: '确认备料已完成，开始排产？',
-      produce_done: '确认生产已完成，进入仓库待发货？',
-      ship: '前往录入物流单号发货？',
-      finish: '确认该订单已送达并结算完成？',
-      logistics: '查看当前物流轨迹？'
+    const { orderId } = order;
+
+    const actionConfig = {
+      confirm: { status: 'pending_material', msg: '确认接受该订单并开始备料？' },
+      material_done: { status: 'producing', msg: '确认备料已完成，开始排产？' },
+      produce_done: { status: 'pending_ship', msg: '确认生产已完成，准备发货？' },
+      ship: { status: 'shipped', msg: '确认订单已发出？' },
+      finish: { status: 'completed', msg: '确认订单已完成签收与结算？' }
     };
 
     if (type === 'logistics') {
-      wx.showToast({ title: '物流查询接口维护中', icon: 'none' });
+      this.getExpressDetail(orderId);
       return;
     }
 
+    const config = actionConfig[type];
+    if (!config) return;
+
     wx.showModal({
       title: '业务流转确认',
-      content: actionMap[type] || '确认执行此操作？',
+      content: config.msg,
       confirmColor: '#1890FF',
       success: (res) => {
-        if (res.confirm) {
-          // 这里将来调用 API 修改订单状态
-          wx.showLoading({ title: '处理中...' });
-          setTimeout(() => {
-            wx.hideLoading();
-            wx.showToast({ title: '流转成功', icon: 'success' });
-            // 重新刷新数据
-            this.mockGetSalesOrderData();
-          }, 600);
-        }
+        if (res.confirm) this.executeStatusUpdate(orderId, config.status);
       }
     });
   },
 
-  // 跳转至新建页面
-  handleCreateOrder() {
-    // 确保这里的路径与你的实际目录一致
-    wx.navigateTo({ url: '/pages/salesOrderCreate/salesOrderCreate' });
-  },
+  executeStatusUpdate(orderId, nextStatus) {
+    wx.showLoading({ title: '处理中...' });
 
-  // 进入详情页
-  openDetail(e) {
-    const { order } = e.currentTarget.dataset;
-    // 传递订单号进入详情页
-    wx.navigateTo({
-      url: `/pages/order/detail?orderId=${order.orderId}`
+    request({
+      url: `/sales/orders/${orderId}/status`,
+      method: 'POST',
+      data: { status: nextStatus }
+    }).then(() => {
+      wx.showToast({ title: '流转成功', icon: 'success' });
+      this.setData({ page: 1, isFinished: false }, () => {
+        this.fetchOrderList();
+      });
+    })
+    // ⬇️⬇️⬇️ 这里也只留日志，不弹提示 ⬇️⬇️⬇️
+    .catch(err => {
+      console.error('操作失败', err);
+    })
+    .finally(() => {
+      wx.hideLoading();
     });
   },
 
-  handleBack() {
-    wx.navigateBack({ delta: 1 });
+  getExpressDetail(orderId) {
+    request({
+      url: `/sales/orders/expressInfo/${orderId}`,
+      method: 'GET'
+    }).then(res => {
+      const { expressCompany, expressNo } = res.data;
+      if (!expressNo) {
+        wx.showToast({ title: '暂无物流信息', icon: 'none' });
+        return;
+      }
+      wx.showModal({
+        title: '物流追踪',
+        content: `快递公司：${expressCompany || '未知'}\n快递单号：${expressNo}`,
+        showCancel: false
+      });
+    });
   },
 
-  handleSearch() {
-    wx.showToast({ title: '搜索功能优化中', icon: 'none' });
-  }
+  handleCreateOrder() {
+    wx.navigateTo({ url: '/pages/salesOrderCreate/salesOrderCreate' });
+  },
+
+  openDetail(e) {
+    const { orderId } = e.currentTarget.dataset.order;
+    wx.navigateTo({ url: `/pages/order/detail?orderId=${orderId}` });
+  },
+
+  onPullDownRefresh() {
+    this.setData({ page: 1, isFinished: false }, () => {
+      this.fetchOrderList();
+    });
+  },
+
+  onReachBottom() {
+    if (!this.data.isFinished && !this.data.isLoading) {
+      this.setData({ page: this.data.page + 1 }, () => {
+        this.fetchOrderList(true);
+      });
+    }
+  },
+
+  handleBack() { wx.navigateBack({ delta: 1 }); },
+  handleSearch() { wx.showToast({ title: '搜索功能对接中', icon: 'none' }); }
 });

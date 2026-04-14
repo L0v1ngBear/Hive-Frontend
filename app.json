@@ -5,11 +5,8 @@
     "pages/inventory/inventory",
     "pages/order/order",
     "pages/salesOrder/salesOrder",
-    "pages/knowledge/knowledge",
     "pages/orderDetail/orderDetail",
     "pages/badProduct/badProduct",
-    "pages/customer/customer",
-    "pages/customer/customerEdit",
     "pages/bluetooth/bluetooth",
     "pages/salesOrderCreate/salesOrderCreate",
     "pages/productionOrderCreate/productionOrderCreate"

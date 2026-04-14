@@ -1,7 +1,7 @@
 <view class="container">
   <view class="top-nav">
-    <view class="nav-back" bindtap="handleBack">
-      <text class="back-icon">＜</text>
+    <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
+      <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
     </view>
     <text class="nav-title">销售订单管理</text>
     <view class="nav-scan" bindtap="handleSearch">

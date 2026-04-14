@@ -10,14 +10,12 @@
   </view>
 
   <view class="order-filter">
-    <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key"
-      catchtap="handleFilter" data-filter="{{item.key}}">
+    <view class="filter-item {{currentFilter==item.key?'active':''}}" wx:for="{{filterList}}" wx:key="key" catchtap="handleFilter" data-filter="{{item.key}}">
       {{item.label}}
     </view>
   </view>
 
-  <scroll-view class="list-scroll-container" scroll-y="true" scroll-with-animation="true" enhanced="true"
-    bounces="true">
+  <scroll-view class="list-scroll-container" scroll-y="true" scroll-with-animation="true" enhanced="true" bounces="true">
     <view class="order-section {{filteredOrderList.length === 0 ? 'empty-section' : ''}}">
       <view wx:if="{{filteredOrderList.length === 0}}" class="empty-record">
         <text>暂无相关订单数据</text>
@@ -36,26 +34,21 @@
                 <text class="info-label">合作项目：</text>
                 <text class="info-value">{{item.projectName || '暂无项目'}}</text>
               </view>
-
+              <view class="info-line">
+                <text class="info-label">客户：</text>
+                <text class="info-value">{{item.customerName || '暂无客户'}}</text>
+              </view>
               <view class="info-line">
                 <text class="info-label">型号：</text>
                 <text class="info-value">{{item.model}}</text>
-                <text class="info-label ml-12">面料：</text>
-                <text class="info-value">{{item.fabric}}</text>
+                <text class="info-label ml-12">幅宽：</text>
+                <text class="info-value">{{item.width}}cm</text>
               </view>
               <view class="info-line">
                 <text class="info-label">克重：</text>
-                <text class="info-value">{{item.weight}}g</text>
-                <text class="info-label ml-12">幅宽：</text>
-                <text class="info-value">{{item.width}}cm</text>
-                <text class="info-label ml-12">颜色：</text>
-                <text class="info-value">{{item.color}}</text>
-              </view>
-              <view class="info-line">
-                <text class="info-label">数量：</text>
-                <text class="info-value">{{item.quantity}}米</text>
-                <text class="info-label ml-12">单价：</text>
-                <text class="info-value">{{item.price}}元/米</text>
+                <text class="info-value">{{item.weight || '-'}}g</text>
+                <text class="info-label ml-12">数量：</text>
+                <text class="info-value">{{item.quantity || '-'}}米</text>
               </view>
             </view>
 
@@ -78,7 +71,7 @@
               <view class="node {{item.status=='producing'?'active':(item.statusIndex>=2?'done':'')}}">生产</view>
               <view class="line {{item.statusIndex>=3?'done':''}}"></view>
               <view class="node {{item.status=='pending_ship'?'active':(item.statusIndex>=3?'done':'')}}">待发</view>
-              <view class="line {{item.statusIndex>=4?'done':''}}"></view>
+              <view class="line {{item.statusIndex>=5?'done':''}}"></view>
               <view class="node {{item.status=='completed'?'active':''}}">完成</view>
             </view>
           </view>

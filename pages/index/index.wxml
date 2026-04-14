@@ -67,12 +67,6 @@
           <text class="grid-text" selectable="false">次品管理</text>
         </view>
 
-        <view wx:if="{{functionEnable.customer}}" class="grid-item" bindtap="handleFunctionTap"
-          data-function-type="customer" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/customer.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">客户管理</text>
-        </view>
-
         <view wx:if="{{functionEnable.approval}}" class="grid-item" bindtap="handleFunctionTap"
           data-function-type="approval" hover-class="grid-item-hover">
           <image class="grid-icon" src="/images/approval.png" mode="widthFix" lazy-load="true"></image>
@@ -83,12 +77,6 @@
           data-function-type="notice" hover-class="grid-item-hover">
           <image class="grid-icon" src="/images/notice.png" mode="widthFix" lazy-load="true"></image>
           <text class="grid-text" selectable="false">企业公告</text>
-        </view>
-
-        <view wx:if="{{functionEnable.knowledge}}" class="grid-item" bindtap="handleFunctionTap"
-          data-function-type="knowledge" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/knowledge.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">企业知识库</text>
         </view>
       </view>
     </view>
