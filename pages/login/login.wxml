@@ -1,0 +1,65 @@
+<view class="container">
+  <view class="ambient-blob top-right"></view>
+  <view class="ambient-blob bottom-left"></view>
+
+  <view class="main-content">
+    
+    <view class="brand-section">
+      <view class="logo-box">
+        <image class="logo-icon" src="/images/hive.png" mode="aspectFit"></image>
+      </view>
+      <text class="brand-name">HIVE</text>
+      <text class="welcome-title">欢迎回来</text>
+      <text class="welcome-subtitle">先用测试账号登录，进入小程序各业务页面体验完整流程</text>
+    </view>
+
+    <view class="action-section">
+      <view class="login-form">
+        <view class="input-card">
+          <text class="input-label">租户码</text>
+          <input class="input-field" value="{{tenantCode}}" data-field="tenantCode" bindinput="handleInput" placeholder="请输入租户码" placeholder-class="input-placeholder" />
+        </view>
+
+        <view class="input-card">
+          <text class="input-label">账号</text>
+          <input class="input-field" value="{{username}}" data-field="username" bindinput="handleInput" placeholder="请输入账号或手机号" placeholder-class="input-placeholder" />
+        </view>
+
+        <view class="input-card">
+          <text class="input-label">密码</text>
+          <input class="input-field" password value="{{password}}" data-field="password" bindinput="handleInput" placeholder="请输入密码" placeholder-class="input-placeholder" />
+        </view>
+      </view>
+
+      <button class="btn-primary account-btn" bindtap="handleAccountLogin" hover-class="btn-hover" loading="{{submitting}}">
+        <text>账号密码登录</text>
+      </button>
+
+      <button class="btn-secondary wechat-btn" open-type="getPhoneNumber" bindgetphonenumber="handleWechatLogin" hover-class="btn-hover">
+        <text>微信一键登录</text>
+      </button>
+    </view>
+
+    <view class="agreement-section" bindtap="toggleAgreement">
+      <view class="checkbox {{isAgreed ? 'checked' : ''}}">
+        <view class="checkmark" wx:if="{{isAgreed}}"></view>
+      </view>
+      <view class="agreement-text">
+        <text>我已阅读并同意 </text>
+        <text class="link" catchtap="openProtocol">用户协议</text>
+        <text>、</text>
+        <text class="link" catchtap="openPrivacy">隐私政策</text>
+        <text> 以及 </text>
+        <text class="link" catchtap="openRule">数字化管理准则</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <view class="line"></view>
+    <text class="footer-text">INDUSTRIAL PRECISION</text>
+    <view class="line"></view>
+  </view>
+
+  <view class="bottom-base"></view>
+</view>

@@ -1,0 +1,267 @@
+/* 全局容器 */
+.container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  color: #181c1e;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* --- 光晕氛围背景 (Asymmetric Accent) --- */
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.top-right {
+  top: -10%;
+  right: -20%;
+  width: 750rpx;
+  height: 50vh;
+  background-color: rgba(214, 227, 255, 0.4); /* primary-fixed */
+  filter: blur(80px);
+}
+.bottom-left {
+  bottom: -10%;
+  left: -20%;
+  width: 600rpx;
+  height: 40vh;
+  background-color: rgba(242, 188, 130, 0.2); /* tertiary-fixed-dim */
+  filter: blur(80px);
+}
+
+/* --- 主体内容 --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64rpx;
+  z-index: 10;
+  margin-top: 6vh;
+}
+
+/* --- 品牌与 Logo --- */
+.brand-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 64rpx;
+}
+
+.logo-box {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: #002045; /* primary */
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+  box-shadow: 0rpx 32rpx 64rpx rgba(0, 32, 69, 0.15);
+  transform: rotate(3deg); /* 倾斜体现 Atelier 手工感 */
+}
+.logo-icon {
+  width: 60rpx;
+  height: 60rpx;
+  transform: rotate(-3deg);
+}
+
+.brand-name {
+  font-size: 22rpx;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  color: rgba(0, 32, 69, 0.8);
+  text-transform: uppercase;
+  margin-bottom: 48rpx;
+  padding-left: 0.35em;
+}
+
+.welcome-title {
+  font-size: 52rpx;
+  font-weight: 900;
+  letter-spacing: -1rpx;
+  color: #181c1e;
+  margin-bottom: 20rpx;
+}
+
+.welcome-subtitle {
+  font-size: 24rpx;
+  color: #43474e;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+  padding: 0 20rpx;
+}
+
+/* --- 表单输入区 (Minimalist Fill Rule) --- */
+.action-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 48rpx;
+}
+
+.input-card {
+  padding: 20rpx 28rpx;
+  border-radius: 16rpx;
+  background-color: rgba(224, 227, 229, 0.35); /* 极度轻柔的灰色填充 */
+  border-bottom: 2rpx solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 微信小程序中可使用 pseudo-class 或绑定事件模拟 focus 态 */
+.input-card:focus-within {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-bottom-color: #002045; /* 聚焦时底部蓝线高亮 */
+  box-shadow: 0rpx 16rpx 40rpx rgba(0, 32, 69, 0.04);
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8rpx;
+  font-size: 20rpx;
+  color: #5b6472;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.input-field {
+  width: 100%;
+  font-size: 30rpx;
+  color: #181c1e;
+  font-weight: 500;
+  height: 48rpx;
+  min-height: 48rpx;
+}
+
+/* --- 按钮操作区 --- */
+button {
+  margin: 0;
+  padding: 0;
+  border-radius: 20rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+button::after {
+  border: none;
+}
+
+.btn-hover {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* 账号密码登录 - 品牌主色 */
+.account-btn {
+  background-color: #002045;
+  color: #ffffff;
+  box-shadow: 0rpx 16rpx 40rpx rgba(0, 32, 69, 0.15);
+  margin-bottom: 24rpx;
+}
+
+/* 微信快捷登录 - 微信绿 */
+.btn-secondary {
+  background-color: #07C160;
+  color: #ffffff;
+  box-shadow: 0rpx 16rpx 40rpx rgba(7, 193, 96, 0.2);
+}
+
+/* --- 隐私协议复选框 --- */
+.agreement-section {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 48rpx;
+  padding: 20rpx 0;
+}
+
+.checkbox {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: 6rpx;
+  border: 2rpx solid #c4c6cf;
+  background-color: #f7fafc;
+  flex-shrink: 0;
+  margin-top: 6rpx;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background-color: #002045;
+  border-color: #002045;
+}
+
+.checkmark {
+  width: 10rpx;
+  height: 16rpx;
+  border-bottom: 4rpx solid #fff;
+  border-right: 4rpx solid #fff;
+  transform: rotate(45deg) translateY(-2rpx);
+}
+
+.agreement-text {
+  font-size: 22rpx;
+  color: rgba(67, 71, 78, 0.8);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.link {
+  color: #002045;
+  font-weight: 700;
+}
+
+/* --- 底部装饰 --- */
+.footer {
+  width: 100%;
+  padding: 48rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0.3;
+}
+.line {
+  width: 40rpx;
+  height: 2rpx;
+  background-color: #43474e;
+}
+.footer-text {
+  font-size: 18rpx;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #43474e;
+  padding: 0 24rpx;
+}
+
+.bottom-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 12rpx;
+  background-color: #002045;
+  z-index: 20;
+}

@@ -1,5 +1,6 @@
 const tenantUtil = require('../../utils/tenant.js');
 const requestUtil = require('../../utils/request.js');
+const authUtil = require('../../utils/auth.js');
 
 Page({
   data: {
@@ -9,18 +10,18 @@ Page({
     tenantInfo: { name: '' },
     userInfo: { name: '', dept: '' },
     functionEnable: {
-      attendance: false,
-      order: false,
-      salesOrder: false,
-      inventory: false,
-      approval: false,
-      notice: false,
-      file: false,
-      badProduct: false,
-      knowledge: false,
-      customer: false
+      attendance: true,
+      order: true,
+      salesOrder: true,
+      inventory: true,
+      approval: true,
+      notice: true,
+      file: true,
+      badProduct: true,
+      knowledge: true,
+      customer: true
     },
-    hasAnyFunctionEnable: false
+    hasAnyFunctionEnable: true
   },
 
   onLoad() {
@@ -32,38 +33,83 @@ Page({
   },
 
   async fetchHomeSummary(showLoading = true) {
+    if (!authUtil.isLoggedIn()) {
+      this.setData({
+        tenantInfo: tenantUtil.getTenantInfo(),
+        userInfo: { name: '未登录用户', dept: '点击功能后跳转登录' },
+        todoCount: 0,
+        todoList: []
+      });
+      return;
+    }
+
     try {
       const res = await requestUtil.get('/home/summary', { showLoading });
       const data = res.data || {};
       const tenantInfo = data.tenantInfo || {};
-      const functionEnable = data.functionEnable || {};
       tenantUtil.setTenantInfo(tenantInfo);
 
       this.setData({
-        tenantInfo: { name: tenantInfo.name || '未加入组织' },
+        tenantInfo: { name: tenantInfo.name || '当前组织' },
         userInfo: data.userInfo || { name: '', dept: '' },
         todoCount: data.todoCount || 0,
-        todoList: data.todoList || [],
-        functionEnable,
-        hasAnyFunctionEnable: Object.values(functionEnable).some(Boolean)
+        todoList: data.todoList || []
       });
     } catch (error) {
       console.error('获取首页数据失败', error);
     }
   },
 
-  handleJoinTenant() {
-    const tenantInfo = tenantUtil.getTenantInfo();
-    wx.showToast({ title: tenantInfo.name || '当前未绑定组织', icon: 'none' });
-  },
-
   handleFunctionTap(e) {
     const type = e.currentTarget.dataset.functionType;
-    if (!this.data.functionEnable[type]) {
-      wx.showToast({ title: '该功能暂无权限', icon: 'none' });
+    if (!authUtil.requireLogin(`/pages/${type}/${type}`)) {
       return;
     }
     wx.navigateTo({ url: `/pages/${type}/${type}` });
+  },
+
+  async handleScanWebLogin() {
+    if (!authUtil.requireLogin('/pages/index/index')) {
+      return;
+    }
+
+    try {
+      const scanResult = await new Promise((resolve, reject) => {
+        wx.scanCode({
+          scanType: ['qrCode'],
+          success: resolve,
+          fail: reject
+        });
+      });
+
+      const sceneKey = this.parseWebLoginScene(scanResult.result);
+      if (!sceneKey) {
+        wx.showToast({ title: '这不是网页登录二维码', icon: 'none' });
+        return;
+      }
+
+      await requestUtil.post(`${requestUtil.getWebBaseUrl()}/auth/scan-login/confirm`, {
+        sceneKey
+      }, { needTenant: false });
+
+      wx.showToast({ title: '已确认网页登录', icon: 'success' });
+    } catch (error) {
+      if (error?.errMsg === 'scanCode:fail cancel') {
+        return;
+      }
+      console.error('扫码确认网页登录失败', error);
+    }
+  },
+
+  parseWebLoginScene(result) {
+    const content = String(result || '').trim();
+    if (!content) {
+      return '';
+    }
+    if (content.startsWith('HIVE_WEB_LOGIN:')) {
+      return content.slice('HIVE_WEB_LOGIN:'.length).trim();
+    }
+    return '';
   },
 
   handleJumpToTodoList() {
@@ -75,6 +121,10 @@ Page({
   },
 
   handleTodoItemTap(e) {
+    if (!authUtil.requireLogin('/pages/index/index')) {
+      return;
+    }
+
     const item = e.currentTarget.dataset.item || {};
     if (item.tag === '生产订单') {
       wx.navigateTo({ url: '/pages/order/order' });
