@@ -1,97 +1,90 @@
-<scroll-view class="scroll-container" scroll-y="true">
+<scroll-view class="scroll-container" scroll-y="true" enhanced show-scrollbar="{{false}}">
   <view class="fixed-top-nav-wrap">
     <view class="top-nav">
-      <view class="nav-left">
-        <image class="nav-icon" src="/images/hive.png" mode="widthFix" lazy-load="true"></image>
-        <text class="tenant-name" selectable="false">
-          {{tenantInfo.name || '当前组织'}}
-        </text>
+      <view class="nav-search-bar" bindtap="handleSearchTap">
+        <icon type="search" size="16" color="#94a3b8"></icon>
+        <text class="search-placeholder">搜索订单、功能或待办...</text>
       </view>
-      
-      <view class="nav-scan-btn" bindtap="handleScanWebLogin" hover-class="nav-scan-btn-hover">
+      <view class="nav-scan-btn" bindtap="handleScanWebLogin" hover-class="btn-active-pulp">
         <image class="nav-scan-icon" src="/images/scan_all.png" mode="aspectFit"></image>
       </view>
     </view>
   </view>
 
-  <view class="container">
+  <view class="main-content">
     <view class="user-card">
-      <view class="user-avatar-wrapper">
-        <image class="user-avatar" src="/images/avatar.png" mode="widthFix" lazy-load="true"></image>
-      </view>
-      <view class="user-info">
-        <text class="user-name" selectable="false">{{userInfo.name}}</text>
-        <text class="user-dept" selectable="false">{{userInfo.dept}}</text>
-        <text class="user-tenant" selectable="false">{{tenantInfo.name || '当前未绑定组织'}}</text>
-      </view>
-      <view class="user-todo" bindtap="handleJumpToTodoList">
-        <text class="todo-num" selectable="false">{{todoCount}}</text>
-        <text class="todo-text" selectable="false">待办事项</text>
+      <view class="user-card-inner">
+        <view class="user-avatar-wrapper">
+          <image class="user-avatar" src="/images/avatar.png" mode="aspectFill"></image>
+        </view>
+        <view class="user-info">
+          <view class="user-name">{{userInfo.name}}</view>
+          <view class="user-dept">{{userInfo.dept}}</view>
+          <view class="user-tenant">{{tenantInfo.name || '当前未绑定组织'}}</view>
+        </view>
+        <view class="user-todo-badge" bindtap="handleJumpToTodoList" hover-class="btn-active-scale">
+          <text class="todo-num">{{todoCount}}</text>
+          <text class="todo-label">待办</text>
+        </view>
       </view>
     </view>
 
-    <view class="function-module">
-      <view class="module-title" selectable="false">核心功能</view>
+    <view class="section-box">
+      <view class="section-title">核心功能</view>
       <view class="function-grid">
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="attendance" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/attendance.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">考勤打卡</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="order" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/order.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">生产订单</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="salesOrder" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/order.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">销售订单</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="inventory" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/inventory.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">库存管理</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="badProduct" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/badproduct.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">坏品管理</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="approval" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/approval.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">审批流程</text>
-        </view>
-        <view class="grid-item" bindtap="handleFunctionTap" data-function-type="notice" hover-class="grid-item-hover">
-          <image class="grid-icon" src="/images/notice.png" mode="widthFix" lazy-load="true"></image>
-          <text class="grid-text" selectable="false">企业公告</text>
-        </view>
-      </view>
-    </view>
-
-    <view class="quick-todo">
-      <view class="todo-title">
-        <text selectable="false">待办列表</text>
-        <text class="todo-more" bindtap="handleMoreTodo" hover-class="todo-more-hover">查看更多 ></text>
-      </view>
-      <view class="todo-list">
-        <block wx:for="{{todoList}}" wx:key="id">
-          <view class="todo-item" bindtap="handleTodoItemTap" data-item="{{item}}" hover-class="todo-item-hover">
-            <view class="todo-tag" selectable="false">{{item.tag}}</view>
-            <text class="todo-content" selectable="false" decode="{{true}}">{{item.content}}</text>
-            <text class="todo-time" selectable="false">{{item.time}}</text>
+        <block wx:for="{{functionItems}}" wx:key="key">
+          <view class="grid-item" bindtap="handleFunctionTap" data-function-type="{{item.key}}" hover-class="grid-item-active">
+            <view class="icon-wrap">
+              <image class="grid-icon" src="{{item.icon}}" mode="aspectFit"></image>
+            </view>
+            <text class="grid-text">{{item.label}}</text>
           </view>
         </block>
-        <view wx:if="{{todoList.length === 0}}" class="empty-todo">
-          <text selectable="false">暂无待办事项</text>
-        </view>
       </view>
     </view>
 
-    <view class="bottom-tab">
-      <view class="tab-item active" bindtap="switchTab" data-tab-page="index" hover-class="tab-item-hover">
-        <image class="tab-icon" src="/images/home_active.png" mode="widthFix" lazy-load="true"></image>
-        <text class="tab-text" selectable="false">首页</text>
+    <view class="section-box">
+      <view class="section-header">
+        <view class="section-title">待办事项</view>
+        <view class="todo-more" bindtap="handleMoreTodo" hover-class="btn-active-scale">
+          <text>全部</text>
+          <text class="arrow-icon">></text>
+        </view>
       </view>
-      <view class="tab-item" bindtap="switchTab" data-tab-page="mine" hover-class="tab-item-hover">
-        <image class="tab-icon" src="/images/mine.png" mode="widthFix" lazy-load="true"></image>
-        <text class="tab-text" selectable="false">我的</text>
+
+      <view class="todo-card-container">
+        <block wx:for="{{todoList}}" wx:key="id">
+          <view class="todo-card-item" bindtap="handleTodoItemTap" data-item="{{item}}" hover-class="todo-item-active">
+            <view class="todo-status-bar"></view>
+            <view class="todo-info-main">
+              <view class="todo-top-row">
+                <text class="todo-tag-text">{{item.tag}}</text>
+                <text class="todo-time-stamp">{{item.time}}</text>
+              </view>
+              <view class="todo-content-text">{{item.content}}</view>
+            </view>
+            <view class="todo-action-icon">
+              <view class="circle-btn"><view class="inner-dot"></view></view>
+            </view>
+          </view>
+        </block>
+        <view wx:if="{{todoList.length === 0}}" class="todo-empty-wrap">
+          <text class="empty-txt">暂无紧急待办事项</text>
+        </view>
       </view>
     </view>
   </view>
+
+  <view class="footer-spacer"></view>
 </scroll-view>
+
+<view class="bottom-tab-bar">
+  <view class="tab-item active" bindtap="switchTab" data-tab-page="index">
+    <image class="tab-icon" src="/images/home_active.png"></image>
+    <text>首页</text>
+  </view>
+  <view class="tab-item" bindtap="switchTab" data-tab-page="mine">
+    <image class="tab-icon" src="/images/mine.png"></image>
+    <text>我的</text>
+  </view>
+</view>

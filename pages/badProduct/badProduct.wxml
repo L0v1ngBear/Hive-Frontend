@@ -1,181 +1,196 @@
-<scroll-view 
-  class="scroll-container" 
-  scroll-y="true" 
-  scroll-with-animation="true"
-  enhanced="true"
-  bounces="true"
->
-  <view class="container">
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page-shell">
     <view class="top-nav">
-      <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
-        <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true" />
+      <view class="nav-action" bindtap="handleBack">
+        <image class="nav-icon" src="/images/back.png" mode="aspectFit" />
       </view>
       <text class="nav-title">次品管理</text>
-      <view class="nav-add" bindtap="openAddModal" hover-class="nav-add-hover">
-        <image class="add-icon" src="/images/add.png" mode="widthFix" lazy-load="true" />
+      <view class="nav-action nav-action-primary" bindtap="openCreate">
+        <image class="nav-icon" src="/images/add.png" mode="aspectFit" />
       </view>
     </view>
 
-    <view class="defective-filter">
-      <view class="filter-group">
-        <text class="filter-label">状态：</text>
-        <view class="filter-items">
-          <view class="filter-item {{currentStatus==item.key ? 'active' : ''}}" wx:for="{{statusList}}" wx:key="key" bindtap="handleStatusFilter" data-status="{{item.key}}">
+    <view class="hero-card">
+      <view>
+        <text class="hero-title">及时登记异常次品</text>
+        <text class="hero-desc">支持筛选、编辑、处理和查看完整次品记录。</text>
+      </view>
+      <view class="hero-badge">{{list.length}} 条记录</view>
+    </view>
+
+    <view class="filter-card">
+      <view class="filter-row">
+        <text class="filter-label">状态</text>
+        <view class="filter-pills">
+          <view
+            wx:for="{{statusOptions}}"
+            wx:key="key"
+            class="filter-pill {{currentStatus === item.key ? 'active' : ''}}"
+            bindtap="handleStatusFilter"
+            data-status="{{item.key}}"
+          >
             {{item.label}}
           </view>
         </view>
       </view>
 
-      <view class="filter-group">
-        <text class="filter-label">类型：</text>
-        <view class="filter-items">
-          <view class="filter-item {{currentType==item.key ? 'active' : ''}}" wx:for="{{typeList}}" wx:key="key" bindtap="handleTypeFilter" data-type="{{item.key}}">
+      <view class="filter-row">
+        <text class="filter-label">类型</text>
+        <view class="filter-pills">
+          <view
+            wx:for="{{typeOptions}}"
+            wx:key="key"
+            class="filter-pill {{currentType === item.key ? 'active' : ''}}"
+            bindtap="handleTypeFilter"
+            data-type="{{item.key}}"
+          >
             {{item.label}}
           </view>
         </view>
       </view>
 
-      <view class="filter-group">
-        <text class="filter-label">时间：</text>
+      <view class="filter-row">
+        <text class="filter-label">日期</text>
         <picker mode="date" value="{{dateRange}}" start="2026-01-01" end="{{currentDate}}" bindchange="handleDateFilter">
           <view class="date-picker">
-            <text>{{dateRange || '全部时间'}}</text>
-            <image class="arrow-icon" src="/images/arrow-down.png" mode="widthFix" />
+            <text>{{dateRange || '全部日期'}}</text>
+            <image class="date-arrow" src="/images/arrow-down.png" mode="aspectFit" />
           </view>
         </picker>
       </view>
     </view>
 
-    <view class="defective-section {{filteredDefectiveList.length === 0 ? 'empty-section' : ''}}">
-      <view wx:if="{{filteredDefectiveList.length === 0}}" class="empty-record">
-        <text>暂无相关次品数据</text>
-      </view>
+    <view wx:if="{{loading}}" class="state-card">
+      <text class="state-text">正在加载次品数据...</text>
+    </view>
 
-      <block wx:for="{{filteredDefectiveList}}" wx:key="defectiveId">
-        <view class="defective-card">
-          <view class="card-content" bindtap="openDetail" data-defective="{{item}}">
-            
-            <view class="defective-head">
-              <text class="defective-code">次品编号：{{item.defectiveId}}</text>
-              <text class="defective-status {{item.status == 'processed' ? 'status-processed' : 'status-pending'}}">{{item.status == 'processed' ? '已处理' : '待处理'}}</text>
-            </view>
+    <view wx:elif="{{list.length === 0}}" class="state-card">
+      <text class="state-text">当前没有符合条件的次品记录</text>
+    </view>
 
-            <view class="info-group">
-              <view class="info-item full">
-                <text class="info-label">关联订单：</text>
-                <text class="info-value">{{item.orderId || '无'}}</text>
-              </view>
-              <view class="info-item full">
-                <text class="info-label">登记时间：</text>
-                <text class="info-value">{{item.createTime}}</text>
-              </view>
-              
-              <view class="info-item half">
-                <text class="info-label">次品类型：</text>
-                <text class="info-value">{{typeMap[item.type]}}</text>
-              </view>
-              <view class="info-item half">
-                <text class="info-label">登记人：</text>
-                <text class="info-value">{{item.creator}}</text>
-              </view>
-              
-              <view class="info-item half">
-                <text class="info-label">次品数量：</text>
-                <text class="info-value">{{item.quantity}}米</text>
-              </view>
-              <view class="info-item half">
-                <text class="info-label">损失金额：</text>
-                <text class="info-value">¥{{item.lossAmount}}</text>
-              </view>
-            </view>
-
-            <view class="desc-box">
-              <text class="desc-title">次品描述：</text>
-              <text class="desc-content">{{item.description || '无'}}</text>
-            </view>
-
-            <view class="process-status">
-              <text class="process-label">处理状态：</text>
-              <text class="process-value {{item.status == 'processed' ? 'success' : 'pending'}}">{{item.status == 'processed' ? '已处理' : '待处理'}}</text>
-            </view>
+    <view wx:else class="list-section">
+      <view wx:for="{{list}}" wx:key="defectiveId" class="record-card" bindtap="showDetail" data-record="{{item}}">
+        <view class="record-head">
+          <view>
+            <text class="record-code">{{item.defectiveId}}</text>
+            <text class="record-time">{{item.createTimeText}}</text>
           </view>
+          <text class="record-status {{item.status}}">{{item.statusLabel}}</text>
+        </view>
 
-          <view class="defective-action">
-            <button class="edit-btn" size="mini" bindtap="openEditModal" data-defective="{{item}}">编辑</button>
-            <button class="process-btn" size="mini" type="primary" bindtap="openProcessModal" data-defective="{{item}}" wx:if="{{item.status != 'processed'}}">标记处理</button>
+        <view class="record-grid">
+          <view class="record-field">
+            <text class="field-label">次品类型</text>
+            <text class="field-value">{{item.typeLabel}}</text>
+          </view>
+          <view class="record-field">
+            <text class="field-label">登记人</text>
+            <text class="field-value">{{item.creatorText}}</text>
+          </view>
+          <view class="record-field">
+            <text class="field-label">次品数量</text>
+            <text class="field-value">{{item.quantityText}}</text>
+          </view>
+          <view class="record-field">
+            <text class="field-label">损失金额</text>
+            <text class="field-value">¥{{item.lossAmountText}}</text>
+          </view>
+          <view class="record-field full">
+            <text class="field-label">关联订单</text>
+            <text class="field-value">{{item.orderId || '未关联'}}</text>
+          </view>
+          <view class="record-field full">
+            <text class="field-label">问题描述</text>
+            <text class="field-value multi">{{item.description || '未填写'}}</text>
           </view>
         </view>
-      </block>
+
+        <view class="card-actions">
+          <button class="action-btn secondary" size="mini" catchtap="openEdit" data-record="{{item}}">编辑</button>
+          <button
+            wx:if="{{item.status !== 'processed'}}"
+            class="action-btn primary"
+            size="mini"
+            catchtap="openProcess"
+            data-record="{{item}}"
+          >
+            标记处理
+          </button>
+        </view>
+      </view>
     </view>
   </view>
 </scroll-view>
 
-<view class="modal-mask" wx:if="{{showAddModal}}" bindtap="closeAddModal">
-  <view class="modal-content" catchtap="stopPropagation">
-    <view class="modal-title">{{isEdit ? '编辑次品信息' : '新增次品登记'}}</view>
-    <view class="modal-form">
-      <view class="form-item">
-        <text class="form-label">关联订单号：</text>
-        <input class="form-input" placeholder="输入关联订单号" value="{{formData.orderId}}" bindinput="handleInput" data-key="orderId" />
-      </view>
-
-      <view class="form-item">
-        <text class="form-label">次品类型：<text class="required">*</text></text>
-        <picker value="{{typeIndex}}" range="{{typeLabelList}}" bindchange="changeType" class="form-picker-wrapper">
-          <view class="form-picker">
-            <text>{{typeLabelList[typeIndex] || '请选择类型'}}</text>
-            <image class="arrow-icon" src="/images/arrow-down.png" mode="widthFix" />
-          </view>
-        </picker>
-      </view>
-
-      <view class="form-item">
-        <text class="form-label">次品数量(米)：<text class="required">*</text></text>
-        <input class="form-input" type="digit" placeholder="输入次品数量" value="{{formData.quantity}}" bindinput="handleInput" data-key="quantity" />
-      </view>
-
-      <view class="form-item">
-        <text class="form-label">损失金额(元)：<text class="required">*</text></text>
-        <input class="form-input" type="digit" placeholder="输入损失金额" value="{{formData.lossAmount}}" bindinput="handleInput" data-key="lossAmount" />
-      </view>
-
-      <view class="form-item-vertical">
-        <text class="form-label">次品描述：</text>
-        <textarea class="form-textarea" placeholder="描述次品详细问题..." value="{{formData.description}}" bindinput="handleInput" data-key="description"></textarea>
-      </view>
+<view wx:if="{{showFormPopup}}" class="popup-mask" bindtap="closeFormPopup">
+  <view class="popup-card" catchtap="stopPropagation">
+    <view class="popup-header">
+      <text class="popup-title">{{isEdit ? '编辑次品记录' : '新增次品记录'}}</text>
+      <text class="popup-subtitle">保存后会直接写入真实次品台账</text>
     </view>
 
-    <view class="modal-actions">
-      <button class="modal-btn cancel-btn" bindtap="closeAddModal">取消</button>
-      <button class="modal-btn confirm-btn" bindtap="submitDefective">{{isEdit ? '保存修改' : '确认登记'}}</button>
+    <view class="form-item">
+      <text class="form-label">关联订单</text>
+      <input class="form-input" placeholder="请输入订单号" value="{{formData.orderId}}" bindinput="handleFormInput" data-key="orderId" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">次品类型</text>
+      <picker value="{{typeIndex}}" range="{{typeLabels}}" bindchange="handleTypeChange">
+        <view class="form-picker">
+          <text>{{typeLabels[typeIndex] || '请选择次品类型'}}</text>
+          <image class="date-arrow" src="/images/arrow-down.png" mode="aspectFit" />
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">次品数量</text>
+      <input class="form-input" type="digit" placeholder="请输入次品数量" value="{{formData.quantity}}" bindinput="handleFormInput" data-key="quantity" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">损失金额</text>
+      <input class="form-input" type="digit" placeholder="请输入损失金额" value="{{formData.lossAmount}}" bindinput="handleFormInput" data-key="lossAmount" />
+    </view>
+
+    <view class="form-item vertical">
+      <text class="form-label">问题描述</text>
+      <textarea class="form-textarea" placeholder="请输入次品问题说明" value="{{formData.description}}" bindinput="handleFormInput" data-key="description" />
+    </view>
+
+    <view class="popup-actions">
+      <button class="popup-btn ghost" bindtap="closeFormPopup">取消</button>
+      <button class="popup-btn solid" bindtap="submitForm">{{isEdit ? '保存修改' : '确认登记'}}</button>
     </view>
   </view>
 </view>
 
-<view class="modal-mask" wx:if="{{showProcessModal}}" bindtap="closeProcessModal">
-  <view class="modal-content" catchtap="stopPropagation">
-    <view class="modal-title">标记次品处理</view>
-    <view class="modal-info" wx:if="{{currentDefective}}">
-      <view class="info-row">
-        <text class="info-label">次品编号：</text>
-        <text class="info-value">{{currentDefective.defectiveId}}</text>
-      </view>
-      <view class="info-row">
-        <text class="info-label">关联订单：</text>
-        <text class="info-value">{{currentDefective.orderId || '无'}}</text>
-      </view>
-      <view class="form-item">
-        <text class="form-label">处理方式：<text class="required">*</text></text>
-        <input class="form-input" placeholder="输入处理方式（如：报废/返工）" value="{{processData.method}}" bindinput="handleProcessInput" data-key="method" />
-      </view>
-      <view class="form-item">
-        <text class="form-label">处理备注：</text>
-        <textarea class="form-textarea" placeholder="可选，输入处理备注" value="{{processData.remark}}" bindinput="handleProcessInput" data-key="remark"></textarea>
-      </view>
+<view wx:if="{{showProcessPopup}}" class="popup-mask" bindtap="closeProcessPopup">
+  <view class="popup-card" catchtap="stopPropagation">
+    <view class="popup-header">
+      <text class="popup-title">处理次品记录</text>
+      <text class="popup-subtitle">处理后该次品会从待处理转为已处理</text>
     </view>
-    <view class="modal-actions">
-      <button class="modal-btn cancel-btn" bindtap="closeProcessModal">取消</button>
-      <button class="modal-btn confirm-btn" bindtap="confirmProcess">确认处理</button>
+
+    <view class="record-summary" wx:if="{{currentRecord}}">
+      <text>次品编号：{{currentRecord.defectiveId}}</text>
+      <text>关联订单：{{currentRecord.orderId || '未关联'}}</text>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">处理方式</text>
+      <input class="form-input" placeholder="例如报废、返工、让步接收" value="{{processData.method}}" bindinput="handleProcessInput" data-key="method" />
+    </view>
+
+    <view class="form-item vertical">
+      <text class="form-label">处理备注</text>
+      <textarea class="form-textarea" placeholder="请输入处理说明" value="{{processData.remark}}" bindinput="handleProcessInput" data-key="remark" />
+    </view>
+
+    <view class="popup-actions">
+      <button class="popup-btn ghost" bindtap="closeProcessPopup">取消</button>
+      <button class="popup-btn solid" bindtap="submitProcess">确认处理</button>
     </view>
   </view>
 </view>

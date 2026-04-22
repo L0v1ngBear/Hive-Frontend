@@ -70,12 +70,8 @@ Page({
   },
 
   drawTrendChart(trendData) {
-    if (!trendData || !trendData.inMeters) {
-      trendData = {
-        dates: ['10-21', '10-22', '10-23', '10-24', '10-25', '10-26', '今天'],
-        inMeters: [120, 300, 150, 50, 400, 210, 350],
-        outMeters: [50, 100, 80, 200, 10, 30, 90]
-      };
+    if (!trendData || !Array.isArray(trendData.inMeters) || !Array.isArray(trendData.outMeters)) {
+      trendData = this.buildEmptyTrendData();
     }
 
     setTimeout(() => {
@@ -144,6 +140,21 @@ Page({
       drawLine(outMeters, '#52C41A');
       ctx.draw();
     }, 150);
+  },
+
+  buildEmptyTrendData() {
+    const dates = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i -= 1) {
+      const date = new Date(now);
+      date.setDate(now.getDate() - i);
+      dates.push(`${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+    }
+    return {
+      dates,
+      inMeters: dates.map(() => 0),
+      outMeters: dates.map(() => 0)
+    };
   },
 
   handlePrepareScanOut() {
@@ -303,7 +314,8 @@ Page({
           barcode,
           meters: Number(inputMeters),
           orderNo: activeOrderNo,
-          customerName: activeCustomerName
+          customerName: activeCustomerName,
+          requestId: this.generateRequestId(barcode)
         }
       });
 
@@ -454,8 +466,8 @@ Page({
     });
   },
 
-  handleStockCheck() { wx.showToast({ title: '盘点功能开发中', icon: 'none' }); },
-  handleShowAllRecord() { wx.showToast({ title: '跳转完整记录页面', icon: 'none' }); },
+  handleStockCheck() { this.refreshDashboard(); },
+  handleShowAllRecord() { this.refreshDashboard(); },
   hideAddClothModal() { this.setData({ showAddClothModal: false, showModelList: false }); },
   hideClothModal() { this.setData({ showClothModal: false, currentRequestId: '' }); },
   hidePrintModal() { this.setData({ showPrintModal: false }); },
@@ -480,7 +492,12 @@ Page({
       await printerUtil.printTriplicate(printData);
       this.hidePrintModal();
     } else if (type === 'preview') {
-      wx.showToast({ title: '预览功能开发中', icon: 'none' });
+      const { printData } = this.data;
+      wx.showModal({
+        title: '标签预览',
+        content: `条码：${printData.barcode || '-'}\n型号：${printData.modelCode || '-'}\n米数：${printData.meters || '-'}\n规格：${printData.spec || '-'}`,
+        showCancel: false
+      });
     }
   }
 });

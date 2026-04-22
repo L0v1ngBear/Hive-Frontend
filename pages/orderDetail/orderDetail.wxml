@@ -4,7 +4,7 @@
       <view class="nav-back" bindtap="handleBack" hover-class="nav-back-hover">
         <image class="back-icon" src="/images/back.png" mode="widthFix" lazy-load="true"></image>
       </view>
-      <text class="nav-title">订单详情</text>
+      <text class="nav-title">{{orderType === 'sales' ? '销售订单详情' : '生产订单详情'}}</text>
       <view class="nav-empty"></view>
     </view>
 
@@ -12,7 +12,7 @@
       <view class="info-row main-row">
         <text class="label">订单号：</text>
         <text class="value main-value">{{orderDetail.orderId}}</text>
-        <text class="status-tag {{statusClass}}">{{statusMap[orderDetail.status]}}</text>
+        <text class="status-tag {{statusClass}}">{{statusMap[orderDetail.status] || orderDetail.status}}</text>
       </view>
       <view class="info-row">
         <text class="label">项目：</text>
@@ -30,9 +30,13 @@
         <text class="label">交付日期：</text>
         <text class="value">{{orderDetail.deliveryDate || '-'}}</text>
       </view>
+      <view class="info-row" wx:if="{{orderType === 'sales' && orderDetail.status === 'shipped'}}">
+        <text class="label">物流信息：</text>
+        <text class="value">{{orderDetail.expressCompany || '未填写'}} / {{orderDetail.expressNo || '未填写'}}</text>
+      </view>
     </view>
 
-    <view class="product-info-card">
+    <view class="product-info-card" wx:if="{{orderType === 'production'}}">
       <text class="card-title">产品信息</text>
       <view class="info-grid">
         <view class="info-item">
@@ -54,7 +58,20 @@
       </view>
     </view>
 
-    <view class="process-card" wx:if="{{orderDetail.status == 'producing'}}">
+    <view class="product-info-card" wx:if="{{orderType === 'sales'}}">
+      <text class="card-title">订单明细</text>
+      <view class="info-grid" wx:if="{{orderDetail.items.length > 0}}">
+        <view class="info-item" wx:for="{{orderDetail.items}}" wx:key="id">
+          <text class="item-label">{{item.modelCode || '未填写型号'}}</text>
+          <text class="item-value">{{item.quantity || '-'}}米 / {{item.weight || '-'}}g / {{item.spec || '-'}}cm</text>
+        </view>
+      </view>
+      <view class="empty-record" wx:else>
+        <text>暂无订单明细</text>
+      </view>
+    </view>
+
+    <view class="process-card" wx:if="{{orderType === 'production' && orderDetail.status == 'producing'}}">
       <text class="card-title">生产进度</text>
       <view class="process-title">当前工序：{{orderDetail.processText || '未开始'}}</view>
       <view class="process-progress">

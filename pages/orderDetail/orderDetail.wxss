@@ -493,3 +493,105 @@ progress::-webkit-progress-value {
     background-image: linear-gradient(0deg, #f5f5f5, #f5f5f5);
   }
 }
+
+/* ========== 统一视觉覆盖：详情页与首页/订单列表保持一致 ========== */
+page {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.top-nav {
+  background: rgba(248, 250, 252, 0.96);
+  border-bottom: 1rpx solid rgba(226, 232, 240, 0.82);
+}
+
+.nav-title,
+.value.main-value,
+.card-title,
+.log-status {
+  color: #0f172a;
+}
+
+.label,
+.item-label,
+.log-time,
+.log-operator {
+  color: #64748b;
+}
+
+.base-info-card,
+.product-info-card,
+.process-card,
+.status-log-card {
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 242, 0.94));
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.card-title {
+  position: relative;
+  padding-left: 18rpx;
+}
+
+.card-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6rpx;
+  height: 24rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #fbab06, #ffd666);
+  transform: translateY(-50%);
+}
+
+.status-tag {
+  border-radius: 999rpx;
+  font-weight: 700;
+}
+
+.status-pending_confirm {
+  color: #d48806;
+  background: #fff7e8;
+}
+
+.status-pending_material {
+  color: #722ed1;
+  background: #f9f0ff;
+}
+
+.status-producing {
+  color: #d48806;
+  background: rgba(251, 171, 6, 0.14);
+}
+
+.status-pending_ship {
+  color: #0f766e;
+  background: #ecfdf5;
+}
+
+.status-completed {
+  color: #15803d;
+  background: #f0fdf4;
+}
+
+progress::-webkit-progress-value,
+.log-dot.current {
+  background: linear-gradient(90deg, #fbab06, #ffd666);
+}
+
+.step-item.done {
+  color: #d48806;
+}
+
+.log-list::before {
+  background: rgba(251, 171, 6, 0.24);
+}
+
+.log-dot {
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 0 0 1rpx rgba(226, 232, 240, 0.9);
+}

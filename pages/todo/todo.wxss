@@ -1,0 +1,241 @@
+page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #0f172a;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.page-shell {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: calc(env(safe-area-inset-top) + 22rpx) 24rpx 52rpx;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.nav-action {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-text {
+  margin-top: -4rpx;
+  font-size: 56rpx;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.subscribe-action {
+  width: 104rpx;
+  background: linear-gradient(135deg, #fbab06, #d48806);
+  border: none;
+}
+
+.subscribe-text {
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  letter-spacing: 1rpx;
+}
+
+.hero-card,
+.todo-card,
+.empty-card {
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.hero-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 24rpx;
+  padding: 34rpx;
+  border-radius: 36rpx;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 236, 0.94)),
+    radial-gradient(circle at 88% 16%, rgba(251, 171, 6, 0.18), transparent 32%);
+}
+
+.hero-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.hero-desc {
+  display: block;
+  margin-top: 14rpx;
+  color: #64748b;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.hero-count {
+  flex-shrink: 0;
+  min-width: 116rpx;
+  height: 116rpx;
+  border-radius: 32rpx;
+  background: #fff7e8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.count-num {
+  color: #d48806;
+  font-size: 44rpx;
+  font-weight: 900;
+}
+
+.count-label {
+  color: #92400e;
+  font-size: 22rpx;
+}
+
+.filter-scroll {
+  margin: 24rpx -24rpx 8rpx;
+  white-space: nowrap;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16rpx;
+  padding: 0 24rpx 16rpx;
+}
+
+.filter-pill {
+  flex-shrink: 0;
+  padding: 14rpx 28rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  border: 1rpx solid rgba(226, 232, 240, 0.9);
+  color: #64748b;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.filter-pill.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #fbab06, #d48806);
+  border-color: transparent;
+  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.24);
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding-top: 8rpx;
+}
+
+.todo-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx;
+  border-radius: 32rpx;
+}
+
+.todo-card-active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+.todo-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 14rpx;
+}
+
+.todo-tag {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: #fff7e8;
+  color: #d48806;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.todo-time {
+  color: #94a3b8;
+  font-size: 22rpx;
+}
+
+.todo-title {
+  display: block;
+  color: #0f172a;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.todo-content {
+  display: block;
+  margin-top: 8rpx;
+  color: #64748b;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.todo-arrow {
+  color: #cbd5e1;
+  font-size: 54rpx;
+  line-height: 1;
+}
+
+.empty-card {
+  border-radius: 32rpx;
+  padding: 88rpx 24rpx;
+  text-align: center;
+}
+
+.empty-title,
+.empty-desc {
+  display: block;
+}
+
+.empty-title {
+  color: #0f172a;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.empty-desc {
+  margin-top: 12rpx;
+  color: #94a3b8;
+  font-size: 24rpx;
+}
+
+.load-text {
+  padding: 24rpx 0;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 24rpx;
+}

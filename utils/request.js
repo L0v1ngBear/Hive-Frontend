@@ -31,6 +31,7 @@ function request(options) {
     url,
     method = 'POST',
     data = {},
+    params = {},
     showLoading = true,
     needTenant = true,
     needAuth = true,
@@ -68,6 +69,8 @@ function request(options) {
     header['Tenant-Code'] = tenantId;
   }
 
+  // wx.request 的 GET 查询参数也通过 data 传递；兼容旧页面里使用 params 的写法，避免参数被静默丢弃。
+  const requestData = Object.keys(params || {}).length > 0 ? { ...data, ...params } : data;
   const fullUrl = url.startsWith('http') ? url : getBaseUrl() + url;
 
   return new Promise((resolve, reject) => {
@@ -75,7 +78,7 @@ function request(options) {
       url: fullUrl,
       method,
       header,
-      data,
+      data: requestData,
       timeout,
       success: (res) => {
         if (showLoading) {

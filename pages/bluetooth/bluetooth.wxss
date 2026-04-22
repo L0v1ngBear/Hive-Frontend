@@ -69,3 +69,41 @@ page {
   font-size: 28rpx; 
   padding-top: 100rpx; 
 }
+
+/* 统一视觉覆盖：蓝牙页使用同一套卡片和橙金按钮 */
+page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.title,
+.device-name {
+  color: #0f172a;
+}
+
+.scan-btn {
+  background: linear-gradient(135deg, #fbab06, #d48806);
+  color: #ffffff;
+  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+}
+
+.scan-btn::after {
+  border: none;
+}
+
+.device-list {
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.device-id,
+.empty {
+  color: #64748b;
+}
+
+.device-item {
+  border-bottom-color: #f1f5f9;
+}

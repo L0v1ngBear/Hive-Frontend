@@ -517,3 +517,87 @@ page {
   color: #ad6800;
   font-size: 24rpx;
 }
+
+/* ================= 统一视觉覆盖：库存页保持橙金卡片风 ================= */
+page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.nav-title,
+.section-title,
+.section-title text:first-child,
+.record-col,
+.modal-title,
+.info-value {
+  color: #0f172a;
+}
+
+.warning-section,
+.chart-section,
+.quick-actions,
+.record-section,
+.modal-content,
+.active-task-bar,
+.template-picker-box {
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.chart-section,
+.quick-actions,
+.record-section,
+.modal-content {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.warning-section {
+  background: #fff7e8;
+  border-color: rgba(251, 171, 6, 0.28);
+}
+
+.warning-title,
+.model-item.create-item,
+.section-title text:last-child,
+.active-task-bar .task-value {
+  color: #d48806;
+}
+
+.dot.in,
+.active-task-bar .finish-btn {
+  background-color: #fbab06;
+}
+
+.action-icon-wrapper {
+  background: linear-gradient(180deg, #fff7e8, #ffffff);
+  border: 1rpx solid rgba(251, 171, 6, 0.18);
+  box-shadow: 0 12rpx 24rpx rgba(251, 171, 6, 0.08);
+}
+
+.record-header,
+.record-item,
+.info-row input,
+.template-picker,
+.template-picker-box {
+  background: #f8fafc;
+}
+
+.confirm-btn,
+.btn.in {
+  background: linear-gradient(135deg, #fbab06, #d48806);
+}
+
+.preview-btn {
+  background: #475569;
+}
+
+.active-task-bar {
+  background: #fff7e8;
+  border-color: rgba(251, 171, 6, 0.32);
+}
+
+.active-task-bar .finish-btn {
+  box-shadow: 0 8rpx 18rpx rgba(251, 171, 6, 0.28);
+}

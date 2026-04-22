@@ -12,8 +12,8 @@ Page({
     offWorkStartTime: '18:00',
     offWorkEndTime: '18:30',
     
-    // 初始化为空，由 onLoad 从缓存中读取
-    userId: 1 
+    // 从登录态读取真实用户 ID，未登录时不再使用固定测试账号。
+    userId: null
   },
 
   onLoad(options) {
@@ -76,11 +76,11 @@ Page({
         method: 'GET'
       });
       if (res.code === 200 && res.data) {
-        const record = res.data;
+        const record = Array.isArray(res.data) ? (res.data[0] || {}) : res.data;
         this.setData({
-          checkInTime: record.firstPunchTime || '',
-          checkOutTime: record.lastPunchTime || '',
-          checkStatus: record.firstPunchTime ? 'completed' : 'uncompleted'
+          checkInTime: record.firstPunchTime || record.signInTime || '',
+          checkOutTime: record.lastPunchTime || record.signOutTime || '',
+          checkStatus: (record.firstPunchTime || record.signInTime) ? 'completed' : 'uncompleted'
         });
       }
     } catch (err) {

@@ -421,3 +421,104 @@ text.back-icon {
   width: 100%;
   background: transparent;
 }
+
+/* ================= 10. 统一视觉覆盖：橙金工业卡片风 ================= */
+page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.top-nav {
+  background: rgba(248, 250, 252, 0.96);
+  border-bottom: 1rpx solid rgba(226, 232, 240, 0.8);
+}
+
+.nav-title {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+text.back-icon {
+  color: #0f172a;
+}
+
+.order-filter {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1rpx solid rgba(226, 232, 240, 0.85);
+}
+
+.filter-item {
+  color: #64748b;
+}
+
+.filter-item.active {
+  color: #d48806;
+}
+
+.filter-item.active::after {
+  background: linear-gradient(90deg, #fbab06, #ffd666);
+}
+
+.order-card,
+.modal-content {
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.order-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 242, 0.95));
+}
+
+.order-id,
+.info-value,
+.modal-title {
+  color: #0f172a;
+}
+
+.info-label,
+.process-title,
+.node {
+  color: #64748b;
+}
+
+.order-head {
+  border-bottom-color: rgba(226, 232, 240, 0.9);
+}
+
+.status-producing,
+.node.active {
+  color: #d48806;
+  background: rgba(251, 171, 6, 0.12);
+}
+
+.process-box {
+  background: #fffaf2;
+  border-color: rgba(251, 171, 6, 0.18);
+  border-radius: 24rpx;
+}
+
+.process-item.done {
+  background: #fff7e8;
+  color: #d48806;
+  border-color: rgba(251, 171, 6, 0.45);
+}
+
+.line.done {
+  background: linear-gradient(90deg, #fbab06, #52c41a);
+}
+
+.update-btn,
+.confirm-btn,
+.create-order-btn {
+  background: linear-gradient(135deg, #fbab06, #d48806) !important;
+  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+}
+
+.fixed-bottom-bar {
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1rpx solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 -16rpx 44rpx rgba(15, 23, 42, 0.06);
+}

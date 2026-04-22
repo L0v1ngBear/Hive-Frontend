@@ -288,3 +288,51 @@ page {
   font-size: 16px;
   color: #999;
 }
+
+/* 统一视觉覆盖：考勤页同步首页卡片质感 */
+page {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.nav-title,
+.current-date,
+.status-text,
+.tips-title text,
+.section-title text:first-child,
+.record-col {
+  color: #0f172a;
+}
+
+.attendance-card,
+.rule-tips,
+.record-section {
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18rpx 44rpx rgba(15, 23, 42, 0.07);
+}
+
+.attendance-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 242, 0.94));
+}
+
+.current-week,
+.time-label,
+.rule-item,
+.header-col,
+.empty-record {
+  color: #64748b;
+}
+
+.check-btn {
+  background: linear-gradient(135deg, #fbab06, #d48806);
+  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+}
+
+.record-more,
+.status-completed .status-text {
+  color: #d48806;
+}

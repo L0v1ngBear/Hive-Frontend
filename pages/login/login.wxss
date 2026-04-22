@@ -265,3 +265,47 @@ button::after {
   background-color: #002045;
   z-index: 20;
 }
+
+/* ================= 统一视觉覆盖：登录页保留深色品牌块，融入橙金氛围 ================= */
+.container {
+  background:
+    radial-gradient(circle at 84% 4%, rgba(251, 171, 6, 0.16), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.top-right {
+  background-color: rgba(251, 171, 6, 0.16);
+}
+
+.bottom-left {
+  background-color: rgba(15, 23, 42, 0.08);
+}
+
+.logo-box,
+.account-btn,
+.checkbox.checked,
+.bottom-base {
+  background-color: #0f2f5f;
+}
+
+.logo-box,
+.account-btn {
+  box-shadow: 0 24rpx 52rpx rgba(15, 47, 95, 0.16);
+}
+
+.input-card {
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1rpx solid rgba(226, 232, 240, 0.86);
+  border-bottom: 1rpx solid rgba(226, 232, 240, 0.86);
+  box-shadow: 0 14rpx 34rpx rgba(15, 23, 42, 0.05);
+}
+
+.input-card:focus-within {
+  border-color: rgba(251, 171, 6, 0.5);
+}
+
+.link {
+  color: #d48806;
+}

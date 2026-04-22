@@ -3,6 +3,7 @@ const { request } = require('../../utils/request.js');
 Page({
   data: {
     currentFilter: 'all',
+    searchKeyword: '',
     filterList: [
       { key: 'all', label: '全部' },
       { label: '待确认', key: 'pending_confirm' },
@@ -20,7 +21,11 @@ Page({
     isLoading: false
   },
 
-  onLoad(options) {
+  onLoad(options = {}) {
+    const keyword = decodeURIComponent(options.keyword || '');
+    if (keyword) {
+      this.setData({ searchKeyword: keyword });
+    }
     this.fetchOrderList();
   },
 
@@ -35,25 +40,26 @@ Page({
       status: this.data.currentFilter === 'all' ? '' : this.data.currentFilter
     };
 
+    if (this.data.searchKeyword) {
+      queryParams.keyWord = this.data.searchKeyword;
+    }
+
     request({
       url: '/sales/orders/list',
       method: 'GET',
-      params: queryParams  // 这里我也帮你修正拼写
-    }).then(res => {
+      params: queryParams
+    }).then((res) => {
       const { data, total, pages } = res.data;
       const newList = isMore ? this.data.filteredOrderList.concat(data) : data;
 
       this.setData({
         filteredOrderList: newList,
-        total: total,
+        total,
         isFinished: this.data.page >= pages
       });
-    })
-    // ⬇️⬇️⬇️ 只打日志，不弹任何提示！交给 request.js 自动弹 ⬇️⬇️⬇️
-    .catch(err => {
-      console.error('加载失败:', err);
-    })
-    .finally(() => {
+    }).catch((err) => {
+      console.error('加载销售订单失败', err);
+    }).finally(() => {
       this.setData({ isLoading: false });
       wx.stopPullDownRefresh();
     });
@@ -81,7 +87,7 @@ Page({
       confirm: { status: 'pending_material', msg: '确认接受该订单并开始备料？' },
       material_done: { status: 'producing', msg: '确认备料已完成，开始排产？' },
       produce_done: { status: 'pending_ship', msg: '确认生产已完成，准备发货？' },
-      ship: { status: 'shipped', msg: '确认订单已发出？' },
+      ship: { status: 'shipped', msg: '确认订单已发货？' },
       finish: { status: 'completed', msg: '确认订单已完成签收与结算？' }
     };
 
@@ -115,12 +121,9 @@ Page({
       this.setData({ page: 1, isFinished: false }, () => {
         this.fetchOrderList();
       });
-    })
-    // ⬇️⬇️⬇️ 这里也只留日志，不弹提示 ⬇️⬇️⬇️
-    .catch(err => {
-      console.error('操作失败', err);
-    })
-    .finally(() => {
+    }).catch((err) => {
+      console.error('更新销售订单状态失败', err);
+    }).finally(() => {
       wx.hideLoading();
     });
   },
@@ -129,14 +132,14 @@ Page({
     request({
       url: `/sales/orders/expressInfo/${orderId}`,
       method: 'GET'
-    }).then(res => {
+    }).then((res) => {
       const { expressCompany, expressNo } = res.data;
       if (!expressNo) {
         wx.showToast({ title: '暂无物流信息', icon: 'none' });
         return;
       }
       wx.showModal({
-        title: '物流追踪',
+        title: '物流信息',
         content: `快递公司：${expressCompany || '未知'}\n快递单号：${expressNo}`,
         showCancel: false
       });
@@ -149,7 +152,7 @@ Page({
 
   openDetail(e) {
     const { orderId } = e.currentTarget.dataset.order;
-    wx.navigateTo({ url: `/pages/order/detail?orderId=${orderId}` });
+    wx.navigateTo({ url: `/pages/orderDetail/orderDetail?type=sales&orderId=${orderId}` });
   },
 
   onPullDownRefresh() {
@@ -166,6 +169,11 @@ Page({
     }
   },
 
-  handleBack() { wx.navigateBack({ delta: 1 }); },
-  handleSearch() { wx.showToast({ title: '搜索功能对接中', icon: 'none' }); }
+  handleBack() {
+    wx.navigateBack({ delta: 1 });
+  },
+
+  handleSearch() {
+    wx.showToast({ title: '可从首页顶部搜索框直接搜索销售订单', icon: 'none' });
+  }
 });

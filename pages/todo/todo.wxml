@@ -1,0 +1,58 @@
+<view class="page-shell">
+  <view class="top-nav">
+    <view class="nav-action" bindtap="handleBack" hover-class="btn-active-scale">
+      <text class="back-text">‹</text>
+    </view>
+    <view class="nav-title">待办中心</view>
+    <view class="nav-action subscribe-action" bindtap="handleSubscribeTap" hover-class="btn-active-scale">
+      <text class="subscribe-text">提醒</text>
+    </view>
+  </view>
+
+  <view class="hero-card">
+    <view>
+      <text class="hero-title">我的待办事项</text>
+      <text class="hero-desc">汇总所有与当前用户相关的审批、订单、打印和质量处理事项。</text>
+    </view>
+    <view class="hero-count">
+      <text class="count-num">{{total}}</text>
+      <text class="count-label">项</text>
+    </view>
+  </view>
+
+  <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="filter-row">
+      <view
+        wx:for="{{filters}}"
+        wx:key="value"
+        class="filter-pill {{activeType === item.value ? 'active' : ''}}"
+        data-type="{{item.value}}"
+        bindtap="handleFilterTap"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="todo-list">
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="todo-card" bindtap="handleTodoTap" data-item="{{item}}" hover-class="todo-card-active">
+        <view class="todo-main">
+          <view class="todo-head">
+            <text class="todo-tag">{{item.tag}}</text>
+            <text class="todo-time">{{item.time}}</text>
+          </view>
+          <text class="todo-title">{{item.title}}</text>
+          <text class="todo-content">{{item.content}}</text>
+        </view>
+        <text class="todo-arrow">›</text>
+      </view>
+    </block>
+
+    <view wx:if="{{!loading && list.length === 0}}" class="empty-card">
+      <text class="empty-title">暂无待办</text>
+      <text class="empty-desc">当前筛选下没有需要处理的事项。</text>
+    </view>
+
+    <view wx:if="{{loading}}" class="load-text">加载中...</view>
+    <view wx:if="{{finished && list.length > 0}}" class="load-text">已加载全部待办</view>
+  </view>
+</view>
