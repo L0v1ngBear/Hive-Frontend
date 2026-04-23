@@ -35,8 +35,8 @@ Page({
     this.setData({ isLoading: true });
 
     const queryParams = {
-      current: this.data.page,
-      size: this.data.pageSize,
+      pageNum: this.data.page,
+      pageSize: this.data.pageSize,
       status: this.data.currentFilter === 'all' ? '' : this.data.currentFilter
     };
 

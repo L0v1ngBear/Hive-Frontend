@@ -1,17 +1,17 @@
-/** 全局视觉基础：保持小程序当前橙金主色，同时向管理端的卡片化工业风靠齐。 */
+/** 全局视觉基础：统一为“云枢蓝”品牌色，同时保持管理端的卡片化工业风。 */
 page {
-  --hive-primary: #fbab06;
-  --hive-primary-dark: #d48806;
-  --hive-ink: #0f172a;
+  --hive-primary: #1f6fff;
+  --hive-primary-dark: #0b2a6f;
+  --hive-ink: #071f5f;
   --hive-muted: #64748b;
-  --hive-line: #e5e7eb;
+  --hive-line: #dbe8ff;
   --hive-card: rgba(255, 255, 255, 0.94);
-  --hive-soft: #fff8ec;
-  --hive-bg: #f6f8fc;
+  --hive-soft: #eef6ff;
+  --hive-bg: #f4f8ff;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, .18), transparent 34%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    radial-gradient(circle at 14% 0%, rgba(103, 183, 255, .26), transparent 36%),
+    linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
   color: var(--hive-ink);
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   box-sizing: border-box;
@@ -57,18 +57,18 @@ page {
   width: 6rpx;
   height: 28rpx;
   border-radius: 999rpx;
-  background: linear-gradient(180deg, #ffbe45, #fbab06);
+  background: linear-gradient(180deg, #67b7ff, #1f6fff);
   transform: translateY(-50%);
 }
 
 .hive-primary-btn {
-  background: linear-gradient(135deg, #ffb84d 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #67b7ff 0%, #1f6fff 62%, #0b2a6f 100%);
   color: #fff;
-  box-shadow: 0 10rpx 24rpx rgba(251, 171, 6, .24);
+  box-shadow: 0 10rpx 24rpx rgba(31, 111, 255, .24);
 }
 
 .hive-ghost-btn {
-  background: #fff7e8;
+  background: #eef6ff;
   color: var(--hive-primary-dark);
 }
 

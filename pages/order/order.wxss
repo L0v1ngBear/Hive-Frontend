@@ -184,12 +184,12 @@ text.back-icon {
   background-color: #f5f5f5; /* 默认保底色 */
   color: #666;
 }
-.status-pending_confirm { color: #FAAD14; background: rgba(250, 173, 20, 0.1); }
+.status-pending_confirm { color: #1f6fff; background: rgba(31, 111, 255, 0.1); }
 .status-pending_material { color: #722ED1; background: rgba(114, 46, 209, 0.1); }
 .status-producing { color: #1890FF; background: rgba(24, 144, 255, 0.1); }
-.status-pending_ship { color: #D48806; background: rgba(255, 251, 230, 1); border: 1rpx solid #FFE58F; }
+.status-pending_ship { color: #0b2a6f; background: rgba(238, 246, 255, 1); border: 1rpx solid #b8dcff; }
 .status-shipped { color: #13C2C2; background: rgba(19, 194, 194, 0.1); }
-.status-completed { color: #52C41A; background: rgba(82, 196, 26, 0.1); }
+.status-completed { color: #1f6fff; background: rgba(31, 111, 255, 0.1); }
 
 /* 基础信息组 */
 .info-group {
@@ -274,7 +274,7 @@ text.back-icon {
   font-weight: 600;
 }
 .node.done {
-  color: #52C41A;
+  color: #1f6fff;
 }
 .line {
   width: 40rpx;
@@ -284,7 +284,7 @@ text.back-icon {
   flex-shrink: 0;
 }
 .line.done {
-  background-color: #52C41A;
+  background-color: #1f6fff;
 }
 
 /* ================= 7. 卡片操作按钮 ================= */
@@ -422,10 +422,10 @@ text.back-icon {
   background: transparent;
 }
 
-/* ================= 10. 统一视觉覆盖：橙金工业卡片风 ================= */
+/* ================= 10. 统一视觉覆盖：云枢蓝工业卡片风 ================= */
 page {
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 12% 0%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
@@ -435,12 +435,12 @@ page {
 }
 
 .nav-title {
-  color: #0f172a;
+  color: #071f5f;
   font-weight: 800;
 }
 
 text.back-icon {
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .order-filter {
@@ -453,11 +453,11 @@ text.back-icon {
 }
 
 .filter-item.active {
-  color: #d48806;
+  color: #0b2a6f;
 }
 
 .filter-item.active::after {
-  background: linear-gradient(90deg, #fbab06, #ffd666);
+  background: linear-gradient(90deg, #1f6fff, #8fd0ff);
 }
 
 .order-card,
@@ -469,13 +469,13 @@ text.back-icon {
 
 .order-card {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 242, 0.95));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 255, 0.95));
 }
 
 .order-id,
 .info-value,
 .modal-title {
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .info-label,
@@ -490,31 +490,31 @@ text.back-icon {
 
 .status-producing,
 .node.active {
-  color: #d48806;
-  background: rgba(251, 171, 6, 0.12);
+  color: #0b2a6f;
+  background: rgba(31, 111, 255, 0.12);
 }
 
 .process-box {
-  background: #fffaf2;
-  border-color: rgba(251, 171, 6, 0.18);
+  background: #f3f8ff;
+  border-color: rgba(31, 111, 255, 0.18);
   border-radius: 24rpx;
 }
 
 .process-item.done {
-  background: #fff7e8;
-  color: #d48806;
-  border-color: rgba(251, 171, 6, 0.45);
+  background: #eef6ff;
+  color: #0b2a6f;
+  border-color: rgba(31, 111, 255, 0.45);
 }
 
 .line.done {
-  background: linear-gradient(90deg, #fbab06, #52c41a);
+  background: linear-gradient(90deg, #1f6fff, #67b7ff);
 }
 
 .update-btn,
 .confirm-btn,
 .create-order-btn {
-  background: linear-gradient(135deg, #fbab06, #d48806) !important;
-  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f) !important;
+  box-shadow: 0 12rpx 26rpx rgba(31, 111, 255, 0.28);
 }
 
 .fixed-bottom-bar {

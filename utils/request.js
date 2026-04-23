@@ -69,8 +69,9 @@ function request(options) {
     header['Tenant-Code'] = tenantId;
   }
 
-  // wx.request 的 GET 查询参数也通过 data 传递；兼容旧页面里使用 params 的写法，避免参数被静默丢弃。
-  const requestData = Object.keys(params || {}).length > 0 ? { ...data, ...params } : data;
+  // wx.request 的 GET 查询参数也通过 data 传递；同时清理空参数，避免 undefined 被序列化成字符串传给后端。
+  const mergedData = Object.keys(params || {}).length > 0 ? { ...data, ...params } : data;
+  const requestData = cleanRequestData(mergedData);
   const fullUrl = url.startsWith('http') ? url : getBaseUrl() + url;
 
   return new Promise((resolve, reject) => {
@@ -143,6 +144,21 @@ function get(url, options = {}) {
 
 function post(url, data, options = {}) {
   return request({ ...options, url, method: 'POST', data });
+}
+
+function cleanRequestData(source) {
+  if (!source || typeof source !== 'object' || Array.isArray(source)) {
+    return source;
+  }
+
+  return Object.keys(source).reduce((target, key) => {
+    const value = source[key];
+    if (value === undefined || value === null) {
+      return target;
+    }
+    target[key] = value;
+    return target;
+  }, {});
 }
 
 module.exports = {

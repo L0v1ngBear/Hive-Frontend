@@ -59,7 +59,7 @@ page {
   display: block; 
 }
 .connect-status { 
-  color: #52C41A; 
+  color: #1f6fff; 
   font-size: 28rpx; 
   font-weight: bold;
 }
@@ -70,22 +70,22 @@ page {
   padding-top: 100rpx; 
 }
 
-/* 统一视觉覆盖：蓝牙页使用同一套卡片和橙金按钮 */
+/* 统一视觉覆盖：蓝牙页使用同一套卡片和云枢蓝按钮 */
 page {
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 12% 0%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
 .title,
 .device-name {
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .scan-btn {
-  background: linear-gradient(135deg, #fbab06, #d48806);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f);
   color: #ffffff;
-  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+  box-shadow: 0 12rpx 26rpx rgba(31, 111, 255, 0.28);
 }
 
 .scan-btn::after {

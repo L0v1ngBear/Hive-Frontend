@@ -179,7 +179,7 @@ page {
 /* ================= 统一视觉覆盖：新建生产订单 ================= */
 page {
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 12% 0%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
@@ -198,7 +198,7 @@ page {
 .nav-title,
 .card-title,
 .form-label {
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .form-card {
@@ -221,13 +221,13 @@ page {
   width: 6rpx;
   height: 24rpx;
   border-radius: 999rpx;
-  background: linear-gradient(180deg, #fbab06, #ffd666);
+  background: linear-gradient(180deg, #1f6fff, #8fd0ff);
   transform: translateY(-50%);
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #fbab06, #d48806);
-  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.28);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f);
+  box-shadow: 0 12rpx 26rpx rgba(31, 111, 255, 0.28);
 }
 
 .btn-cancel {

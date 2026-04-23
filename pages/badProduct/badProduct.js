@@ -54,7 +54,8 @@ Page({
     typeIndex: 0,
     formData: buildEmptyForm(),
     processData: { method: '', remark: '' },
-    currentRecord: null
+    currentRecord: null,
+    loaded: false
   },
 
   onLoad() {
@@ -62,6 +63,12 @@ Page({
     const currentDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     this.setData({ currentDate });
     this.loadList();
+  },
+
+  onShow() {
+    if (this.data.loaded) {
+      this.loadList();
+    }
   },
 
   handleBack() {
@@ -92,7 +99,7 @@ Page({
         lossAmountText: formatNumber(item.lossAmount),
         creatorText: item.creator || '未知用户'
       }));
-      this.setData({ list: records });
+      this.setData({ list: records, loaded: true });
     } catch (error) {
       console.error('加载次品列表失败', error);
     } finally {
@@ -113,12 +120,7 @@ Page({
   },
 
   openCreate() {
-    this.setData({
-      showFormPopup: true,
-      isEdit: false,
-      typeIndex: 0,
-      formData: buildEmptyForm()
-    });
+    wx.navigateTo({ url: '/pages/badProductCreate/badProductCreate' });
   },
 
   openEdit(e) {

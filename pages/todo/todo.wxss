@@ -1,9 +1,9 @@
 page {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 12% 0%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  color: #0f172a;
+  color: #071f5f;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
@@ -35,13 +35,13 @@ page {
 .back-text {
   margin-top: -4rpx;
   font-size: 56rpx;
-  color: #0f172a;
+  color: #071f5f;
   line-height: 1;
 }
 
 .subscribe-action {
   width: 104rpx;
-  background: linear-gradient(135deg, #fbab06, #d48806);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f);
   border: none;
 }
 
@@ -73,7 +73,7 @@ page {
   border-radius: 36rpx;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 236, 0.94)),
-    radial-gradient(circle at 88% 16%, rgba(251, 171, 6, 0.18), transparent 32%);
+    radial-gradient(circle at 88% 16%, rgba(31, 111, 255, 0.18), transparent 32%);
 }
 
 .hero-title {
@@ -95,7 +95,7 @@ page {
   min-width: 116rpx;
   height: 116rpx;
   border-radius: 32rpx;
-  background: #fff7e8;
+  background: #eef6ff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,7 +103,7 @@ page {
 }
 
 .count-num {
-  color: #d48806;
+  color: #0b2a6f;
   font-size: 44rpx;
   font-weight: 900;
 }
@@ -137,9 +137,9 @@ page {
 
 .filter-pill.active {
   color: #ffffff;
-  background: linear-gradient(135deg, #fbab06, #d48806);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f);
   border-color: transparent;
-  box-shadow: 0 12rpx 26rpx rgba(251, 171, 6, 0.24);
+  box-shadow: 0 12rpx 26rpx rgba(31, 111, 255, 0.24);
 }
 
 .todo-list {
@@ -178,8 +178,8 @@ page {
 .todo-tag {
   padding: 8rpx 18rpx;
   border-radius: 999rpx;
-  background: #fff7e8;
-  color: #d48806;
+  background: #eef6ff;
+  color: #0b2a6f;
   font-size: 22rpx;
   font-weight: 800;
 }
@@ -191,7 +191,7 @@ page {
 
 .todo-title {
   display: block;
-  color: #0f172a;
+  color: #071f5f;
   font-size: 30rpx;
   font-weight: 800;
 }
@@ -222,7 +222,7 @@ page {
 }
 
 .empty-title {
-  color: #0f172a;
+  color: #071f5f;
   font-size: 30rpx;
   font-weight: 800;
 }

@@ -1,7 +1,7 @@
 page {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(255, 184, 77, 0.2), transparent 36%),
+    radial-gradient(circle at top, rgba(103, 183, 255, 0.2), transparent 36%),
     linear-gradient(180deg, #f6f8fc 0%, #ffffff 100%);
   color: #1f2937;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -36,7 +36,7 @@ page {
 }
 
 .nav-action-primary {
-  background: linear-gradient(135deg, #ffb84d 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #67b7ff 0%, #1f6fff 100%);
 }
 
 .nav-icon {
@@ -74,7 +74,7 @@ page {
   display: block;
   font-size: 34rpx;
   font-weight: 700;
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .hero-desc {
@@ -89,7 +89,7 @@ page {
   flex-shrink: 0;
   padding: 14rpx 18rpx;
   border-radius: 999rpx;
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(31, 111, 255, 0.12);
   color: #b45309;
   font-size: 24rpx;
   font-weight: 600;
@@ -128,7 +128,7 @@ page {
 }
 
 .filter-pill.active {
-  background: linear-gradient(135deg, #ffb84d 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #67b7ff 0%, #1f6fff 100%);
   color: #ffffff;
 }
 
@@ -183,7 +183,7 @@ page {
   display: block;
   font-size: 30rpx;
   font-weight: 700;
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .record-time {
@@ -202,7 +202,7 @@ page {
 }
 
 .record-status.pending {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(31, 111, 255, 0.12);
   color: #b45309;
 }
 
@@ -237,7 +237,7 @@ page {
   display: block;
   margin-top: 10rpx;
   font-size: 26rpx;
-  color: #0f172a;
+  color: #071f5f;
   font-weight: 600;
 }
 
@@ -275,7 +275,7 @@ page {
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #ffb84d 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #67b7ff 0%, #1f6fff 100%);
   color: #ffffff;
 }
 
@@ -306,7 +306,7 @@ page {
   display: block;
   font-size: 32rpx;
   font-weight: 700;
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .popup-subtitle {
@@ -339,7 +339,7 @@ page {
   background: #f8fafc;
   border-radius: 24rpx;
   font-size: 26rpx;
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .form-input,
@@ -396,12 +396,12 @@ page {
 }
 
 .popup-btn.solid {
-  background: linear-gradient(135deg, #ffb84d 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #67b7ff 0%, #1f6fff 100%);
   color: #ffffff;
 }
 
 /* 统一视觉微调：避免次品页出现独立的蓝色按钮 */
 .action-btn.secondary {
-  background: #fff7e8;
-  color: #d48806;
+  background: #eef6ff;
+  color: #0b2a6f;
 }

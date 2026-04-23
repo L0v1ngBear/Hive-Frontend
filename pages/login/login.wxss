@@ -2,7 +2,7 @@
 .container {
   min-height: 100vh;
   background-color: #f7fafc;
-  color: #181c1e;
+  color: #071f5f;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
@@ -30,7 +30,7 @@
   left: -20%;
   width: 600rpx;
   height: 40vh;
-  background-color: rgba(242, 188, 130, 0.2); /* tertiary-fixed-dim */
+  background-color: rgba(103, 183, 255, 0.2); /* tertiary-fixed-dim */
   filter: blur(80px);
 }
 
@@ -56,7 +56,7 @@
 .logo-box {
   width: 120rpx;
   height: 120rpx;
-  background-color: #002045; /* primary */
+  background-color: #071f5f; /* primary */
   border-radius: 36rpx;
   display: flex;
   align-items: center;
@@ -85,7 +85,7 @@
   font-size: 52rpx;
   font-weight: 900;
   letter-spacing: -1rpx;
-  color: #181c1e;
+  color: #071f5f;
   margin-bottom: 20rpx;
 }
 
@@ -123,7 +123,7 @@
 /* 微信小程序中可使用 pseudo-class 或绑定事件模拟 focus 态 */
 .input-card:focus-within {
   background-color: rgba(255, 255, 255, 0.8);
-  border-bottom-color: #002045; /* 聚焦时底部蓝线高亮 */
+  border-bottom-color: #071f5f; /* 聚焦时底部蓝线高亮 */
   box-shadow: 0rpx 16rpx 40rpx rgba(0, 32, 69, 0.04);
 }
 
@@ -140,7 +140,7 @@
 .input-field {
   width: 100%;
   font-size: 30rpx;
-  color: #181c1e;
+  color: #071f5f;
   font-weight: 500;
   height: 48rpx;
   min-height: 48rpx;
@@ -171,17 +171,17 @@ button::after {
 
 /* 账号密码登录 - 品牌主色 */
 .account-btn {
-  background-color: #002045;
+  background-color: #071f5f;
   color: #ffffff;
   box-shadow: 0rpx 16rpx 40rpx rgba(0, 32, 69, 0.15);
   margin-bottom: 24rpx;
 }
 
-/* 微信快捷登录 - 微信绿 */
+/* 微信快捷登录 - 品牌蓝 */
 .btn-secondary {
-  background-color: #07C160;
+  background-color: #1f6fff;
   color: #ffffff;
-  box-shadow: 0rpx 16rpx 40rpx rgba(7, 193, 96, 0.2);
+  box-shadow: 0rpx 16rpx 40rpx rgba(31, 111, 255, 0.2);
 }
 
 /* --- 隐私协议复选框 --- */
@@ -208,8 +208,8 @@ button::after {
 }
 
 .checkbox.checked {
-  background-color: #002045;
-  border-color: #002045;
+  background-color: #071f5f;
+  border-color: #071f5f;
 }
 
 .checkmark {
@@ -228,7 +228,7 @@ button::after {
 }
 
 .link {
-  color: #002045;
+  color: #071f5f;
   font-weight: 700;
 }
 
@@ -262,20 +262,20 @@ button::after {
   left: 0;
   width: 100%;
   height: 12rpx;
-  background-color: #002045;
+  background-color: #071f5f;
   z-index: 20;
 }
 
-/* ================= 统一视觉覆盖：登录页保留深色品牌块，融入橙金氛围 ================= */
+/* ================= 统一视觉覆盖：登录页保留深色品牌块，融入云枢蓝氛围 ================= */
 .container {
   background:
-    radial-gradient(circle at 84% 4%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 84% 4%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 .top-right {
-  background-color: rgba(251, 171, 6, 0.16);
+  background-color: rgba(31, 111, 255, 0.16);
 }
 
 .bottom-left {
@@ -286,7 +286,7 @@ button::after {
 .account-btn,
 .checkbox.checked,
 .bottom-base {
-  background-color: #0f2f5f;
+  background-color: #071f5f;
 }
 
 .logo-box,
@@ -303,9 +303,9 @@ button::after {
 }
 
 .input-card:focus-within {
-  border-color: rgba(251, 171, 6, 0.5);
+  border-color: rgba(31, 111, 255, 0.5);
 }
 
 .link {
-  color: #d48806;
+  color: #0b2a6f;
 }

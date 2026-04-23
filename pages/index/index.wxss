@@ -1,12 +1,14 @@
 /* --- 核心变量 --- */
 page {
-  --primary: #fbab06;
-  --primary-light: #fff7e8;
-  --bg: #f8fafc;
+  --primary: #1f6fff;
+  --primary-light: #eef6ff;
+  --primary-dark: #071f5f;
+  --bg: #f4f8ff;
   --white: #ffffff;
-  --text-main: #1e293b;
+  --text-main: #071f5f;
   --text-sub: #64748b;
   --shadow: 0 10rpx 40rpx rgba(30, 41, 59, 0.05);
+  --brand-icon-filter: brightness(0) saturate(100%) invert(40%) sepia(92%) saturate(2232%) hue-rotate(205deg) brightness(101%) contrast(102%);
   background-color: var(--bg);
 }
 
@@ -26,7 +28,7 @@ page {
   top: 0;
   width: 100%;
   z-index: 1000;
-  background: linear-gradient(180deg, rgba(251, 171, 6, 0.12) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(31, 111, 255, 0.12) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(20px);
   padding-top: env(safe-area-inset-top);
 }
@@ -64,7 +66,7 @@ page {
   align-items: center;
   justify-content: center;
   margin-left: 16rpx;
-  box-shadow: 0 6rpx 16rpx rgba(251, 171, 6, 0.3);
+  box-shadow: 0 6rpx 16rpx rgba(31, 111, 255, 0.3);
 }
 
 .nav-scan-icon {
@@ -123,7 +125,7 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 8rpx 24rpx rgba(251, 171, 6, 0.25);
+  box-shadow: 0 8rpx 24rpx rgba(31, 111, 255, 0.25);
 }
 
 .todo-num {
@@ -179,7 +181,7 @@ page {
 .grid-icon {
   width: 82rpx !important;
   height: 82rpx !important;
-  filter: drop-shadow(0 4rpx 10rpx rgba(251, 171, 6, 0.1));
+  filter: var(--brand-icon-filter) drop-shadow(0 4rpx 10rpx rgba(31, 111, 255, 0.12));
 }
 
 .grid-text {
@@ -260,7 +262,7 @@ page {
 .todo-content-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #1e293b;
+  color: #071f5f;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -309,6 +311,7 @@ page {
 .tab-icon {
   width: 42rpx;
   height: 42rpx;
+  filter: var(--brand-icon-filter);
 }
 
 .tab-item text {
@@ -324,7 +327,7 @@ page {
 
 .todo-item-active {
   transform: scale(0.98);
-  background: #fffcf5;
+  background: #f7fbff;
 }
 
 .btn-active-pulp {

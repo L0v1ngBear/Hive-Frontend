@@ -89,8 +89,8 @@ page {
 
 /* ================= 1. 异常预警区域 ================= */
 .warning-section {
-  background: #FFF2F0;
-  border: 1px solid #FFCCC7;
+  background: #eef6ff;
+  border: 1px solid #b8dcff;
   padding: 12px 16px;
 }
 .warning-header {
@@ -154,7 +154,7 @@ page {
   margin-right: 6px;
 }
 .dot.in { background-color: #1890FF; } 
-.dot.out { background-color: #52C41A; } 
+.dot.out { background-color: #1f6fff; } 
 .chart-container {
   width: 100%;
   height: 240rpx; /* 高度从 360rpx 缩小到 240rpx */
@@ -197,6 +197,7 @@ page {
 .action-icon {
   width: 38px;  /* 图标从 28px 放大到 38px */
   height: 38px; 
+  filter: brightness(0) saturate(100%) invert(40%) sepia(92%) saturate(2232%) hue-rotate(205deg) brightness(101%) contrast(102%);
 }
 .action-text {
   font-size: 15px; /* 文字从 13px 放大到 15px */
@@ -276,7 +277,7 @@ page {
 .model-col { flex: 1.8; text-align: center; }
 .meter-col { flex: 0.8; text-align: right; padding-right: 8px; }
 
-.type-in { color: #52C41A; font-weight: 500; }
+.type-in { color: #1f6fff; font-weight: 500; }
 .type-out { color: #F5222D; font-weight: 500; }
 
 .stopPropagation { pointer-events: auto; }
@@ -360,7 +361,7 @@ page {
   border-bottom: none;
 }
 .model-item.create-item {
-  color: #F5A623;
+  color: #2f86ff;
   font-weight: 500;
 }
 .model-item:active {
@@ -401,7 +402,7 @@ page {
   color: #666;
 }
 .confirm-btn, .btn.in {
-  background: linear-gradient(90deg, #F5A623, #FFB84D);
+  background: linear-gradient(90deg, #2f86ff, #67b7ff);
   color: #fff;
 }
 .btn.out {
@@ -416,7 +417,7 @@ page {
   color: #fff;
 }
 .bluetooth-btn {
-  background: #07c160;
+  background: #1f6fff;
   color: #fff;
 }
 .active-task-bar {
@@ -456,7 +457,7 @@ page {
 .active-task-bar .task-meters {
   font-size: 22rpx;
   color: #F5222D;
-  background: #FFE8E6;
+  background: #e8f2ff;
   padding: 2rpx 12rpx;
   border-radius: 8rpx;
   font-weight: bold;
@@ -504,24 +505,24 @@ page {
   margin-left: 12rpx;
   padding: 4rpx 10rpx;
   border-radius: 999rpx;
-  background: #07c160;
+  background: #1f6fff;
   color: #fff;
   font-size: 20rpx;
 }
 
 .template-empty {
   padding: 20rpx;
-  background: #fff7e6;
-  border: 1px solid #ffd591;
+  background: #eef6ff;
+  border: 1px solid #b8dcff;
   border-radius: 12rpx;
   color: #ad6800;
   font-size: 24rpx;
 }
 
-/* ================= 统一视觉覆盖：库存页保持橙金卡片风 ================= */
+/* ================= 统一视觉覆盖：库存页保持云枢蓝卡片风 ================= */
 page {
   background:
-    radial-gradient(circle at 12% 0%, rgba(251, 171, 6, 0.16), transparent 34%),
+    radial-gradient(circle at 12% 0%, rgba(31, 111, 255, 0.16), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
@@ -531,7 +532,7 @@ page {
 .record-col,
 .modal-title,
 .info-value {
-  color: #0f172a;
+  color: #071f5f;
 }
 
 .warning-section,
@@ -554,26 +555,26 @@ page {
 }
 
 .warning-section {
-  background: #fff7e8;
-  border-color: rgba(251, 171, 6, 0.28);
+  background: #eef6ff;
+  border-color: rgba(31, 111, 255, 0.28);
 }
 
 .warning-title,
 .model-item.create-item,
 .section-title text:last-child,
 .active-task-bar .task-value {
-  color: #d48806;
+  color: #0b2a6f;
 }
 
 .dot.in,
 .active-task-bar .finish-btn {
-  background-color: #fbab06;
+  background-color: #1f6fff;
 }
 
 .action-icon-wrapper {
-  background: linear-gradient(180deg, #fff7e8, #ffffff);
-  border: 1rpx solid rgba(251, 171, 6, 0.18);
-  box-shadow: 0 12rpx 24rpx rgba(251, 171, 6, 0.08);
+  background: linear-gradient(180deg, #eef6ff, #ffffff);
+  border: 1rpx solid rgba(31, 111, 255, 0.18);
+  box-shadow: 0 12rpx 24rpx rgba(31, 111, 255, 0.08);
 }
 
 .record-header,
@@ -586,7 +587,7 @@ page {
 
 .confirm-btn,
 .btn.in {
-  background: linear-gradient(135deg, #fbab06, #d48806);
+  background: linear-gradient(135deg, #1f6fff, #0b2a6f);
 }
 
 .preview-btn {
@@ -594,10 +595,10 @@ page {
 }
 
 .active-task-bar {
-  background: #fff7e8;
-  border-color: rgba(251, 171, 6, 0.32);
+  background: #eef6ff;
+  border-color: rgba(31, 111, 255, 0.32);
 }
 
 .active-task-bar .finish-btn {
-  box-shadow: 0 8rpx 18rpx rgba(251, 171, 6, 0.28);
+  box-shadow: 0 8rpx 18rpx rgba(31, 111, 255, 0.28);
 }

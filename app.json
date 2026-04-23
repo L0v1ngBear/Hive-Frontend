@@ -8,6 +8,7 @@
     "pages/salesOrder/salesOrder",
     "pages/orderDetail/orderDetail",
     "pages/badProduct/badProduct",
+    "pages/badProductCreate/badProductCreate",
     "pages/bluetooth/bluetooth",
     "pages/salesOrderCreate/salesOrderCreate",
     "pages/productionOrderCreate/productionOrderCreate",

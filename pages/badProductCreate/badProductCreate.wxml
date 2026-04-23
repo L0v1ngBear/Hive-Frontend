@@ -1,0 +1,89 @@
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page-shell">
+    <view class="top-nav">
+      <view class="nav-action" bindtap="handleBack">
+        <image class="nav-icon" src="/images/back.png" mode="aspectFit" />
+      </view>
+      <text class="nav-title">新建次品</text>
+      <view class="nav-placeholder"></view>
+    </view>
+
+    <view class="hero-card">
+      <view>
+        <text class="hero-kicker">Defect Record</text>
+        <text class="hero-title">登记新的次品记录</text>
+        <text class="hero-desc">统一记录次品类型、数量、损失金额和问题描述，保存后会写入真实次品台账。</text>
+      </view>
+      <view class="hero-mark">DC</view>
+    </view>
+
+    <view class="form-card">
+      <view class="form-item">
+        <text class="form-label">关联订单</text>
+        <input
+          class="form-input"
+          placeholder="请输入销售或生产订单号，非必填"
+          value="{{formData.orderId}}"
+          bindinput="handleInput"
+          data-key="orderId"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">次品类型</text>
+        <picker value="{{typeIndex}}" range="{{typeLabels}}" bindchange="handleTypeChange">
+          <view class="form-picker">
+            <text>{{typeLabels[typeIndex]}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.png" mode="aspectFit" />
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-item">
+          <text class="form-label">次品数量</text>
+          <input
+            class="form-input"
+            type="digit"
+            placeholder="如 12"
+            value="{{formData.quantity}}"
+            bindinput="handleInput"
+            data-key="quantity"
+          />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">损失金额</text>
+          <input
+            class="form-input"
+            type="digit"
+            placeholder="如 300"
+            value="{{formData.lossAmount}}"
+            bindinput="handleInput"
+            data-key="lossAmount"
+          />
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">问题描述</text>
+        <textarea
+          class="form-textarea"
+          placeholder="请说明次品原因、位置、批次或现场处理建议"
+          value="{{formData.description}}"
+          bindinput="handleInput"
+          data-key="description"
+        />
+      </view>
+    </view>
+
+    <view class="safe-bottom-area"></view>
+  </view>
+</scroll-view>
+
+<view class="bottom-actions">
+  <button class="action-btn ghost" bindtap="handleBack">取消</button>
+  <button class="action-btn solid" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submitForm">
+    {{submitting ? '保存中' : '确认登记'}}
+  </button>
+</view>
